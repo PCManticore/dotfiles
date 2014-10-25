@@ -1,0 +1,383 @@
+Xft.antialias:  1
+Xft.autohint: 0
+Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintfull
+Xft.hinting: 1
+!Xft.dpi: 94
+Xft.rgba: rgb
+Xft.dpi: 120
+
+!Xft.antialias: true
+! Xft.hinting: true
+! Xft.hintstyle: hintlight
+! Xft.rgba: rgb
+! URxvt.font: xft:DejaVu Sans Mono-8
+! URxvt.letterSpace: -1
+
+Emacs.FontBackend: xft
+! Emacs*font: DejaVu Sans Mono-9
+! Emacs*font: Liberation Mono-18
+! Emacs*font: Source Sans Pro Light-16
+! Emacs*font: xft:source code pro:medium:size=15
+Emacs*font: Source Code Pro Medium:size=22
+ipython.font: DeJavu Sans Mono-16
+! Skype.font: Liberation Mono-18
+
+! Hyper<Key>i: string("0x1b") string("[A") \n\
+! Hyper<Key>k: string("0x1b") string("[B") \n\
+! Hyper<Key>l: string("0x1b") string("[C") \n\
+! Hyper<Key>j: string("0x1b") string("[D") \n\
+
+! XTerm*VT100.translations: #override \n\
+!  Hyper<Key>d: string("0x1b") string("[A") \n\
+!  Hyper<Key>h: string("0x1b") string("[B") \n\
+!  Hyper<Key>t: string("0x1b") string("[C") \n\
+!  Hyper<Key>n: string("0x1b") string("[D")
+
+Hyper<Key>p: insert-selection(CLIPBOARD) \n\
+Hyper<Key>i: string("0x1b") string("OA") \n\
+Hyper<Key>k: string("0x1b") string("OB") \n\
+Hyper<Key>l: string("0x1b") string("OC") \n\
+Hyper<Key>j: string("0x1b") string("OD")
+
+
+! XTerm*VT100.translations: #override \n\
+!  Hyper<Key>t: string("0xff52") string("[A") \n\
+!  Hyper<Key>n: string("0xff52") string("[A") \n\
+!  Hyper<Key>h: string("0xff54") string("[B") \n\
+!  Hyper<Key>d: string("0xff51") string("[C") \n\
+!  <Key>m: string("qa")\n\
+!  Ctrl<Key>Tab:     string(0x1b) string("r")
+
+
+
+! *VT100.Translations: #override \
+!   Hyper<Key>t: string("0xff52") string("[A") \n\
+!   Hyper<Key>h: string("0xff54") string("[B") \n\
+!   Hyper<Key>d: string("0xff51") string("[C") \n\
+!   Hyper<Key>n: string("0xff52") string("[A") \n\
+!   Shift <Key>Up:         scroll-back(1) \n\
+!   Shift <Key>Down:       scroll-forw(1) \n\
+!   Ctrl<Key>m: string(0x1b) string("qa") \n\
+!   Ctrl<Key>Tab:     string(0x1b) string("r") \n\
+!                 <Key>Left: input(h) \n\
+!                 <Key>Right: input(l) \n\
+!                 <Key>Up: input(k) \n\
+!                 <Key>Down: input(j)
+
+! XTerm*.Translations: #override \
+!   Hyper<Key>t: string("0xff52") string("[A") \n\
+!   Hyper<Key>h: string("0xff54") string("[B") \n\
+!   Hyper<Key>n: string("0xff52") string("[A") \n\
+!   Hyper<Key>d: string("0xff51") string("[C") \n\
+!   Shift <Key>Up:         scroll-back(1) \n\
+!   Shift <Key>Down:       scroll-forw(1) \n\
+!   Ctrl<Key>m: string(0x1b) string("qa") \n\
+!   Ctrl<Key>Tab:     string(0x1b) string("r") \n\
+!                 <Key>Left: input(h) \n\
+!                 <Key>Right: input(l) \n\
+!                 <Key>Up: input(k) \n\
+!                 <Key>Down: input(j)
+
+! Fix up xterms keybindings 
+! xterm*VT100.translations:  #override \
+!       <Key>BackSpace:    string(0x7F) \n\
+!       <KeyPress>Insert:       string(0x1b) string("[2~")\n\
+!       <Key>Delete:       string(0x1b) string("[3~")\n\
+!       <Key>Home:         string(0x1b) string("[1~")\n\
+!       <Key>End:         string(0x1b) string("[4~")\n\
+!       <Key>Page_Up:      string(0x1b) string("[5~")\n\
+!       <Key>Page_Down:    string(0x1b) string("[6~")\n\
+!       <KeyPress>Prior : scroll-back(1,page)\n\
+!       <KeyPress>Next : scroll-forw(1,page)\n\
+!       <KeyPress>ñ: scroll-forw(1) \n\
+!       <Key>ñ: scroll-forw(1)\n\
+!       Hyper<KeyPress>n: scroll-forw(1)\n\
+!                 <Key>Left: input(h) \n\
+!                 <Key>Right: input(l) \n\
+!                 <Key>Up: input(k) \n\
+!                 <Key>Down: input(j)
+
+! NetHack*map*translations:   #override \
+!                 <Key>Left: input(h) \n\
+!                 <Key>Right: input(l) \n\
+!                 <Key>Up: input(k) \n\
+!                 <Key>Down: input(j)
+
+!{{{ XTERM
+xterm*internalBorder:        0
+xterm*loginShell:         true
+xterm*scrollBar:         false
+xterm*cursorBlink:       false
+!xterm*geometry:         80x26
+xterm*saveLines:         65535
+xterm*dynamicColors:        on
+xterm*highlightSelection: true
+! Appearance
+! xterm*utf8:            2
+! xterm*eightBitInput:   true
+xterm*metaSendsEscape: true
+! xterm*font:        -xos4-terminus-medium-*-*-*-16-*-*-*-*-*-iso8859-2
+! xterm*boldFont:    -xos4-terminus-bold-*-*-*-16-*-*-*-*-*-iso8859-2
+! xterm*font: Source Code Pro Medium:size=22
+xterm*cursorColor: #DCDCCC
+! xterm*font:        -source-code-pro-medium-*-*-*-22-*-*-*-*-*-iso8859-2
+! xterm*boldFont:    -source-code-pro-bold-*-*-*-22-*-*-*-*-*-iso8859-2
+! Zenburn
+xterm*background:  #3f3f3f
+xterm*foreground:  #dcdccc
+xterm*color0:      #1E2320
+xterm*color1:      #705050
+xterm*color2:      #60b48a
+xterm*color3:      #dfaf8f
+xterm*color4:      #506070
+xterm*color5:      #dc8cc3
+xterm*color6:      #8cd0d3
+xterm*color7:      #dcdccc
+xterm*color8:      #709080
+xterm*color9:      #dca3a3
+xterm*color10:     #c3bf9f
+xterm*color11:     #f0dfaf
+xterm*color12:     #94bff3
+xterm*color13:     #ec93d3
+xterm*color14:     #93e0e3
+xterm*color15:     #ffffff
+!}}}
+
+!{{{ gnome
+gnome*internalBorder:        0
+gnome*loginShell:         true
+gnome*scrollBar:         false
+gnome*cursorBlink:       false
+!xterm*geometry:         80x26
+gnome*saveLines:         65535
+gnome*dynamicColors:        on
+gnome*highlightSelection: true
+! Appearance
+! gnome*utf8:            2
+gnome*eightBitInput:   true
+gnome*metaSendsEscape: true
+! xterm*font:        -xos4-terminus-medium-*-*-*-16-*-*-*-*-*-iso8859-2
+! xterm*boldFont:    -xos4-terminus-bold-*-*-*-16-*-*-*-*-*-iso8859-2
+gnome*font: Source Code Pro Medium:size=22
+gnome*cursorColor: #DCDCCC
+! Zenburn
+gnome*background:  #3f3f3f
+gnome*foreground:  #dcdccc
+gnome*color0:      #1E2320
+gnome*color1:      #705050
+gnome*color2:      #60b48a
+gnome*color3:      #dfaf8f
+gnome*color4:      #506070
+gnome*color5:      #dc8cc3
+gnome*color6:      #8cd0d3
+gnome*color7:      #dcdccc
+gnome*color8:      #709080
+gnome*color9:      #dca3a3
+gnome*color10:     #c3bf9f
+gnome*color11:     #f0dfaf
+gnome*color12:     #94bff3
+gnome*color13:     #ec93d3
+gnome*color14:     #93e0e3
+gnome*color15:     #ffffff
+!}}}
+
+
+! XTerm*faceName: Source Code Pro Medium
+! XTerm*faceName: DejaVuSansMono:size=16:style=Book:antialias=true
+! XTerm*faceName: Terminus:size=16:style=Bold
+! : Terminus Bold
+! XTerm*faceName: DejaVu Sans Mono Book
+! xterm*faceSize: 14
+! xterm*vt100*geometry: 80x60
+! XTerm*font: -xos4-terminus-medium-r-normal-*-12-*-*-*-*-*-*-*
+! xterm*font: -*-terminus-*-r-*-*-14-*-*-*-*-*-iso10646-*
+! xterm*saveLines: 16384
+! xterm*loginShell: true
+
+XTerm*pointerColor: white
+XTerm*pointerColorBackground: black
+XTerm*cursorColor: yellow
+XTerm*cursorBlink: true
+
+! xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
+XTerm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+XTerm*on3Clicks: regex [[:alpha:]]+://([[:alnum:]!#+,./=?@_~-]|(%[[:xdigit:]][[:xdigit:]]))+
+! XTerm*on3Clicks: regex ([[:alpha:]]+://)?([[:alnum:]!#+,./=?@_~-]|(%[[:xdigit:]][[:xdigit:]]))+
+xterm*termName: xterm-color
+xterm*eightBitInput: false
+XTerm*locale: true
+XTerm*jumpScroll: false
+XTerm*selectToClipboard: true
+! xterm*faceName: Liberation Mono:size=10:antialias=false
+! xterm*font: 7x13
+
+! xterm*faceName: DejaVu Sans Mono:style=Book:antialias=true
+xterm*faceName: Source Code Pro Medium
+! xterm*faceName: Source Code Pro Semibold
+xterm*faceNameDoublesize: WenQuanYi Bitmap Song
+xterm*faceSize: 14
+XTerm*scaleHeight: 1.1
+
+*VT100*translations: #override Shift <Btn1Up>: exec-formatted("google-chrome '%t'", PRIMARY)
+
+XTerm*visualbell: true
+XTerm*bellIsUrgent: true
+
+URxvt.depth: 32
+! URxvt.background: [95]#000000
+URxvt.background: [95]#313131
+
+! *cursorColor: #DCDCCC
+! *background:  #3f3f3f
+*background:  #404040
+*foreground:  #dcdccc
+*color0:      #1E2320
+
+! $ git status
+! multiline comments in the .el file
+! *color1:      #7F9F7F
+! *color2:      #60b48a
+! *color3:      #dfaf8f
+! *color4:      #506070
+! *color5:      #dc8cc3
+! *color6:      #8cd0d3
+! *color7:      #dcdccc
+! *color8:      #709080
+! *color9:      #dca3a3
+! *color10:     #c3bf9f
+! *color11:     #f0dfaf
+! *color12:     #94bff3
+! *color13:     #ec93d3
+! *color14:     #93e0e3
+! *color15:     #ffffff
+
+!! BLK Cursor (black dark/light)
+#define _color0         #3F3F3F
+#define _color8         #5F5F5F
+!! RED Tag (red dark/light)
+! color1 could be seen in:
+! 1) $ git status
+! 2) multiline comments in the .el file
+#define _color1         #BC8383
+#define _color9         #CC9393
+!! GRN SpecialKey (green dark/light)
+#define _color2         #5F7F5F
+#define _color10        #7F9F7F
+!! YEL Keyword (yellow dark/light)
+#define _color3         #E0CF9F
+#define _color11        #F0DFAF
+!! BLU Number (blue dark/light)
+#define _color4         #7CB8BB
+#define _color12        #8CD0D3
+!! MAG Precondit (magenta dark/light)
+#define _color5         #DC8CC3
+#define _color13        #DC8CC3
+!! CYN Float (cyan dark/light)
+#define _color6         #93E0E3
+#define _color14        #93E0E3
+!! WHT Search (white dark/light)
+#define _color7         #DCDCCC
+#define _color15        #FFFFFF
+!FMT Include, StatusLine, ErrorMsg
+#define _colorBD       #E0CF9F
+#define _colorUL       #8CD0D3
+#define _colorIT       #656555
+!TXT Normal, Normal, Cursor
+#define _foreground    #DCDCCC
+#define _background    #3F3F3F
+#define _cursorColor   #DCDCCC
+#define _cursorColor2  #3F3F3F
+
+URxvt*background: _background
+URxvt*foreground: _foreground
+URxvt*cursorColor: _cursorColor
+URxvt*cursorColor2: _cursorColor2
+URxvt*colorUL: _colorUL
+URxvt*underlineColor: #F0DFAF
+URxvt*colorBD: _colorBD
+URxvt*colorIT: _colorIT
+
+URxvt*color0:           _color0
+URxvt*color8:           _color8
+URxvt*color1:           _color1
+URxvt*color9:           _color9
+URxvt*color2:           _color2
+URxvt*color10:          _color10
+URxvt*color3:           _color3
+URxvt*color11:          _color11
+URxvt*color4:           _color4
+URxvt*color12:          _color12
+URxvt*color5:           _color5
+URxvt*color13:          _color13
+URxvt*color6:           _color6
+URxvt*color14:          _color14
+URxvt*color7:           _color7
+URxvt*color15:          _color15
+
+URxvt.font:                  [codeset=UTF-8]xft:Source Code Pro:pixelsize=20:antialias=true:hinting=true
+URxvt*imFont:                [codeset=UTF-8]xft:Source Code Pro:pixelsize=20:antialias=true:hinting=true
+URxvt.boldFont:              [codeset=UTF-8]xft:Source Code Pro:pixelsize=20:antialias=true:hinting=true
+URxvt*italicFont:            [codeset=UTF-8]xft:Source Code Pro:italic:pixelsize=20:antialias=true:hinting=true
+URxvt*boldItalicFont:        [codeset=UTF-8]xft:Source Code Pro:bold:italic:pixelsize=20:antialias=true:hinting=true
+URxvt*faceNameDoublesize:    Terminus
+
+! URxvt*font: xft:DejaVu Sans Mono:pixelsize=20:antialias=true:hinting=true
+! URxvt*boldFont: xft:DejaVu Sans Mono:bold:pixelsize=20:antialias=true:hinting=true
+
+! URxvt.font: xft:Terminus:antialias=true:hinting=false:autohint=false:pixelsize=22
+! URxvt.boldFont: xft:Terminus:bold:antialias=true:hinting=false:autohint=false:pixelsize=22
+
+! URxvt.font:xft:droid sans mono slashed:medium:pixelsize=11
+! URxvt.boldFont:xft:droid sans mono slashed:medium:pixelsize=11
+! URxvt*font: xft:Monospace:pixelsize=11
+
+Xmessage*font: -*-terminus-medium-r-*-*-14-*-*-*-*-*-iso10646-1
+Xmessage*background: red
+Xmessage*foreground: yellow
+Xmessage*form.*.shapeStyle: rectangle
+Xmessage*Scrollbar.width: 1
+Xmessage*Scrollbar.borderWidth: 0
+Xmessage*Buttons: OK
+Xmessage*defaultButton: OK
+
+URxvt.keysym.C-equal : perl:font-size:increase
+URxvt.keysym.C-minus : perl:font-size:decrease
+
+URxvt.url-select.launcher:  firefox
+URxvt.url-select.underline: true
+! URxvt.keysym.C-i:           perl:url-select:select_next
+
+URxvt.perl-ext-common: default,clipboard,url-select,font-size,matcher,keyboard-select,tabbed
+
+URxvt.tabbed.tabbar-fg:         8
+URxvt.tabbed.tabbar-bg:         0
+URxvt.tabbed.tab-fg:            4
+URxvt.tabbed.tab-bg:            0
+
+URxvt.keysym.M-Escape: perl:keyboard-select:activate
+URxvt.keysym.M-u: perl:url-select:select_next
+
+URxvt*scrollBar: false
+URxvt*scrollBar_right: false
+URxvt*scrollBar_floating: false
+
+URxvt*scrollTtyOutput: false
+URxvt*scrollWithBuffer: true
+URxvt*scrollTtyKeypress: true
+
+URxvt.url-launcher: /usr/bin/firefox
+URxvt.matcher.button: 1
+
+URxvt.keysym.C-Delete: perl:matcher:last
+URxvt.keysym.M-Delete: perl:matcher:list
+
+URxvt.keysym.M-w:   perl:clipboard:copy
+URxvt.keysym.M-y:   perl:clipboard:paste
+! URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+
+URxvt.clipboard.copycmd:  xclip -i -selection clipboard
+URxvt.clipboard.pastecmd: xclip -o -selection clipboard
+
+URxvt*utf8:               true
+URxvt*locale:             true

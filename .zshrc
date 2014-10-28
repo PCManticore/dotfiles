@@ -252,3 +252,8 @@ if [ -f ~/.quote ]; then
     . ~/.quote
 fi
 # }}}
+
+# {{{ Dircolors
+#     - with rxvt-256color support
+eval `dircolors -b "${HOME}/.dir_colors"`
+# }}}

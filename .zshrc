@@ -146,7 +146,8 @@ function aoeu() { setxkbmap -model pc101 -layout us }
 # Gentoo Linux specific
 alias uses="vim /usr/portage/profiles/use.desc"
 alias usesd="/usr/portage/profiles/use.local.desc"
-alias etree='equery files --tree'
+alias etree="equery files --tree"
+alias strip_ansii_colors="perl -pe 's/\e\[?.*?[\@-~]//g'"
 
 # Start tmux server and attach to it.
 function tm () {
@@ -223,7 +224,7 @@ function up()
 function p() {
     proj=$(ls /str/development/projects/ | selecta)
     if [[ -n "$proj" ]]; then
-        proj=$(echo "$proj" | perl -pe 's/\e\[?.*?[\@-~]//g')
+        proj=$(echo "$proj" | strip_ansii_colors)
         cd /str/development/projects/$proj
     fi
 }

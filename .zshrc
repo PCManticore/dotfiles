@@ -66,7 +66,7 @@ zstyle ":completion:*:cd:*" ignore-parents parent pwd
 zstyle ":completion:*" list-colors ""
 # }}}
 
-# {{{ Setup key bindings
+# {{{ Setup zkbd (key bindings)
 
 autoload zkbd
 
@@ -119,6 +119,20 @@ function insert-selecta-path-in-command-line() {
 zle -N insert-selecta-path-in-command-line
 # Bind the key to the newly created widget
 bindkey "^S" "insert-selecta-path-in-command-line"
+
+## View history by means of percol
+if exists percol; then
+    function percol_select_history() {
+        local tac
+        exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
+        BUFFER=$(fc -l -n 1 | eval $tac | percol --query "$LBUFFER")
+        CURSOR=$#BUFFER         # move cursor
+        zle -R -c               # refresh
+    }
+
+    zle -N percol_select_history
+    bindkey '^R' percol_select_history
+fi
 # }}}
 
 # {{{ Aliases

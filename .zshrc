@@ -246,3 +246,9 @@ function setprompt () {
 # Prompt init
 setprompt
 # }}}
+
+# {{{ Output quote
+if [ -f ~/.quote ]; then
+    . ~/.quote
+fi
+# }}}

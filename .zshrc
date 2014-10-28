@@ -73,6 +73,18 @@ zstyle ":completion:*:*:kill:*:processes" list-colors "=(#b) #([0-9]#)*=0=01;32"
 zstyle ":completion:*:cd:*" ignore-parents parent pwd
 #  * Complete with colors
 zstyle ":completion:*" list-colors ""
+
+#
+# The following makes possible to navigate through the last used args. For example:
+#
+# % echo a b c
+# % echo 1 2 3
+# % echo <M-.><M-.><M-m>
+# % echo b
+#
+autoload -Uz copy-earlier-word
+zle -N copy-earlier-word
+bindkey "^[m" copy-earlier-word
 # }}}
 
 # {{{ Setup zkbd (key bindings)

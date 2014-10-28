@@ -313,7 +313,9 @@ function prompt_char {
 }
 
 function emerge_info() {
-    cat "${HOME}/emerge-info"
+    if [ -f "${HOME}/emerge-info" ]; then
+        cat "${HOME}/emerge-info"
+    fi
 }
 
 function setprompt () {

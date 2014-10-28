@@ -218,6 +218,15 @@ function up()
     done
     test $DIR != "/" && echo $DIR/$TARGET
 }
+
+# Switch projects
+function p() {
+    proj=$(ls /str/development/projects/ | selecta)
+    if [[ -n "$proj" ]]; then
+        proj=$(echo "$proj" | perl -pe 's/\e\[?.*?[\@-~]//g')
+        cd /str/development/projects/$proj
+    fi
+}
 # }}}
 
 # {{{ Goodies
@@ -252,6 +261,13 @@ if exists percol; then
     zle -N percol_select_history
     bindkey '^R' percol_select_history
 fi
+
+# Find the directory of the named Python module.
+python_module_dir () {
+    echo "$(python -c "import os.path as _, ${1}; \
+        print _.dirname(_.realpath(${1}.__file__[:-1]))"
+        )"
+}
 # }}}
 
 # {{{ Terminal and prompt
@@ -335,11 +351,11 @@ function setprompt () {
 setprompt
 # }}}
 
-# {{{ Output quote
+# {{{ On start up
+## Output quote
 if [ -f ~/.quote ]; then
     . ~/.quote
 fi
-
 ## if switching to the root then go to HOME directory
 cd ${HOME}
 # }}}

@@ -116,6 +116,16 @@ alias lfi="ls -l | egrep -v '^d'"
 alias ldi="ls -l | egrep '^d'"
 alias lst="ls -htl | grep `date +%Y-%m-%d`"
 alias grep="grep --color=always"
+alias list-fonts="fc-list | cut -f2 -d: | sort -u"
+alias ven='. venv/bin/activate'
+alias shareclip='wgetpaste -x -C'
+alias du='du -kh'
+alias df='df -kh'
+
+# Gentoo Linux specific
+alias uses="vim /usr/portage/profiles/use.desc"
+alias usesd="/usr/portage/profiles/use.local.desc"
+alias etree='equery files --tree'
 
 # Start tmux server and attach to it.
 function tm () {

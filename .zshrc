@@ -136,6 +136,7 @@ fi
 # }}}
 
 # {{{ Aliases
+function exists { which $1 &> /dev/null }
 function mcd() { mkdir -p $1 && cd $1 }
 function cdf() { cd *$1*/ }
 alias i=sxiv

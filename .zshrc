@@ -101,6 +101,37 @@ unfunction zkbd_file; unset keyfile ret
 [[ -n "${key[Right]}"   ]]  && bindkey  "${key[Right]}"   forward-char
 # }}}
 
+# {{{ Aliases
+function exists { which $1 &> /dev/null }
+function mcd() { mkdir -p $1 && cd $1 }
+function cdf() { cd *$1*/ }
+alias i=sxiv
+
+# By @ieure; copied from https://gist.github.com/1474072
+#
+# It finds a file, looking up through parent directories until it finds one.
+# Use it like this:
+#
+#   $ ls .tmux.conf
+#   ls: .tmux.conf: No such file or directory
+#
+#   $ ls `up .tmux.conf`
+#   /Users/grb/.tmux.conf
+#
+#   $ cat `up .tmux.conf`
+#   set -g default-terminal "screen-256color"
+#
+function up()
+{
+    local DIR=$PWD
+    local TARGET=$1
+    while [ ! -e $DIR/$TARGET -a $DIR != "/" ]; do
+        DIR=$(dirname $DIR)
+    done
+    test $DIR != "/" && echo $DIR/$TARGET
+}
+# }}}
+
 # {{{ Goodies
 # Run Selecta in the current working directory, appending the selected path, if
 # any, to the current command.
@@ -133,37 +164,6 @@ if exists percol; then
     zle -N percol_select_history
     bindkey '^R' percol_select_history
 fi
-# }}}
-
-# {{{ Aliases
-function exists { which $1 &> /dev/null }
-function mcd() { mkdir -p $1 && cd $1 }
-function cdf() { cd *$1*/ }
-alias i=sxiv
-
-# By @ieure; copied from https://gist.github.com/1474072
-#
-# It finds a file, looking up through parent directories until it finds one.
-# Use it like this:
-#
-#   $ ls .tmux.conf
-#   ls: .tmux.conf: No such file or directory
-#
-#   $ ls `up .tmux.conf`
-#   /Users/grb/.tmux.conf
-#
-#   $ cat `up .tmux.conf`
-#   set -g default-terminal "screen-256color"
-#
-function up()
-{
-    local DIR=$PWD
-    local TARGET=$1
-    while [ ! -e $DIR/$TARGET -a $DIR != "/" ]; do
-        DIR=$(dirname $DIR)
-    done
-    test $DIR != "/" && echo $DIR/$TARGET
-}
 # }}}
 
 # {{{ Terminal and prompt

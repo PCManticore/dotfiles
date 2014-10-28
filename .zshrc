@@ -18,6 +18,8 @@ export VISUAL="emacsclient"
 export EDITOR="${VISUAL}"
 export BROWSER="firefox"
 export XTERM="urxvt"
+export LANG="en_US.UTF-8"
+export LC_COLLATE="C"
 
 # By default, zsh considers many characters part of a word (e.g., _ and -).
 # Narrow that down to allow easier skipping through words via M-f and M-b.

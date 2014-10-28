@@ -26,6 +26,11 @@ export LC_COLLATE="C"
 export WORDCHARS='*?[]~&;!$%^<>'
 # }}}
 
+# {{{ Dircolors
+#     - with rxvt-256color support
+eval `dircolors -b "${HOME}/.dir_colors"`
+# }}}
+
 # {{{ ZSH settings
 setopt emacs
 setopt nohup # don't kill bg processes when exiting
@@ -117,10 +122,26 @@ alias ldi="ls -l | egrep '^d'"
 alias lst="ls -htl | grep `date +%Y-%m-%d`"
 alias grep="grep --color=always"
 alias list-fonts="fc-list | cut -f2 -d: | sort -u"
-alias ven='. venv/bin/activate'
-alias shareclip='wgetpaste -x -C'
-alias du='du -kh'
-alias df='df -kh'
+alias ven=". venv/bin/activate"
+alias shareclip="wgetpaste -x -C"
+alias du="du -kh"
+alias df="df -kh"
+alias xtr="extract"
+alias ec="emacsclient -a emacs -n "
+alias ect="emacsclient -a emacs -t "
+alias ping="ping -c 5"
+alias psptree="ps auxwwwf"
+alias upmem="ps -eo pmem,pcpu,rss,vsize,args | sort -k 1"
+alias cp="cp -ia"
+alias mv="mv -i"
+alias rm="rm -i"
+
+# find file case insensitively
+function ff() { find . -type f -iname '*'"$*"'*' -ls ; }
+
+# Sometimes, very rare, there is a need to switch to the qwerty and back to dvorak
+function asdf() { setxkbmap -model pc101 -layout dvorak }
+function aoeu() { setxkbmap -model pc101 -layout us }
 
 # Gentoo Linux specific
 alias uses="vim /usr/portage/profiles/use.desc"
@@ -132,6 +153,45 @@ function tm () {
     if [ $TERM != "screen" ]; then
         ( (tmux has-session -t remote && tmux attach-session -t remote) || (tmux new-session -s remote) ) && exit 0
         echo "tmux failed to start"
+    fi
+}
+
+# make screenshot and view it
+function scr() {
+    screenshots_root="${HOME}/images/screenshots/"
+    `rm ${screenshots_root}*.png`
+    logfile="${screenshots_root}/screenshots.log"
+    rm ${logfile}
+    screenshot win
+    while [ ! -f ${logfile} ]
+    do
+        sleep 1
+    done
+    sxiv `tail -n 1 ${logfile}`
+}
+
+# Handy Extract Program
+function extract () {
+    if [[ -f "$1" ]]; then
+        case "$1" in
+            *.tbz2 | *.tar.bz2) tar -xvjf  "$1"     ;;
+            *.txz | *.tar.xz)   tar -xvJf  "$1"     ;;
+            *.tgz | *.tar.gz)   tar -xvzf  "$1"     ;;
+            *.tar | *.cbt)      tar -xvf   "$1"     ;;
+            *.zip | *.cbz)      unzip      "$1"     ;;
+            *.rar | *.cbr)      unrar x    "$1"     ;;
+            *.arj)              unarj x    "$1"     ;;
+            *.ace)              unace x    "$1"     ;;
+            *.bz2)              bunzip2    "$1"     ;;
+            *.xz)               unxz       "$1"     ;;
+            *.gz)               gunzip     "$1"     ;;
+            *.7z)               7z x       "$1"     ;;
+            *.Z)                uncompress "$1"     ;;
+            *.gpg)       gpg2 -d "$1" | tar -xvzf - ;;
+            *) echo "Error: failed to extract $1" ;;
+        esac
+    else
+        echo "Error: $1 is not a valid file for extraction"
     fi
 }
 
@@ -279,9 +339,7 @@ setprompt
 if [ -f ~/.quote ]; then
     . ~/.quote
 fi
-# }}}
 
-# {{{ Dircolors
-#     - with rxvt-256color support
-eval `dircolors -b "${HOME}/.dir_colors"`
+## if switching to the root then go to HOME directory
+cd ${HOME}
 # }}}

@@ -20,6 +20,8 @@ export BROWSER="firefox"
 export XTERM="urxvt"
 export LANG="en_US.UTF-8"
 export LC_COLLATE="C"
+export PROJECTS_DIR="/str/development/projects"
+export OO_PROJECT_DIR="${PROJECTS_DIR}/open-source/"
 
 # By default, zsh considers many characters part of a word (e.g., _ and -).
 # Narrow that down to allow easier skipping through words via M-f and M-b.
@@ -221,13 +223,22 @@ function up()
 }
 
 # Switch projects
-function p() {
-    proj=$(ls /str/development/projects/ | selecta)
-    if [[ -n "$proj" ]]; then
-        proj=$(echo "$proj" | strip_ansii_colors)
-        cd /str/development/projects/$proj
+function switch_project() {
+    base_dir="$1"
+    proj=$(ls ${base_dir} | selecta)
+    if [[ -n "${proj}" ]]; then
+        proj=$(echo "${proj}" | strip_ansii_colors)
+        cd ${base_dir}/${proj}
     fi
 }
+# cd to the common project dir
+function cdp() { switch_project ${PROJECTS_DIR} }
+# cd to the open source project dir
+function cdop() { switch_project ${OO_PROJECT_DIR} }
+# cd to the emacs projects
+function cdep() { switch_project ${OO_PROJECT_DIR}/elisp/ }
+# cd to the ghq github directory
+function cdgh() { switch_project ${OO_PROJECT_DIR}/.ghq/github.com/ }
 # }}}
 
 # {{{ Goodies
@@ -267,7 +278,7 @@ fi
 python_module_dir () {
     echo "$(python -c "import os.path as _, ${1}; \
         print _.dirname(_.realpath(${1}.__file__[:-1]))"
-        )"
+    )"
 }
 # }}}
 

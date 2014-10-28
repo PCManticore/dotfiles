@@ -327,6 +327,9 @@ function setprompt () {
         eval PR_LIGHT_"${color}"="%{$fg[${(L)color}]%}"
     done
 
+    nbsp=$'\u00A0'
+    bindkey -s $nbsp '^u'
+
     PR_NO_COLOUR="%{${terminfo[sgr0]}%}"
 
     # Terminal prompt settings
@@ -355,8 +358,17 @@ function setprompt () {
             PROMPT='$PR_GREEN%n@%m$PR_WHITE:$PR_YELLOW%l$PR_WHITE:$PR_RED%~$PR_YELLOW%%$PR_NO_COLOUR '
             ;;
         *)  # Main prompt
-            # PROMPT='$PR_GREEN%n@%m $PR_YELLOW%(!.%1~.%~) $PR_NO_COLOUR%_$(prompt_char) $(emerge_info)'
-            PROMPT='%(!.%{$FG[116]%}.%{$FG[151]%}%n@)%m %{$FG[223]%}%(!.%1~.%~) %{$reset_color%}%_$(prompt_char)%{$reset_color%} $(emerge_info)'
+            #
+            # The last character (I mean nbsp) is a Unicode non-breaking space
+            # (U+00A0). Which will look like a plain space and behave like
+            # one. Except that we can bindkey it to clear the input buffer:
+            #
+            # $ bindkey -s $nbsp '^u'
+            #
+            # As result you have the benefit that you can copy the whole line in your
+            # terminal emulator and just paste it to run it again.
+            #
+            PROMPT='%(!.%{$FG[116]%}.%{$FG[151]%}%n@)%m %{$FG[223]%}%(!.%1~.%~) %{$reset_color%}%_$(prompt_char)%{$reset_color%}$nbsp$(emerge_info)'
             ;;
     esac
 }

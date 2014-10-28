@@ -7,7 +7,7 @@ source /home/demi/bin/zsh-colors.sh
 # }}}
 
 # {{{ Environment
-export PATH="${PATH}:${HOME}/code/bin"
+export PATH="${PATH}:${HOME}/bin:/usr/local/bin/"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -37,6 +37,10 @@ setopt interactivecomments
 setopt autopushd pushdminus pushdsilent pushdtohome
 setopt histreduceblanks histignorespace inc_append_history
 setopt printexitvalue          # alert me if something's failed
+# unsetopt MULTIBYTE             # without it zkbd won't recognize the Alt key
+# By default, ^S freezes terminal output and ^Q resumes it. Disable that so
+# that those keys can be used for other things.
+unsetopt flowcontrol
 
 # Prompt requirements
 setopt extended_glob prompt_subst
@@ -62,10 +66,54 @@ zstyle ":completion:*:cd:*" ignore-parents parent pwd
 zstyle ":completion:*" list-colors ""
 # }}}
 
+# {{{ Goodies
+# Run Selecta in the current working directory, appending the selected path, if
+# any, to the current command.
+function insert-selecta-path-in-command-line() {
+    local selected_path
+    # Print a newline or we'll clobber the old prompt.
+    echo
+    # Find the path; abort if the user doesn't select anything.
+    selected_path=$(find * -type f | selecta) || return
+    # Append the selection to the current command buffer.
+    eval 'LBUFFER="$LBUFFER$selected_path"'
+    # Redraw the prompt since Selecta has drawn several new lines of text.
+    zle reset-prompt
+}
+# Create the zle widget
+zle -N insert-selecta-path-in-command-line
+# Bind the key to the newly created widget
+bindkey "^S" "insert-selecta-path-in-command-line"
+# }}}
+
 # {{{ Aliases
 function mcd() { mkdir -p $1 && cd $1 }
 function cdf() { cd *$1*/ }
 alias i=sxiv
+
+# By @ieure; copied from https://gist.github.com/1474072
+#
+# It finds a file, looking up through parent directories until it finds one.
+# Use it like this:
+#
+#   $ ls .tmux.conf
+#   ls: .tmux.conf: No such file or directory
+#
+#   $ ls `up .tmux.conf`
+#   /Users/grb/.tmux.conf
+#
+#   $ cat `up .tmux.conf`
+#   set -g default-terminal "screen-256color"
+#
+function up()
+{
+    local DIR=$PWD
+    local TARGET=$1
+    while [ ! -e $DIR/$TARGET -a $DIR != "/" ]; do
+        DIR=$(dirname $DIR)
+    done
+    test $DIR != "/" && echo $DIR/$TARGET
+}
 # }}}
 
 # {{{ Terminal and prompt

@@ -116,6 +116,12 @@ alias lfi="ls -l | egrep -v '^d'"
 alias ldi="ls -l | egrep '^d'"
 alias lst="ls -htl | grep `date +%Y-%m-%d`"
 alias grep="grep --color=always"
+function tm () {
+    if [ $TERM != "screen" ]; then
+        ( (tmux has-session -t remote && tmux attach-session -t remote) || (tmux new-session -s remote) ) && exit 0
+        echo "tmux failed to start"
+    fi
+}
 
 # By @ieure; copied from https://gist.github.com/1474072
 #

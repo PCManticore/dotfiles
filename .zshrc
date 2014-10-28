@@ -285,7 +285,7 @@ function prompt_char {
 }
 
 function emerge_info() {
-    cat "/home/demi/emerge-info"
+    cat "${HOME}/emerge-info"
 }
 
 function setprompt () {

@@ -381,3 +381,6 @@ URxvt.clipboard.pastecmd: xclip -o -selection clipboard
 
 URxvt*utf8:               true
 URxvt*locale:             true
+
+URxvt*keysym.Home: \033[1~
+URxvt*keysym.End: \033[8~

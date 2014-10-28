@@ -106,6 +106,14 @@ function exists { which $1 &> /dev/null }
 function mcd() { mkdir -p $1 && cd $1 }
 function cdf() { cd *$1*/ }
 alias i=sxiv
+alias ..="cd .."
+alias ...="cd ../.."
+alias ls="ls -aF --color=always"
+alias ll="ls -l"
+alias lfi="ls -l | egrep -v '^d'"
+alias ldi="ls -l | egrep '^d'"
+alias lst="ls -htl | grep `date +%Y-%m-%d`"
+alias grep="grep --color=always"
 
 # By @ieure; copied from https://gist.github.com/1474072
 #

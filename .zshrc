@@ -84,7 +84,6 @@ zstyle ":completion:*:*:kill:*:processes" list-colors "=(#b) #([0-9]#)*=0=01;32"
 #  * Don't select parent dir on cd
 zstyle ":completion:*:cd:*" ignore-parents parent pwd
 #  * Complete with colors (like in ls(1))
-eval `gdircolors`
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 #  * Don't complete the same twice for kill/diff.

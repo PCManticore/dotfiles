@@ -183,6 +183,13 @@ sfetch() {
 d() {
     g -Hn '(^|\b(#define|func|let|let rec|class|module|def)\s+)'"$@" | sed 's/:/ /2'
 }
+
+# l -- find file names, recursively
+l() {
+    local p=$argv[-1]
+    [[ -d $p ]] && { argv[-1]=(); } || p='.'
+    find $p ! -type d | sed 's:^./::' | egrep "${@:-.}"
+}
 # }}}
 
 # {{{ Setup zkbd (key bindings)

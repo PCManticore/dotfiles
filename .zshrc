@@ -444,11 +444,17 @@ tracing() {
 }
 
 # n -- quickest note taker
-# 21nov2013  +chris+
 n() {
     [[ $# == 0 ]] && tail ~/.n || echo "$(date +'%F %R'): $*" >>~/.n
 }
 alias n=' noglob n'
+
+# nf [-NUM] [COMMENTARY...] -- never forget last N commands
+nf() {
+    local n=-1
+    [[ "$1" = -<-> ]] && n=$1 && shift
+    fc -lnt ": %Y-%m-%d %H:%M ${*/\%/%%} ;" $n | tee -a .neverforget
+}
 # }}}
 
 # {{{ Terminal and prompt

@@ -429,6 +429,11 @@ mess() {
     }
     cd ~/mess/current
 }
+
+# px -- verbose pgrep
+px() {
+    ps uwwp ${$(pgrep -d, "${(j:|:)@}"):?no matches}
+}
 # }}}
 
 # {{{ Terminal and prompt

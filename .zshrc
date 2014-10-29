@@ -167,6 +167,12 @@ h() {
     fc -l 0 -1 | sed -n "/${1:-.}/s/^ */!/p" | tail -n ${2:-10}
 }
 alias h=' h'
+
+# pstop -- ps with top-like output
+pstop() {
+    ps -eo pid,user,pri,ni,vsz,rsz,stat,pcpu,pmem,time,comm --sort -pcpu |
+    head "${@:--n 20}"
+}
 # }}}
 
 # {{{ Setup zkbd (key bindings)

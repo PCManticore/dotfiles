@@ -389,22 +389,7 @@ python_module_dir () {
 # }}}
 
 # {{{ Terminal and prompt
-function precmd {
-    # Terminal width = width - 1 (for lineup)
-    local TERMWIDTH
-    ((TERMWIDTH=${COLUMNS} - 1))
-
-    # Truncate long paths
-    PR_FILLBAR=""
-    PR_PWDLEN=""
-    local PROMPTSIZE="${#${(%):---(%n@%m:%l)---()--}}"
-    local PWDSIZE="${#${(%):-%~}}"
-    if [[ "${PROMPTSIZE} + ${PWDSIZE}" -gt ${TERMWIDTH} ]]; then
-        ((PR_PWDLEN=${TERMWIDTH} - ${PROMPTSIZE}))
-    else
-        PR_FILLBAR="\${(l.((${TERMWIDTH} - (${PROMPTSIZE} + ${PWDSIZE})))..${PR_HBAR}.)}"
-    fi
-}
+function precmd () {print -Pn "\e]0;%n@%m: %d\a"}
 
 function preexec () {
     # Screen window titles as currently running programs

@@ -56,7 +56,8 @@ setopt extended_glob prompt_subst
 autoload colors zsh/terminfo
 
 # New style completion system
-autoload -U compinit; compinit
+zmodload zsh/complist
+autoload -Uz compinit && compinit
 #  * List of completers to use
 zstyle ":completion:*" completer _complete _match _approximate
 #  * Allow approximate
@@ -92,6 +93,19 @@ function _backward_kill_default_word() {
 }
 zle -N backward-kill-default-word _backward_kill_default_word
 bindkey '\e]' backward-kill-default-word
+
+zle -C complete-menu menu-select _generic
+_complete_menu() {
+    setopt localoptions alwayslastprompt
+    zle complete-menu
+}
+zle -N _complete_menu
+bindkey '^F' _complete_menu
+bindkey -M menuselect '^F' accept-and-infer-next-history
+bindkey -M menuselect '/'  accept-and-infer-next-history
+bindkey -M menuselect '^?' undo
+bindkey -M menuselect ' ' accept-and-hold
+bindkey -M menuselect '*' history-incremental-search-forward
 # }}}
 
 # {{{ Setup zkbd (key bindings)

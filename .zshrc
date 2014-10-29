@@ -476,6 +476,18 @@ sprunge() {
         done
     fi | curl -sF 'sprunge=<-' http://sprunge.us | tr -d ' '
 }
+
+# unfmt - convert paragraphs into long lines
+unfmt() {
+    perl -00 -e '
+    while(<>) {
+      chomp;
+      s/(?<=\S)\r?\n(?=\S)/ /g;
+      s/\r?\n//g;
+      print "$_\n";
+    }
+  '
+}
 # }}}
 
 # {{{ Terminal and prompt

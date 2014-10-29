@@ -50,6 +50,12 @@ setopt printexitvalue          # alert me if something's failed
 # By default, ^S freezes terminal output and ^Q resumes it. Disable that so
 # that those keys can be used for other things.
 unsetopt flowcontrol
+# show all completions after two TABS
+setopt BASH_AUTO_LIST
+# don’t cycle
+setopt NO_AUTO_MENU
+# put the prompt always below the completions
+setopt NO_ALWAYS_LAST_PROMPT
 
 # Prompt requirements
 setopt extended_glob prompt_subst

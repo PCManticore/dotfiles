@@ -85,6 +85,13 @@ zstyle ":completion:*" list-colors ""
 autoload -Uz copy-earlier-word
 zle -N copy-earlier-word
 bindkey "^[m" copy-earlier-word
+
+# Sometimes it is useful to kill backward whole path (ignoring slash):
+function _backward_kill_default_word() {
+    WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' zle backward-kill-word
+}
+zle -N backward-kill-default-word _backward_kill_default_word
+bindkey '\e]' backward-kill-default-word
 # }}}
 
 # {{{ Setup zkbd (key bindings)

@@ -178,6 +178,11 @@ pstop() {
 sfetch() {
     curl -k -u $USER -C- ${2:--O}${2:+-o $2} $1
 }
+
+# d -- use g to find a definition (start of line, Go, Ocaml, Ruby)
+d() {
+    g -Hn '(^|\b(#define|func|let|let rec|class|module|def)\s+)'"$@" | sed 's/:/ /2'
+}
 # }}}
 
 # {{{ Setup zkbd (key bindings)

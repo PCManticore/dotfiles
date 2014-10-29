@@ -455,6 +455,27 @@ nf() {
     [[ "$1" = -<-> ]] && n=$1 && shift
     fc -lnt ": %Y-%m-%d %H:%M ${*/\%/%%} ;" $n | tee -a .neverforget
 }
+
+# imgur - post image to imgur.com
+imgur() {
+    curl -F "image=@$1" -F key=b3625162d3418ac51a9ee805b1840452 \
+        http://imgur.com/api/upload.xml |
+    sed -ne 's|.*<original_image>\(.*\)</original_image>.*|\1|p'
+}
+
+# sprunge FILES... - paste to sprunge.us
+sprunge() {
+    local f
+    if [ $# -lt 2 ]; then
+        cat "$@"
+    else
+        for f; do
+            echo "## $f"
+            cat "$f"
+            echo
+        done
+    fi | curl -sF 'sprunge=<-' http://sprunge.us | tr -d ' '
+}
 # }}}
 
 # {{{ Terminal and prompt

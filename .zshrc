@@ -173,6 +173,11 @@ pstop() {
     ps -eo pid,user,pri,ni,vsz,rsz,stat,pcpu,pmem,time,comm --sort -pcpu |
     head "${@:--n 20}"
 }
+
+# sfetch (sftp|scp)://HOST/PATH [DEST] -- file by scp/sftp with resuming
+sfetch() {
+    curl -k -u $USER -C- ${2:--O}${2:+-o $2} $1
+}
 # }}}
 
 # {{{ Setup zkbd (key bindings)

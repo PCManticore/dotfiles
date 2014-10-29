@@ -72,8 +72,10 @@ zstyle ":completion:*:processes" command "ps -au$USER"
 zstyle ":completion:*:*:kill:*:processes" list-colors "=(#b) #([0-9]#)*=0=01;32"
 #  * Don't select parent dir on cd
 zstyle ":completion:*:cd:*" ignore-parents parent pwd
-#  * Complete with colors
-zstyle ":completion:*" list-colors ""
+#  * Complete with colors (like in ls(1))
+eval `gdircolors`
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 #  * Don't complete the same twice for kill/diff.
 zstyle ':completion:*:(kill|diff):*'       ignore-line yes
 
@@ -125,6 +127,29 @@ function _zle_line_finish() {
     ZLE_LINE_ABORTED=$BUFFER
 }
 zle -N zle-line-finish _zle_line_finish
+
+# Quote stuff that looks like URLs automatically.
+autoload -U url-quote-magic
+zle -N self-insert url-quote-magic
+
+# This will make C-z on the command line resume vi again, so you can toggle between
+# them easily. Even if you typed something already!
+foreground-vi() {
+    fg %vi
+}
+zle -N foreground-vi
+bindkey '^Z' foreground-vi
+
+# Persist the dirstack across sessions:
+DIRSTACKSIZE=9
+DIRSTACKFILE=~/.zdirs
+if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
+    dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
+    [[ -d $dirstack[1] ]] && cd $dirstack[1] && cd $OLDPWD
+fi
+chpwd() {
+    print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
+}
 # }}}
 
 # {{{ Setup zkbd (key bindings)
@@ -189,6 +214,13 @@ alias upmem="ps -eo pmem,pcpu,rss,vsize,args | sort -k 1"
 alias cp="cp -ia"
 alias mv="mv -i"
 alias rm="rm -i"
+alias homegit="GIT_DIR=~/dotfiles/.git GIT_WORK_TREE=~ git"
+
+# The manpage zshall(1) contains everything, and this function will make it easy to
+# search in (Try zman fc or zman HIST_IGNORE_SPACE!):
+function zman() {
+    PAGER="less -g -s '+/^       "$1"'" man zshall
+}
 
 # find file case insensitively
 function ff() { find . -type f -iname '*'"$*"'*' -ls ; }

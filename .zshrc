@@ -56,6 +56,11 @@ setopt BASH_AUTO_LIST
 setopt NO_AUTO_MENU
 # put the prompt always below the completions
 setopt NO_ALWAYS_LAST_PROMPT
+# history management
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt APPEND_HISTORY
+setopt EXTENDED_HISTORY
 
 # Prompt requirements
 setopt extended_glob prompt_subst

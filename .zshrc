@@ -434,6 +434,14 @@ mess() {
 px() {
     ps uwwp ${$(pgrep -d, "${(j:|:)@}"):?no matches}
 }
+
+# tracing -- run zsh function with tracing
+tracing() {
+    local f=$1; shift
+    functions -t $f
+    $f "$@"
+    functions +t $f
+}
 # }}}
 
 # {{{ Terminal and prompt

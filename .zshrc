@@ -74,6 +74,8 @@ zstyle ":completion:*:*:kill:*:processes" list-colors "=(#b) #([0-9]#)*=0=01;32"
 zstyle ":completion:*:cd:*" ignore-parents parent pwd
 #  * Complete with colors
 zstyle ":completion:*" list-colors ""
+#  * Don't complete the same twice for kill/diff.
+zstyle ':completion:*:(kill|diff):*'       ignore-line yes
 
 #
 # The following makes possible to navigate through the last used args. For example:

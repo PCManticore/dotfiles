@@ -255,6 +255,7 @@ alias cp="cp -ia"
 alias mv="mv -i"
 alias rm="rm -i"
 alias homegit="GIT_DIR=~/dotfiles/.git GIT_WORK_TREE=~ git"
+alias df.="df -h | grep 'sda8\|sda7'"
 
 # The manpage zshall(1) contains everything, and this function will make it easy to
 # search in (Try zman fc or zman HIST_IGNORE_SPACE!):

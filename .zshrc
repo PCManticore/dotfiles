@@ -386,6 +386,18 @@ python_module_dir () {
         print _.dirname(_.realpath(${1}.__file__[:-1]))"
     )"
 }
+
+# mess -- switch to current mess folder, creating it if needed
+mess() {
+    set +e
+    DIR=~/mess/$(date +%Y/%V)
+    [[ -d $DIR ]] || {
+        mkdir -p $DIR
+        ln -sfn $DIR ~/mess/current
+        echo "Created $DIR."
+    }
+    cd ~/mess/current
+}
 # }}}
 
 # {{{ Terminal and prompt

@@ -106,6 +106,23 @@ bindkey -M menuselect '/'  accept-and-infer-next-history
 bindkey -M menuselect '^?' undo
 bindkey -M menuselect ' ' accept-and-hold
 bindkey -M menuselect '*' history-incremental-search-forward
+
+# Keep the last line in all cases, allowing you to fix it:
+function _recover_line_or_else() {
+    if [[ -z $BUFFER && $CONTEXT = start && $zsh_eval_context = shfunc
+                && -n $ZLE_LINE_ABORTED
+                && $ZLE_LINE_ABORTED != $history[$((HISTCMD-1))] ]]; then
+        LBUFFER+=$ZLE_LINE_ABORTED
+        unset ZLE_LINE_ABORTED
+    else
+        zle .$WIDGET
+    fi
+}
+zle -N up-line-or-history _recover_line_or_else
+function _zle_line_finish() {
+    ZLE_LINE_ABORTED=$BUFFER
+}
+zle -N zle-line-finish _zle_line_finish
 # }}}
 
 # {{{ Setup zkbd (key bindings)

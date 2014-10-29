@@ -442,6 +442,13 @@ tracing() {
     $f "$@"
     functions +t $f
 }
+
+# n -- quickest note taker
+# 21nov2013  +chris+
+n() {
+    [[ $# == 0 ]] && tail ~/.n || echo "$(date +'%F %R'): $*" >>~/.n
+}
+alias n=' noglob n'
 # }}}
 
 # {{{ Terminal and prompt

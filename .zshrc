@@ -161,6 +161,12 @@ fi
 chpwd() {
     print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
 }
+
+# h -- grep history
+h() {
+    fc -l 0 -1 | sed -n "/${1:-.}/s/^ */!/p" | tail -n ${2:-10}
+}
+alias h=' h'
 # }}}
 
 # {{{ Setup zkbd (key bindings)

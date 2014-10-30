@@ -7,7 +7,8 @@ source /home/demi/bin/zsh-colors.sh
 # }}}
 
 # {{{ Environment
-export PATH="${PATH}:${HOME}/bin:/usr/local/bin:${HOME}/.cask/bin"
+export HOMEBIN="${HOME}/bin"
+export PATH="${PATH}:${HOMEBIN}:/usr/local/bin:${HOME}/.cask/bin"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -19,6 +20,7 @@ export EDITOR="${VISUAL}"
 export BROWSER="firefox"
 export XTERM="urxvt"
 export LANG="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
 export LC_COLLATE="C"
 export PROJECTS_DIR="/str/development/projects"
 export OO_PROJECT_DIR="${PROJECTS_DIR}/open-source/"
@@ -50,12 +52,9 @@ setopt printexitvalue          # alert me if something's failed
 # By default, ^S freezes terminal output and ^Q resumes it. Disable that so
 # that those keys can be used for other things.
 unsetopt flowcontrol
-# show all completions after two TABS
-setopt BASH_AUTO_LIST
-# don’t cycle
-setopt NO_AUTO_MENU
-# put the prompt always below the completions
-setopt NO_ALWAYS_LAST_PROMPT
+setopt BASH_AUTO_LIST # show all completions after two TABS
+setopt NO_AUTO_MENU # don't cycle completions
+setopt NO_ALWAYS_LAST_PROMPT # put the prompt always below the completions
 # history management
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE

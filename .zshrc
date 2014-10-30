@@ -391,6 +391,15 @@ function switch_project() {
         cd ${base_dir}/${proj}
     fi
 }
+
+# Switch to the ghq project
+function switch_ghq_project() {
+    GHQ_PROJECT_DIR="${OO_PROJECT_DIR}/.ghq"
+    proj=$(find $GHQ_PROJECT_DIR -maxdepth 3 -type d | selecta)
+    if [[ -n "${proj}" ]]; then
+        cd ${proj}
+    fi
+}
 # cd to the common project dir
 function cdp() { switch_project ${PROJECTS_DIR} }
 # cd to the open source project dir
@@ -398,7 +407,7 @@ function cdop() { switch_project ${OO_PROJECT_DIR} }
 # cd to the emacs projects
 function cdep() { switch_project ${OO_PROJECT_DIR}/elisp/ }
 # cd to the ghq github directory
-function cdgh() { switch_project ${OO_PROJECT_DIR}/.ghq/github.com/ }
+function cdgh() { switch_ghq_project }
 # }}}
 
 # {{{ Goodies

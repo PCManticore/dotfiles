@@ -88,6 +88,11 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 #  * Don't complete the same twice for kill/diff.
 zstyle ':completion:*:(kill|diff):*'       ignore-line yes
 
+# Magic tab-completion trickery to pull hostnames from ~/.ssh/known_hosts:
+hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[0-9]*}%%\ *}%%,*})
+# hosts=(${${${(f)"$(<$HOME/.ssh/known_hosts)"}%%\ *}%%,*})
+zstyle ':completion:*:hosts' hosts $hosts
+
 #
 # The following makes possible to navigate through the last used args. For example:
 #

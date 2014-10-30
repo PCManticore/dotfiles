@@ -593,7 +593,10 @@ function setprompt () {
             # As result you have the benefit that you can copy the whole line in your
             # terminal emulator and just paste it to run it again.
             #
-            PROMPT='%(!.%{$FG[116]%}.%{$FG[151]%}%n@)%m %{$FG[223]%}%(!.%1~.%~) %{$reset_color%}%_$(prompt_char)%{$reset_color%}$nbsp$(emerge_info)'
+            PROMPT='%(!.%{$FG[116]%}.%{$FG[151]%}%n@)%m '
+            PROMPT+='%{$FG[223]%}%(!.%1~.%~) %{$reset_color%}'
+            PROMPT+='%_$(prompt_char)%{$reset_color%}$nbsp'
+            PROMPT+='$(emerge_info)'
             ;;
     esac
 }

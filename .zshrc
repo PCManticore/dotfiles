@@ -284,6 +284,15 @@ alias rm="rm -i"
 alias homegit="GIT_DIR=~/dotfiles/.git GIT_WORK_TREE=~ git"
 alias df.="df -h | grep 'sda8\|sda7'"
 
+# Turn on/off shell divider
+function sd() {
+    if [[ $SHOW_DIVIDER -eq 1 ]]; then
+        SHOW_DIVIDER=0
+    else
+        SHOW_DIVIDER=1
+    fi
+}
+
 # The manpage zshall(1) contains everything, and this function will make it easy to
 # search in (Try zman fc or zman HIST_IGNORE_SPACE!):
 function zman() {
@@ -553,6 +562,12 @@ function zgit_branch_except_home() {
     fi
 }
 
+function shell_divider() {
+    if [[ $SHOW_DIVIDER -eq 1 ]]; then
+        echo $(repeat $COLUMNS printf '-')
+    fi
+}
+
 function setprompt () {
     if [[ "${terminfo[colors]}" -ge 8 ]]; then
         colors
@@ -603,8 +618,10 @@ function setprompt () {
             # As result you have the benefit that you can copy the whole line in your
             # terminal emulator and just paste it to run it again.
             #
-            PROMPT='%(!.%{$FG[116]%}.%{$FG[151]%}%n@)%m '
-            PROMPT+='%{$FG[223]%}%(!.%1~.%~) %{$reset_color%}'
+            PROMPT=''
+            PROMPT+='%{$FG[000]%}$(shell_divider)%{$reset_color%}'
+            PROMPT+='%(!.%{$FG[116]%}.%{$FG[151]%}%n@)%m '
+            PROMPT+='%{$FG[223]%}%(!.%1~.%~) %{$reset%}'
             PROMPT+='%_$(prompt_char)%{$reset_color%}$nbsp'
             PROMPT+='$(emerge_info)'
 

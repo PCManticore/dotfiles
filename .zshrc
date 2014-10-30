@@ -6,6 +6,9 @@
 source /home/demi/bin/zsh-colors.sh
 # }}}
 
+# test2
+# test3
+
 # {{{ Environment
 export HOMEBIN="${HOME}/bin"
 export PATH="${PATH}:${HOMEBIN}:/usr/local/bin:${HOME}/.cask/bin"

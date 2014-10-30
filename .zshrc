@@ -65,6 +65,10 @@ setopt EXTENDED_HISTORY
 setopt extended_glob prompt_subst
 autoload colors zsh/terminfo
 
+# Load zgit (https://github.com/jcorbin/zsh-git)
+autoload -U zgitinit
+zgitinit
+
 # New style completion system
 zmodload zsh/complist
 autoload -Uz compinit && compinit
@@ -543,6 +547,12 @@ function emerge_info() {
     fi
 }
 
+function zgit_branch_except_home() {
+    if [ $(pwd) != ${HOME} ]; then
+        echo $(zgit_branch)
+    fi
+}
+
 function setprompt () {
     if [[ "${terminfo[colors]}" -ge 8 ]]; then
         colors
@@ -597,6 +607,8 @@ function setprompt () {
             PROMPT+='%{$FG[223]%}%(!.%1~.%~) %{$reset_color%}'
             PROMPT+='%_$(prompt_char)%{$reset_color%}$nbsp'
             PROMPT+='$(emerge_info)'
+
+            RPROMPT='$(zgit_branch_except_home)'
             ;;
     esac
 }

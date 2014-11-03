@@ -48,7 +48,6 @@
 (depends-on "elisp-slime-nav")
 (depends-on "elpy")
 (depends-on "elscreen")
-(depends-on "emacs-for-python" :git "https://github.com/gabrielelanaro/emacs-for-python.git")
 ;; (depends-on "emacs-w3m")
 (depends-on "emmet-mode")
 (depends-on "emms")

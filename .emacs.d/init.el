@@ -1708,10 +1708,6 @@ by using nxml's indentation rules."
     (when (not (display-graphic-p))
       (setenv "GPG_AGENT_INFO" agent))))
 
-(load-file "~/.emacs.d/def.el")
-
-(load-file "/str/development/projects/open-source/elisp/god-mode/god-mode.el")
-
 (load-file "/str/development/projects/open-source/elisp/ukrainian-programmer-dvorak/ukrainian-programmer-dvorak.el")
 
 (setq default-input-method "ukrainian-programmer-dvorak")
@@ -1751,8 +1747,6 @@ by using nxml's indentation rules."
   (pop-to-buffer "*Log*"))
 
 (define-key minibuffer-local-map (kbd "M-t") '@cisco/tail)
-
-(load-file "~/.emacs.d/presentation.el")
 
 (add-to-list 'load-path "~/mh-e-8.5/")
 
@@ -1838,8 +1832,6 @@ by using nxml's indentation rules."
 (add-to-list 'load-path "/str/development/projects/open-source/.ghq/code.google.com/p/emacs-soap-client/")
 (require 'soap-client)
 (setq jiralib-url "https://qbeats.atlassian.net/")
-
-(load-file "~/.emacs.d/syntax-subword.el")
 
 (add-to-list
  'directory-abbrev-alist

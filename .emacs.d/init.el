@@ -1063,21 +1063,6 @@ current line instead."
         (insert "~/"))
     (insert "~")))
 
-;; muse
-
-(require 'muse-mode)     ; load authoring mode
-(require 'muse-html)     ; load publishing styles I use
-(require 'muse-latex)
-(require 'muse-texinfo)
-(require 'muse-docbook)
-(require 'muse-project)  ; publish files in projects
-
-(add-to-list 'load-path "~/.emacs.d/muse-html-slidy/")
-(require 'muse-html-slidy)
-
-(setq muse-project-alist
-      '(("Main" ("~/MainWiki" :default "index"))))
-
 ;; navi
 
 (require 'navi-mode)

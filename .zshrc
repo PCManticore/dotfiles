@@ -8,7 +8,7 @@ source /home/demi/bin/zsh-colors.sh
 
 # {{{ Environment
 export HOMEBIN="${HOME}/bin"
-export PATH="${PATH}:${HOMEBIN}:/usr/local/bin:${HOME}/.cask/bin:${HOME}/go/bin"
+export PATH="/usr/lib/distcc/bin:${PATH}:${HOMEBIN}:/usr/local/bin:${HOME}/.cask/bin:${HOME}/go/bin"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000

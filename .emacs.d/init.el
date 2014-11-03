@@ -1063,12 +1063,6 @@ current line instead."
         (insert "~/"))
     (insert "~")))
 
-;; moz
-
-(load-file "~/.emacs.d/moz.el")
-
-(autoload 'moz-minor-mode "moz" "Mozilla Minor and Inferior Mozilla Modes" t)
-
 ;; muse
 
 (require 'muse-mode)     ; load authoring mode

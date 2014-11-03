@@ -1,6 +1,7 @@
 (source org)
 (source gnu)
 (source melpa)
+(source "elpy" "http://jorgenschaefer.github.io/packages/")
 
 (depends-on "abl-mode")
 (depends-on "ace-jump-mode")

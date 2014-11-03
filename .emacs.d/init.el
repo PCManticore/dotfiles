@@ -1384,6 +1384,10 @@ current line instead."
 (elpy-enable)
 (elpy-use-ipython)
 
+(eval-after-load "python"
+  '(progn
+     (define-key python-mode-map (kbd "C-h f") 'elpy-doc)))
+
 ;; rainbow-delimiters
 
 (require 'rainbow-delimiters)

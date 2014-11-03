@@ -28,7 +28,8 @@
 
 (setq package-archives '(("org"          . "http://orgmode.org/elpa/")
                          ("gnu"          . "http://elpa.gnu.org/packages/")
-             ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
+                         ("elpy"         . "http://jorgenschaefer.github.io/packages/")
+                         ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
                          ("melpa"        . "http://melpa.milkbox.net/packages/")
                          ("marmalade"    . "http://marmalade-repo.org/packages/")))
 
@@ -1380,9 +1381,8 @@ current line instead."
 
 ;; python
 
-(require 'demi-python)
-(require 'demi-python-flake8)
-(require 'demi-emacs-for-python)
+(elpy-enable)
+(elpy-use-ipython)
 
 ;; rainbow-delimiters
 

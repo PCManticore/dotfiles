@@ -73,6 +73,7 @@
 (depends-on "flymake-python-pyflakes")
 (depends-on "fringe-helper")
 (depends-on "fuzzy")
+
 (depends-on "git-gutter")
 (depends-on "git-gutter-fringe")
 (depends-on "git-commit-mode")
@@ -83,6 +84,7 @@
 (depends-on "goto-chg")
 (depends-on "grizzl")
 (depends-on "guide-key")
+
 (depends-on "hungry-delete")
 (depends-on "helm")
 (depends-on "helm-dash")
@@ -103,6 +105,7 @@
 (depends-on "imenu-anywhere")
 (depends-on "inflections")
 (depends-on "info+")
+
 (depends-on "jabber")
 ;; (depends-on "jdee")
 (depends-on "jedi")
@@ -110,12 +113,15 @@
 (depends-on "js2-mode")
 (depends-on "json")
 (depends-on "jumpc")
+
 (depends-on "key-chord")
 (depends-on "kill-ring-ido")
+
 (depends-on "langtool")
 (depends-on "lispy")
 (depends-on "list-utils")
 (depends-on "log4j-mode")
+
 (depends-on "mag-menu")
 (depends-on "magit")
 (depends-on "makey")
@@ -140,6 +146,7 @@
 ;; (depends-on "org-sync")
 (depends-on "org2blog")
 (depends-on "ov")
+(depends-on "outorg")
 (depends-on "outshine")
 
 (depends-on "package")
@@ -187,20 +194,26 @@
 (depends-on "smooth-scrolling")
 (depends-on "splitter")
 (depends-on "sticky")
+
 (depends-on "tern")
 (depends-on "tree-mode")
+
 (depends-on "ucs-utils")
 (depends-on "undo-tree")
 (depends-on "use-package")
+
 (depends-on "virtualenv")
 (depends-on "visible-mark")
+
 (depends-on "web-mode")
 (depends-on "wgrep")
 (depends-on "wgrep-ag")
 (depends-on "whitespace-cleanup-mode")
 (depends-on "whole-line-or-region")
+
 (depends-on "xml-rpc")
 ;; (depends-on "xml-rpc-el")
+
 (depends-on "yasnippet")
 
 (depends-on "unfill")

@@ -7,6 +7,12 @@
 
 (add-to-list 'load-path "~/.emacs.d")
 
+(load "server")
+(unless (server-running-p) (server-start))
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 (load-file "/str/development/projects/open-source/elisp/ef.el/ef.el")
 
 (defmacro defhook (body)
@@ -1619,12 +1625,6 @@ by using nxml's indentation rules."
 (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
 
 
-
-(load "server")
-(unless (server-running-p) (server-start))
-
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
 
 ;; disable brackets autocomplete
 (setq skeleton-pair nil)

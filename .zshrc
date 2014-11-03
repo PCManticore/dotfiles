@@ -8,7 +8,7 @@ source /home/demi/bin/zsh-colors.sh
 
 # {{{ Environment
 export HOMEBIN="${HOME}/bin"
-export PATH="${PATH}:${HOMEBIN}:/usr/local/bin:${HOME}/.cask/bin"
+export PATH="${PATH}:${HOMEBIN}:/usr/local/bin:${HOME}/.cask/bin:${HOME}/go/bin"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -24,6 +24,7 @@ export LC_CTYPE="en_US.UTF-8"
 export LC_COLLATE="C"
 export PROJECTS_DIR="/str/development/projects"
 export OO_PROJECT_DIR="${PROJECTS_DIR}/open-source/"
+export GOPATH="${HOME}/go"
 
 # By default, zsh considers many characters part of a word (e.g., _ and -).
 # Narrow that down to allow easier skipping through words via M-f and M-b.

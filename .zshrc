@@ -285,6 +285,9 @@ alias mv="mv -i"
 alias rm="rm -i"
 alias homegit="GIT_DIR=~/dotfiles/.git GIT_WORK_TREE=~ git"
 alias df.="df -h | grep 'sda8\|sda7'"
+alias ahss="ah s 10"
+alias aht="ah t --"
+alias ahc="ah gt --all"
 
 # Turn on/off shell divider
 function sd() {

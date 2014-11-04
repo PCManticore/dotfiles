@@ -350,6 +350,7 @@
 (ido-mode 1)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
+(setq ido-enable-prefix t)
 
 (setq ido-decorations                                                      ; Make ido-mode display vertically
       (quote

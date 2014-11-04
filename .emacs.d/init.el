@@ -1388,6 +1388,29 @@ current line instead."
   '(progn
      (define-key python-mode-map (kbd "C-h f") 'elpy-doc)))
 
+;; javascript
+
+(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+(setq js2-highlight-level 3)
+
+(add-hook 'js-mode-hook
+          (lambda () (flycheck-mode t)))
+
+(add-hook 'js2-mode-hook 'skewer-mode)
+(add-hook 'css-mode-hook 'skewer-css-mode)
+(add-hook 'html-mode-hook 'skewer-html-mode)
+
+(autoload 'moz-minor-mode "moz"
+  "Mozilla Minor and Inferior Mozilla Modes" t)
+
+(add-hook 'js2-mode-hook 'javascript-custom-setup)
+(defun javascript-custom-setup ()
+  (moz-minor-mode 1))
+
 ;; rainbow-delimiters
 
 (require 'rainbow-delimiters)

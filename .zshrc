@@ -538,6 +538,15 @@ unfmt() {
     }
   '
 }
+
+# execute command with ah
+function execute_with_ah {
+    BUFFER="ah t -- $BUFFER"
+    zle accept-line
+}
+
+zle -N execute_with_ah_widget execute_with_ah
+bindkey '^[-' execute_with_ah_widget
 # }}}
 
 # {{{ Terminal and prompt

@@ -26,6 +26,7 @@ export PROJECTS_DIR="/str/development/projects"
 export OO_PROJECT_DIR="${PROJECTS_DIR}/open-source/"
 export GOPATH="${HOME}/go"
 export DISTCC_HOSTS="gnt.home"
+export REPORTTIME=5
 
 # By default, zsh considers many characters part of a word (e.g., _ and -).
 # Narrow that down to allow easier skipping through words via M-f and M-b.

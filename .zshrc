@@ -289,6 +289,7 @@ alias df.="df -h | grep 'sda8\|sda7'"
 alias ahss="ah s 10"
 alias aht="ah t --"
 alias ahc="ah gt --all"
+alias chubuntu='mount /dev/sda6 /mnt/ubuntu; chroot /mnt/ubuntu'
 
 # Turn on/off shell divider
 function sd() {

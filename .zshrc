@@ -294,6 +294,10 @@ alias chubuntu="mount /dev/sda6 /mnt/ubuntu; chroot /mnt/ubuntu"
 alias kconfig="modprobe configs && zcat /proc/config.gz > kconfig"
 # The bogomips line tells something about its performance
 alias cpu-perfomance="cat /proc/cpuinfo | grep bogo"
+# To see how enthusiastic the kernel is to use the swap. 60 is the default 100 means
+# the kernel really likes to use the swap and 0 means the kernel avoids to use the
+# swap.
+alias swappiness="cat /proc/sys/vm/swappiness"
 
 # Turn on/off shell divider
 function sd() {

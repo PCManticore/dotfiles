@@ -292,6 +292,8 @@ alias ahc="ah gt --all"
 alias chubuntu="mount /dev/sda6 /mnt/ubuntu; chroot /mnt/ubuntu"
 # retrieve kernel config
 alias kconfig="modprobe configs && zcat /proc/config.gz > kconfig"
+# The bogomips line tells something about its performance
+alias cpu-perfomance="cat /proc/cpuinfo | grep bogo"
 
 # Turn on/off shell divider
 function sd() {

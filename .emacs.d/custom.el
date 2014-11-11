@@ -74,21 +74,3 @@
  '(org-done ((t (:foreground "PaleGreen" :weight normal :strike-through t))))
  '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
  '(org-level-1 ((t (:inherit outline-1 :foreground "#DFAF8F" :foundry "24" :family "Consolas")))))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(gnus-summary-low-read ((t (:inherit zenburn-green :foreground "#7F9F7F" :weight ultra-light))) t)
- '(hl-line-face ((t (:background "dim gray"))) t)
- '(markdown-header-delimiter-face ((t (:inherit font-lock-function-name-face :underline t :weight bold))))
- '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.5))))
- '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.3))))
- '(markdown-header-face-3 ((t (:inherit markdown-header-face :underline t :height 1.2))))
- '(markdown-header-face-4 ((t (:inherit markdown-header-face :underline t :height 1.1))))
- '(markdown-header-face-5 ((t (:inherit markdown-header-face :underline t))))
- '(markdown-header-face-6 ((t (:inherit markdown-header-face :underline t))))
- '(org-done ((t (:foreground "PaleGreen" :weight normal :strike-through t))))
- '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
- '(org-level-1 ((t (:inherit outline-1 :foreground "#DFAF8F" :foundry "24" :family "Consolas")))))

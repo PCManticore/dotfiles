@@ -4,6 +4,7 @@
 (source "elpy" "http://jorgenschaefer.github.io/packages/")
 
 (depends-on "abl-mode")
+(depends-on "ac-js2")
 (depends-on "ace-jump-mode")
 (depends-on "ack-and-a-half")
 (depends-on "ack-menu")
@@ -111,6 +112,7 @@
 ;; (depends-on "jdee")
 (depends-on "jedi")
 (depends-on "jira")
+(depends-on "js-comint")
 (depends-on "js2-mode")
 (depends-on "json")
 (depends-on "jumpc")

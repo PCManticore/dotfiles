@@ -1,0 +1,114 @@
+$include /etc/inputrc
+
+set show-all-if-ambiguous on
+set visible-stats on
+
+# for vi mode
+# set editing-mode vi
+$if mode=vi
+
+    set keymap vi-command
+    # these are for vi-command mode
+    "\e[A": history-search-backward            # arrow up
+    "\e[B": history-search-forward             # arrow down
+    "\ep": yank-last-arg                       # bind to Alt-p
+    Control-l: clear-screen
+
+    set keymap vi-insert
+    # these are for vi-insert mode
+    "\e[A": history-search-backward
+    "\e[B": history-search-forward
+    "\ep": yank-last-arg
+    Control-l: clear-screen
+$endif
+
+set editing-mode emacs
+
+$if mode=emacs
+
+    Meta-Control-h: backward-kill-word  Text after the function name is ignored
+
+
+    # Arrow keys in keypad mode
+    #
+    "\M-OD":        backward-char
+    "\M-OC":        forward-char
+    "\M-OA":        previous-history
+    "\M-OB":        next-history
+    ##
+    ## Arrow keys in ANSI mode
+    ## 
+    \M-[D":        backward-char
+    \M-[C":        forward-char
+    \M-[A":        previous-history
+    \M-[B":        next-history
+    ##
+    ## Arrow keys in 8 bit keypad mode
+    ##
+    "\M-\C-OD":       backward-char
+    "\M-\C-OC":       forward-char
+    "\M-\C-OA":       previous-history
+    "\M-\C-OB":       next-history
+    ##
+    ## Arrow keys in 8 bit ANSI mode
+    ##
+    \M-\C-[D":       backward-char
+    \M-\C-[C":       forward-char
+    \M-\C-[A":       previous-history
+    \M-\C-[B":       next-history
+
+    C-q: quoted-insert
+    C-l: forward-char
+
+    "þ": previous-history
+    "ð": next-history
+
+    "\e[1~": beginning-of-line
+    "\e[4~": end-of-line
+    "\e[7~": beginning-of-line
+    "\e[8~": end-of-line
+    "\eOH": beginning-of-line
+    "\eOF": end-of-line
+    "\e[H": beginning-of-line
+    "\e[F": end-of-line
+
+$endif
+
+# Return gentoo style PgUp/PgDown behaviour
+"\e[5~": history-search-backward
+"\e[6~": history-search-forward
+
+"\ex": menu-complete
+"\ez": "ls -la\ex"
+C-q: quoted-insert
+
+# Bind grep substring in all files to F3 (execute immediately)
+"\eOR": "\C-agrep --color=always -nr \"\C-e\" .\n"
+
+# Shit-F3: same as above but allow to edit command line
+"\eO1;2R": "\C-agrep --color=always -nr \"\C-e\" ."
+
+# Bind grep substring in C/C++ files to F4 (execute immediately)
+"\eOS": "\C-agrep --color=always -nr --include=*.{php,html,py,phtml} \"\C-e\" .\n"
+
+# Shitf-F4: same as above but allow to edit command line
+"\eO1;2S": "\C-agrep --color=always -nr --include=*.{php,html,py,phtml} \"\C-e\" ."
+
+# Bind ps ax to F7
+"\e[18~": "\C-aps ax | grep -v grep | grep "\C-e\"\n"
+
+"\C-@": "cd ..\n"
+
+"\C-x\C-r": re-read-init-file
+
+"\C-x\C-i": "back\b"
+
+"\C-x\C-s": "echo $?\n"
+
+set input-meta on
+set output-meta on
+set convert-meta off
+set enable-meta-key on
+
+# "\M-4": "blabla"
+# "d": "testmessage"

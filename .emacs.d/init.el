@@ -477,6 +477,8 @@
         ("uk" . "ru")
         ("ru" . "uk")))
 
+(setq google-translate-pop-up-buffer-set-focus t)
+
 ;; google-this mode
 
 (require 'google-this)

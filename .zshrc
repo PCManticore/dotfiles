@@ -3,7 +3,11 @@
 # atykhonov's init file for Z-SHELL 4.3.10 on Gentoo Linux.
 
 # {{{ Make possible to use colors a little bit easier
-source /home/demi/bin/zsh-colors.sh
+. /home/demi/bin/zsh-colors.sh
+# }}}
+
+# {{{ Source resty
+. resty
 # }}}
 
 # {{{ Environment

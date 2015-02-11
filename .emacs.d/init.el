@@ -11,7 +11,20 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-(load-file "/str/development/projects/open-source/elisp/ef.el/ef.el")
+(defun str-exists ()
+  (let ((path "/str/development/projects/open-source/"))
+    (if (file-exists-p path) t nil)))
+
+(setq open-source-path "/str/development/projects/open-source/.ghq/")
+(setq open-source-elisp "/str/development/projects/open-source/elisp/")
+
+(defun oo-elisp-path (path)
+  (concat open-source-elisp path))
+
+(defun oo-ghq-path (path)
+  (concat open-source-path path))
+
+(load-file (oo-elisp-path "ef.el/ef.el"))
 
 (defmacro defhook (body)
   `(lambda ()
@@ -34,7 +47,7 @@
 (package-initialize)
 
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/bisect.el/")
+(add-to-list 'load-path (oo-elisp-path "bisect.el/"))
 (require 'bisect)
 (bisect-load)
 
@@ -114,7 +127,7 @@
 
 ;; Development tool which may help to bump versions
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/emacs-bump-version/")
+(add-to-list 'load-path (oo-elisp-path "emacs-bump-version/"))
 (require 'bump-version)
 
 (global-set-key (kbd "C-c C-b p") 'bump-version-patch)
@@ -125,7 +138,7 @@
 
 (semantic-mode 1)
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/cedet/contrib")
+(add-to-list 'load-path (oo-elisp-path "cedet/contrib"))
 
 (require 'eassist)
 
@@ -134,9 +147,6 @@
 
 ;; Color Identifiers Mode
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/color-identifiers-mode/")
-
-(require 'color-identifiers-mode)
 (add-hook 'emacs-lisp-mode-hook 'color-identifiers-mode)
 
 (setq global-color-identifiers-mode t)
@@ -491,7 +501,7 @@
 
 ;; google-translate
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/google-translate/")
+(add-to-list 'load-path (oo-elisp-path "google-translate/"))
 (require 'google-translate)
 (require 'google-translate-smooth-ui)
 
@@ -658,7 +668,7 @@
 
 ;; ezbl configuration
 
-(add-to-list 'load-path "/str/development/projects/open-source/ezbl/")
+(add-to-list 'load-path (oo-elisp-path "ezbl/"))
 (require 'ezbl)
 
 ;; fancy narrow
@@ -690,7 +700,7 @@
 
 ;; feature-mode
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/cucumber.el/")
+(add-to-list 'load-path (oo-elisp-path "cucumber.el/"))
 
 (require 'feature-mode)
 (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
@@ -915,7 +925,7 @@ Return an alist with elements like (data . number_results)."
 
 ;; howdoi configuration
 
-(load-file "/str/development/projects/open-source/elisp/emacs-howdoi/howdoi.el")
+(load-file (oo-elisp-path "emacs-howdoi/howdoi.el"))
 
 (global-set-key (kbd "C-c o q") 'howdoi-query)
 
@@ -994,7 +1004,7 @@ Return an alist with elements like (data . number_results)."
 
 ;; iregister configuration
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/iregisters.el/")
+(add-to-list 'load-path (oo-elisp-path "iregisters.el/"))
 (require 'iregister)
 
 (global-set-key (kbd "H-v") 'iregister-jump-to-next-marker)
@@ -1062,7 +1072,7 @@ current line instead."
 
 ;; lunar-mode
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/lunar-mode-line/")
+(add-to-list 'load-path (oo-elisp-path "lunar-mode-line/"))
 (require 'lunar-mode-line)
 (display-lunar-phase-mode)
 
@@ -1074,11 +1084,11 @@ current line instead."
 
 ;; magit
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/git-modes/")
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/magit/")
+(add-to-list 'load-path (oo-elisp-path "git-modes/"))
+(add-to-list 'load-path (oo-elisp-path "magit/"))
 (eval-after-load 'info
   '(progn (info-initialize)
-          (add-to-list 'Info-directory-list "/str/development/projects/open-source/elisp/magit/")))
+          (add-to-list 'Info-directory-list (oo-elisp-path "magit/"))))
 (require 'magit)
 
 (add-hook 'magit-log-edit-mode-hook 'flyspell-mode)
@@ -1627,7 +1637,7 @@ current line instead."
 
 ;; smart-return
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/emacs-smart-return/")
+(add-to-list 'load-path (oo-elisp-path "emacs-smart-return/"))
 
 (require 'smart-return)
 (global-set-key (kbd "H-<return>") 'smart-return)
@@ -1749,18 +1759,18 @@ frames with exactly two windows."
 
 ;; workgroups configuration
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/workgroups.el/")
+(add-to-list 'load-path (oo-elisp-path "workgroups.el/"))
 (require 'workgroups)
 (setq wg-prefix-key (kbd "C-c z"))
 
 ;; ecco configuration
 
-(add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/capitaomorte/ecco/")
+(add-to-list 'load-path (oo-ghq-path "github.com/capitaomorte/ecco/"))
 (require 'ecco)
 
 ;; org-projectile
 
-(add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/IvanMalison/org-projectile")
+(add-to-list 'load-path (oo-ghq-path "github.com/IvanMalison/org-projectile"))
 (require 'org-projectile)
 
 ;; xml tools
@@ -2149,7 +2159,7 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 (setq c-default-style "linux" c-basic-offset 4)
 (add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
 
-(add-to-list 'load-path "/str/development/projects/open-source/elisp/ljupdate/")
+(add-to-list 'load-path (oo-elisp-path "ljupdate/"))
 (require 'ljupdate)
 
 (load-file "~/.emacs.d/ezbl.el")
@@ -2170,7 +2180,7 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 (setq tab-width 4)
 (setq-default indent-tabs-mode nil)
 
-(load-file "/str/development/projects/open-source/elisp/emacs-request/request.el")
+(load-file (oo-elisp-path "emacs-request/request.el"))
 
 (defun goto-project-root ()
   (interactive)
@@ -2221,7 +2231,7 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
     (when (not (display-graphic-p))
       (setenv "GPG_AGENT_INFO" agent))))
 
-(load-file "/str/development/projects/open-source/elisp/ukrainian-programmer-dvorak/ukrainian-programmer-dvorak.el")
+(load-file (oo-elisp-path "ukrainian-programmer-dvorak/ukrainian-programmer-dvorak.el"))
 
 (setq default-input-method "ukrainian-programmer-dvorak")
 
@@ -2237,7 +2247,7 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (setq org-cycle-emulate-tab 'white)
 
-(load-file "/str/development/projects/open-source/elisp/popup-el/popup.el")
+(load-file (oo-elisp-path "popup-el/popup.el"))
 
 (require 'saveplace)
 (setq-default save-place t)
@@ -2342,16 +2352,16 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (global-set-key (kbd "H-SPC") 'hippie-expand)
 
-(add-to-list 'load-path "/str/development/projects/open-source/.ghq/code.google.com/p/emacs-soap-client/")
+(add-to-list 'load-path (oo-ghq-path "code.google.com/p/emacs-soap-client/"))
 (require 'soap-client)
 (setq jiralib-url "https://qbeats.atlassian.net/")
 
 (add-to-list
  'directory-abbrev-alist
- '("^/gt" . "/str/development/projects/open-source/elisp/google-translate"))
+ '("^/gt" . (oo-elisp-path "google-translate")))
 
 (define-abbrev-table 'my-tramp-abbrev-table
-  '(("gt" "/str/development/projects/open-source/elisp/google-translate")))
+  '(("gt" (oo-elisp-path "google-translate"))))
 
 (add-hook
  'minibuffer-setup-hook

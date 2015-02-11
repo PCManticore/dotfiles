@@ -28,6 +28,7 @@
 (depends-on "cl-lib")
 (depends-on "clipmon")
 (depends-on "color")
+(depends-on "color-identifiers-mode")
 (depends-on "color-theme-solarized")
 (depends-on "command-log-mode")
 (depends-on "company")
@@ -208,6 +209,7 @@
 (depends-on "splitter")
 (depends-on "sticky")
 (depends-on "stripe-buffer")
+(depends-on "sx")
 
 (depends-on "tern")
 (depends-on "tree-mode")
@@ -233,3 +235,4 @@
 (depends-on "unfill")
 (depends-on "undo-tree")
 
+(depends-on "zop-to-char")

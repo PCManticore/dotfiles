@@ -5,8 +5,6 @@
 
 ;; end of source
 
-(add-to-list 'load-path "~/.emacs.d")
-
 (load "server")
 (unless (server-running-p) (server-start))
 
@@ -90,6 +88,22 @@
 ;; (require 'demi-appearance)
 
 (display-battery-mode)
+
+;; Sources:
+;;; http://www.reddit.com/r/emacs/comments/2tqdi7/mode_line_battery_indicator_with_unicode_character/
+;;; https://gist.github.com/jordonbiondo/220c41bc33567cb0a0be
+
+;; (defun battery-indicator-string ()
+;;   (let* ((bat (funcall battery-status-function))
+;;          (index (cl-position-if (lambda (e) (> bat e)) '(87 75 62 50 37 25 12 7 -1)))
+;;          (symbol (nth index '("█" "▇" "▆" "▅" "▄" "▃" "▂" "▁" "!")))
+;;          (color (nth index (mapcar (lambda (c) (apply 'color-rgb-to-hex c)) (color-gradient '(.3 1 .2) '(1 .2 .1) 9)))))
+;;     (propertize symbol 'face (list :foreground color :box (if (<= bat 7) color nil)))))
+
+;; (mapcar (lambda (c) (apply 'color-rgb-to-hex c)) (color-gradient '(.4 .9 .2) '(1 .2 .1) 9))
+;; ("#75d330" "#84c12d" "#93af2b" "#a39e28" "#b28c26" "#c17a23" "#d16821" "#e0561e" "#ef441c")
+
+;; (add-to-list 'mode-line-format '(:eval battery-indicator-string))
 
 ;; (require 'demi-battery-mode)
 
@@ -225,10 +239,6 @@
 ;; evaluates.  Eldoc provides minibuffer hints when working with
 ;; Emacs Lisp.
 
-;; detachable cursor - experimental package
-
-(require 'demi-detachable-cursors)
-
 ;; Some key bindings for the text editing
 
 (global-set-key (kbd "H-k") 'kill-line)
@@ -344,6 +354,29 @@
 (require 'expand-region)
 (global-set-key (kbd "H-r") 'er/expand-region)
 (global-set-key (kbd "<XF86Launch8>") 'er/expand-region)
+
+;; yas configuration
+
+(yas-global-mode)
+
+(defun gnt/yas-minor-mode-hook ()
+  "Personal customizations."
+  (define-key yas-minor-mode-map (kbd "<tab>") 'yas-expand)
+  (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
+  ;; (define-key yas-minor-mode-map (kbd "H-[") 'yas-expand)
+  )
+
+(add-hook 'yas-minor-mode-hook 'gnt/yas-minor-mode-hook)
+
+;; whitespace configuration
+
+(require 'whitespace)
+(setq whitespace-style '(trailing lines tab-mark))
+(setq whitespace-line-column 80)
+(global-whitespace-mode 1)
+
+;; (gcr/diminish 'global-whitespace-mode)
+;; (gcr/diminish 'whitespace-mode)
 
 ;; ido configuration
 
@@ -478,11 +511,19 @@
         ("ru" . "uk")))
 
 (setq google-translate-pop-up-buffer-set-focus t)
+(setq google-translate-inline-editing t)
 
 ;; google-this mode
 
 (require 'google-this)
 (google-this-mode 1)
+
+;; deft mode
+;; (require 'deft)
+;; (setq deft-extension "org")
+;; (setq deft-directory "~/git/org")
+;; (setq deft-text-mode 'org-mode)
+;; (setq deft-use-filename-as-title t)
 
 ;; configure gpg-agent
 
@@ -604,7 +645,13 @@
 
 (defun demi/lisp-mode-hook ()
   (interactive)
-  (lispy-mode 1))
+  (abbrev-mode)
+  (speed-of-thought-mode)
+  ;; (global-set-key (kbd "C-k") 'dtc-detach-ck-cursor)
+  ;; (global-set-key (kbd "M-d") 'dtc-detach-metad-cursor)
+  ;; (define-key paredit-mode-map (kbd "C-k") 'dtc-detach-ck-cursor)
+  ;; (define-key paredit-mode-map (kbd "M-d") 'dtc-detach-metad-cursor)
+  )
 
 (add-hook 'lisp-mode-hook 'demi/lisp-mode-hook)
 (add-hook 'emacs-lisp-mode-hook 'demi/lisp-mode-hook)
@@ -1101,6 +1148,7 @@ current line instead."
 
 (global-set-key (kbd "H-b") 'previous-buffer)
 (global-set-key (kbd "H-l") 'next-buffer)
+(global-set-key (kbd "H-l") 'next-buffer)
 
 (global-set-key (kbd "H-O") 'switch-to-other-buffer)
 
@@ -1334,6 +1382,8 @@ current line instead."
 
 ;; org-mode configuration
 
+(load-file "~/.emacs.d/demi-org.el")
+
 (require 'demi-org)
 
 ;; org-babel configuration
@@ -1380,6 +1430,8 @@ current line instead."
 
 ;; prodigy
 
+(load-file "~/.emacs.d/demi-prodigy.el")
+
 (require 'demi-prodigy)
 
 ;; python
@@ -1421,6 +1473,8 @@ current line instead."
 
 ;; readability
 
+(load-file "~/.emacs.d/demi-readability.el")
+
 (require 'demi-readability)
 
 ;; rename-file-and-buffer
@@ -1458,11 +1512,106 @@ current line instead."
 
 ;; sauron
 
+(load-file "~/.emacs.d/demi-sauron.el")
+
 (require 'demi-sauron)
 
 ;; smartparens
 
 (smartparens-global-mode)
+
+;; Source: https://github.com/Fuco1/smartparens/wiki/Example-configuration
+
+;;;;;;;;;
+;;; global
+(require 'smartparens-config)
+(smartparens-global-mode t)
+
+;;; highlights matching pairs
+(show-smartparens-global-mode t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;; keybinding management
+
+(define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
+(define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
+
+(define-key sp-keymap (kbd "C-M-d") 'sp-down-sexp)
+(define-key sp-keymap (kbd "C-M-a") 'sp-backward-down-sexp)
+(define-key sp-keymap (kbd "C-S-a") 'sp-beginning-of-sexp)
+(define-key sp-keymap (kbd "C-S-d") 'sp-end-of-sexp)
+
+(define-key sp-keymap (kbd "C-M-e") 'sp-up-sexp)
+(define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
+(define-key sp-keymap (kbd "C-M-u") 'sp-backward-up-sexp)
+(define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
+
+(define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
+(define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
+
+(define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
+(define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
+
+(define-key sp-keymap (kbd "M-<delete>") 'sp-unwrap-sexp)
+(define-key sp-keymap (kbd "M-<backspace>") 'backward-kill-word)
+
+(define-key sp-keymap (kbd "C-<right>") 'sp-forward-slurp-sexp)
+(define-key sp-keymap (kbd "C-<left>") 'sp-forward-barf-sexp)
+(define-key sp-keymap (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
+(define-key sp-keymap (kbd "C-M-<right>") 'sp-backward-barf-sexp)
+
+(define-key sp-keymap (kbd "M-D") 'sp-splice-sexp)
+(define-key sp-keymap (kbd "C-M-<delete>") 'sp-splice-sexp-killing-forward)
+(define-key sp-keymap (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
+(define-key sp-keymap (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
+
+(define-key sp-keymap (kbd "C-]") 'sp-select-next-thing-exchange)
+(define-key sp-keymap (kbd "C-<left_bracket>") 'sp-select-previous-thing)
+(define-key sp-keymap (kbd "C-M-]") 'sp-select-next-thing)
+
+(define-key sp-keymap (kbd "M-F") 'sp-forward-symbol)
+(define-key sp-keymap (kbd "M-B") 'sp-backward-symbol)
+
+(define-key sp-keymap (kbd "C-M-r") 'sp-raise-sexp)
+
+(define-key sp-keymap (kbd "H-t") 'sp-prefix-tag-object)
+(define-key sp-keymap (kbd "H-p") 'sp-prefix-pair-object)
+(define-key sp-keymap (kbd "H-s c") 'sp-convolute-sexp)
+(define-key sp-keymap (kbd "H-s a") 'sp-absorb-sexp)
+(define-key sp-keymap (kbd "H-s e") 'sp-emit-sexp)
+(define-key sp-keymap (kbd "H-s p") 'sp-add-to-previous-sexp)
+(define-key sp-keymap (kbd "H-s n") 'sp-add-to-next-sexp)
+(define-key sp-keymap (kbd "H-s j") 'sp-join-sexp)
+(define-key sp-keymap (kbd "H-s s") 'sp-split-sexp)
+
+;;;;;;;;;;;;;;;;;;
+;;; pair management
+
+(sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+
+;;; markdown-mode
+(sp-with-modes '(markdown-mode gfm-mode rst-mode)
+  (sp-local-pair "*" "*" :bind "C-*")
+  (sp-local-tag "2" "**" "**")
+  (sp-local-tag "s" "```scheme" "```")
+  (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
+
+;;; tex-mode latex-mode
+(sp-with-modes '(tex-mode plain-tex-mode latex-mode)
+  (sp-local-tag "i" "\"<" "\">"))
+
+;;; html-mode
+(sp-with-modes '(html-mode sgml-mode)
+  (sp-local-pair "<" ">"))
+
+;;; lisp modes
+(sp-with-modes sp--lisp-modes
+  (sp-local-pair "(" nil :bind "C-("))
+
+;; sotlisp (Write lisp at the speed of thought)
+
+(load-file "~/.emacs.d/sotlisp.el")
+(require 'sotlisp)
 
 ;; smart-mode-line
 
@@ -1496,6 +1645,12 @@ current line instead."
 
 (add-to-list 'custom-theme-load-path "~/emacs/packages/themes/")
 (load-theme 'hc-zenburn t)
+;; (setq solarized-distinct-fringe-background +1)
+;; (setq solarized-high-contrast-mode-line +1)
+;; (setq solarized-use-less-bold +1)
+;; (setq solarized-use-more-italic nil)
+;; (setq solarized-emphasize-indicators nil)
+;; (load-theme 'solarized-dark)
 
 ;; Toggles between russian and ukrainian input methods
 
@@ -1512,6 +1667,8 @@ current line instead."
 (global-set-key "\C-x\\" 'toggle-alternative-input-method)
 
 ;; Find file as root via the tramp
+
+(load-file "~/.emacs.d/demi-tramp-find-file-root.el")
 
 (require 'demi-tramp-find-file-root)
 
@@ -1531,6 +1688,8 @@ current line instead."
 (require 'visible-mark)
 
 ;; w3m
+
+(load-file "~/.emacs.d/demi-w3m.el")
 
 (require 'demi-w3m)
 
@@ -1594,6 +1753,16 @@ frames with exactly two windows."
 (require 'workgroups)
 (setq wg-prefix-key (kbd "C-c z"))
 
+;; ecco configuration
+
+(add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/capitaomorte/ecco/")
+(require 'ecco)
+
+;; org-projectile
+
+(add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/IvanMalison/org-projectile")
+(require 'org-projectile)
+
 ;; xml tools
 
 (defun bf-pretty-print-xml-region (begin end)
@@ -1637,6 +1806,123 @@ by using nxml's indentation rules."
     (normal-mode))
   (message "All indented!"))
 
+;; Utils configuration
+;;
+;; Source URL: https://github.com/grettke/home/blob/master/.emacs.el
+
+(defun gnt/util-ielm ()
+  "Personal buffer setup for ielm.
+Creates enough space for one other permanent buffer beneath it."
+  (interactive)
+  (split-window-below -20)
+  (ielm)
+  (set-window-dedicated-p (selected-window) t))
+
+(defun gnt/util-eshell ()
+  "Personal buffer setup for eshell.
+Depends upon `gcr/util-ielm' being run first."
+  (interactive)
+  (split-window-below -10)
+  (other-window 1)
+  (eshell)
+  (set-window-dedicated-p (selected-window) t))
+
+(defun gcr/util-eshell ()
+  "Personal buffer setup for eshell.
+Depends upon `gcr/util-ielm' being run first."
+  (interactive)
+  (split-window-below -10)
+  (other-window 1)
+  (eshell)
+  (set-window-dedicated-p (selected-window) t))
+
+(defvar gcr/util-state nil "Track whether the util buffers are displayed or not.")
+
+(defun gcr/util-state-toggle ()
+  "Toggle the util state."
+  (interactive)
+  (setq gcr/util-state (not gcr/util-state)))
+
+(defun gcr/util-start ()
+  "Perhaps utility buffers."
+  (interactive)
+  (gcr/util-ielm)
+  (gcr/util-eshell)
+  (gcr/util-state-toggle))
+
+(defun gcr/util-stop ()
+  "Remove personal utility buffers."
+  (interactive)
+  (if (get-buffer "*ielm*") (kill-buffer "*ielm*"))
+  (if (get-buffer "*eshell*") (kill-buffer "*eshell*"))
+
+  (gnt/util-state-toggle))
+
+(defun gcr/util-cycle ()
+  "Display or hide the utility buffers."
+  (interactive)
+  (if gcr/util-state
+      (gcr/util-stop)
+    (gcr/util-start)))
+
+(defun gnt/ielm-auto-complete ()
+  "Enables `auto-complete' support in \\[ielm].
+Attribution: URL `http://www.masteringemacs.org/articles/2010/11/29/evaluating-elisp-emacs/'"
+  (setq ac-sources '(ac-source-functions
+                     ac-source-variables
+                     ac-source-features
+                     ac-source-symbols
+                     ac-source-words-in-same-mode-buffers))
+  (add-to-list 'ac-modes 'inferior-emacs-lisp-mode)
+  (auto-complete-mode 1))
+
+(defun gnt/chs ()
+  "Insert opening \"cut here start\" snippet."
+  (interactive)
+  (insert "--8<---------------cut here---------------start------------->8---"))
+
+(defun gnt/che ()
+  "Insert closing \"cut here end\" snippet."
+  (interactive)
+  (insert "--8<---------------cut here---------------end--------------->8---"))
+
+(defun gnt/insert-ellipsis ()
+  "Insert an ellipsis into the current buffer."
+  (interactive)
+  (insert "…"))
+
+;; key-chord configuration
+
+(key-chord-define-global "3." 'gnt/insert-ellipsis)
+(key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
+(key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
+
+(key-chord-mode 1)
+
+;; dired configuration
+
+(defun gnt/dired-copy-path ()
+  "Push the path of the directory under the point to the kill ring.
+
+Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
+  (interactive)
+  (message "Added %s to kill ring" (kill-new default-directory)))
+
+(defun gnt/dired-copy-filename ()
+  "Push the path and filename of the file under the point to the kill ring.
+Attribution: URL `https://lists.gnu.org/archive/html/help-gnu-emacs/2002-10/msg00556.html'
+Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
+  (interactive)
+  (message "Added %s to kill ring" (kill-new (dired-get-filename))))
+
+(defun gcr/occur-mode-hook ()
+  "Personal customizations."
+  (interactive)
+  (turn-on-stripe-buffer-mode)
+  (stripe-listify-buffer))
+
+(add-hook 'occur-mode-hook 'gcr/occur-mode-hook)
+
 ;; hippie expand
 
 (global-set-key (kbd "M-/") 'hippie-expand)
@@ -1648,11 +1934,208 @@ by using nxml's indentation rules."
         try-expand-dabbrev-all-buffers
         try-expand-dabbrev-from-kill))
 
+;; Hydra configuration
+
+(global-set-key
+ (kbd "M-d")
+ (defhydra kill-word ()
+   "kill-word"
+   ("d" kill-word "kill word")
+   ("w" kill-word "kill word")
+   ("s" kill-sexp "kill sexp")
+   ("a" kill-paragraph "kill paragraph")
+   ("e" kill-sentence "kill sentence")
+   ("g" nil "cancel")
+   ("M-d" nil "cancel")))
+
+(setq hydra-backward
+      (defhydra backward ()
+        "backward"
+        ("p" previous-line "previous line")
+        ("b" backward-word "backward word")
+        ("s" backward-sexp "backward sexp")
+        ("y" (lambda ()
+               (interactive)
+               (forward-symbol -1)) "backward symbol")
+        ("u" backward-up-list "backward up list")
+        ("l" backward-list "backward list")
+        ("e" backward-sentence "backward sentence")
+        ("g" nil "cancel")
+        ("M-b" nil "cancel")))
+
+(global-set-key
+ (kbd "M-b")
+ hydra-backward)
+
+(global-set-key
+ (kbd "C-p")
+ hydra-backward)
+
+(setq hydra-forward
+      (defhydra forward ()
+        "forward"
+        ("n" next-line "next line")
+        ("f" forward-word "forward word")
+        ("s" forward-sexp "forward sexp")
+        ("y" (lambda ()
+               (interactive)
+               (forward-symbol 1)) "forward symbol")
+        ("u" up-list "up list")
+        ("i" down-list "down list")
+        ("l" forward-list "forward list")
+        ("e" forward-sentence "forward sentence")
+        ("g" nil "cancel")
+        ("M-f" nil "cancel")
+        ("C-n" nil "cancel")))
+
+(global-set-key
+ (kbd "M-f")
+ hydra-forward)
+
+(global-set-key
+ (kbd "C-n")
+ hydra-forward)
+
+(defun hydra-kill-thing-at-point (thing)
+  (let ((bounds (bounds-of-thing-at-point thing)))
+    (iregister-copy-to-register (car bounds) (cdr bounds) '(4))))
+
+(setq hydra-kill
+      (defhydra kill ()
+        "kill"
+        ("k" kill-line "kill line")
+        ("o" kill-whole-line "kill whole line")
+        ("r" (lambda ()
+               (interactive)
+               (move-beginning-of-line nil)
+               (kill-line)
+               (indent-for-tab-command)) "replace line")
+        ("c" kill-rectangle "kill rectangle")
+        ("s" (lambda ()
+               (interactive)
+               (hydra-kill-thing-at-point 'sexp)) "kill sexp at point")
+        ("y" (lambda ()
+               (interactive)
+               (hydra-kill-thing-at-point 'symbol)) "kill symbol at point")
+        ("w" (lambda ()
+               (interactive)
+               (hydra-kill-thing-at-point 'word)) "kill word at point")
+        ("h" (lambda ()
+               (interactive)
+               (delete-horizontal-space)) "delete horizontal space")
+        ("t" (lambda ()
+               (interactive)
+               (just-one-space)) "delete horizontal space")
+        ("g" nil "cancel")
+        ("C-k" nil "cancel")))
+
+(global-set-key
+ (kbd "C-k")
+ hydra-kill)
+
+(setq hydra-beginning
+      (defhydra beginning ()
+        "beginning"
+        ("a" beginning-of-line "beginning of line")
+        ("b" beginning-of-buffer "beginning of buffer")
+        ("s" (lambda ()
+               (interactive)
+               (beginning-of-sexp)) "beginning of sexp")
+        ("d" beginning-of-defun of "beginning of defun")
+        ("l" beginning-of-line-text)
+        ("g" nil "cancel")
+        ("C-a" nil "cancel")))
+
+(global-set-key
+ (kbd "C-e")
+ hydra-beginning)
+
+(setq hydra-end
+      (defhydra end ()
+        "end"
+        ("e" end-of-line "end of line")
+        ("b" end-of-buffer "end of buffer")
+        ("s" (lambda ()
+               (interactive)
+               (end-of-sexp)) "end of sexp")
+        ("d" end-of-defun of "end of defun")
+        ("g" nil "cancel")
+        ("C-e" nil "cancel")))
+
+(global-set-key
+ (kbd "C-e")
+ hydra-end)
+
+(defun hydra-copy-thing-at-point (thing)
+  (let ((bounds (bounds-of-thing-at-point thing)))
+    (iregister-copy-to-register (car bounds) (cdr bounds))))
+
+(setq hydra-copy
+      (defhydra copy (:color blue)
+        "copy"
+        ("k" (lambda ()
+               (interactive)
+               (hydra-copy-thing-at-point 'line)) "copy line")
+        ("r" (lambda ()
+               (interactive)
+               (move-beginning-of-line nil)
+               (iregister-copy-to-register (point) (line-end-position))
+               (kill-line)
+               (indent-for-tab-command)) "copy and replace line")
+        ("d" (lambda ()
+               (interactive)
+               (hydra-copy-thing-at-point 'defun)) "copy defun at point")
+        ("s" (lambda ()
+               (interactive)
+               (hydra-copy-thing-at-point 'sexp)) "copy sexp at point")
+        ("y" (lambda ()
+               (interactive)
+               (hydra-copy-thing-at-point 'symbol)) "copy symbol at point")
+        ("w" (lambda ()
+               (interactive)
+               (hydra-copy-thing-at-point 'word)) "copy word at point")
+        ("g" nil "cancel")
+        ("C-w" nil "cancel")))
+
+(global-set-key
+ (kbd "C-w")
+ hydra-copy)
 ;; diff-hl
 
 (require 'diff-hl)
 (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
 (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
+
+;; column number mode
+
+(column-number-mode 1)
+
+;; detachable cursor - experimental package
+
+;; (add-to-list 'load-path "/str/development/projects/open-source/elisp/dtc.el/")
+
+;; (require 'dtc)
+;; ;; (require 'dtc-experimental)
+;; (require 'dtc-metad)
+;; (require 'dtc-ck)
+;; (require 'dtc-ca)
+;; (require 'dtc-ce)
+;; (require 'dtc-cd)
+;; (require 'dtc-cs)
+
+;; ;; (require 'dtc-nav)
+;; (require 'dtc-mb)
+;; (require 'dtc-mf)
+
+;; (add-to-list 'load-path "/str/development/projects/open-source/elisp/cursor-mode.el/")
+
+;; (require 'cursor-mode)
+;; (require 'cursor-mode-ck)
+;; (require 'cursor-mode-md)
+;; (require 'cursor-mode-ca)
+;; (require 'cursor-mode-ce)
+;; (require 'cursor-mode-mb)
+;; (require 'cursor-mode-mf)
 
 
 

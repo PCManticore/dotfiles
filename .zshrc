@@ -12,7 +12,7 @@
 
 # {{{ Environment
 export HOMEBIN="${HOME}/bin"
-export PATH="/usr/lib/distcc/bin:${PATH}:${HOMEBIN}:/usr/local/bin:${HOME}/.cask/bin:${HOME}/go/bin"
+export PATH="${HOMEBIN}:/usr/lib/distcc/bin:${PATH}:/usr/local/bin:${HOME}/.cask/bin:${HOME}/go/bin"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -231,8 +231,9 @@ zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a
 autoload zkbd
 
 function zkbd_file() {
-    [[ -f ~/.zkbd/${TERM}-${VENDOR}-${OSTYPE} ]] && printf '%s' ~/".zkbd/${TERM}-${VENDOR}-${OSTYPE}" && return 0
-    [[ -f ~/.zkbd/${TERM}-${DISPLAY}          ]] && printf '%s' ~/".zkbd/${TERM}-${DISPLAY}"          && return 0
+    [[ -f ~/.zkbd/${TERM}-${VENDOR}-${OSTYPE}            ]] && printf '%s' ~/".zkbd/${TERM}-${VENDOR}-${OSTYPE}" && return 0
+    [[ -f ~/.zkbd/${TERM}-${DISPLAY}                     ]] && printf '%s' ~/".zkbd/${TERM}-${DISPLAY}"          && return 0
+    [[ -f ~/.zkbd/$TERM-${${DISPLAY:t}:-$VENDOR-$OSTYPE} ]] && printf '%s' ~/".zkbd/$TERM-${${DISPLAY:t}:-$VENDOR-$OSTYPE}" && return 0
     return 1
 }
 

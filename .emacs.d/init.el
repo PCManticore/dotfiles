@@ -393,7 +393,7 @@
 (ido-mode 1)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
-(setq ido-enable-prefix t)
+(setq ido-enable-prefix nil)
 
 (setq ido-decorations                                                      ; Make ido-mode display vertically
       (quote
@@ -1675,6 +1675,7 @@ current line instead."
     (activate-input-method 'ukrainian-computer))))
 
 (global-set-key "\C-x\\" 'toggle-alternative-input-method)
+(global-set-key "\C-@" 'toggle-input-method)
 
 ;; Find file as root via the tramp
 

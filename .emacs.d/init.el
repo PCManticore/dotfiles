@@ -1,5 +1,12 @@
 ;; source :: http://www.emacswiki.org/emacs/start.el
 
+(defun osx ()
+  (eq system-type 'darwin))
+
+(when (osx)
+  (set-default-font "-*-Source Code Pro-normal-normal-normal-*-22-*-*-*-m-0-iso10646-1")
+  (add-to-list 'default-frame-alist '(font . "Source Code Pro-22")))
+
 (provide 'start)
 (require 'start) ;; Ensure this file is loaded before compile it.
 
@@ -15,8 +22,13 @@
   (let ((path "/str/development/projects/open-source/"))
     (if (file-exists-p path) t nil)))
 
-(setq open-source-path "/str/development/projects/open-source/.ghq/")
-(setq open-source-elisp "/str/development/projects/open-source/elisp/")
+(if (osx)
+    (progn
+      (setq open-source-path "/Users/atykhonov/.ghq/")
+      (setq open-source-elisp "/Users/atykhonov/elisp/"))
+  (progn
+    (setq open-source-path "/str/development/projects/open-source/.ghq/")
+    (setq open-source-elisp "/str/development/projects/open-source/elisp/")))
 
 (defun oo-elisp-path (path)
   (concat open-source-elisp path))
@@ -47,9 +59,10 @@
 (package-initialize)
 
 
-(add-to-list 'load-path (oo-elisp-path "bisect.el/"))
-(require 'bisect)
-(bisect-load)
+(when (not (osx))
+  (add-to-list 'load-path (oo-elisp-path "bisect.el/"))
+  (require 'bisect)
+  (bisect-load))
 
 (let ((sensitive-file "~/.emacs.d/sensitive.el"))
   (when (file-readable-p sensitive-file)
@@ -140,7 +153,8 @@
 
 (add-to-list 'load-path (oo-elisp-path "cedet/contrib"))
 
-(require 'eassist)
+(when (not (osx))
+  (require 'eassist))
 
 (eval-after-load "eassist"
   '(global-set-key [f3] 'psw-switch-function))
@@ -182,17 +196,18 @@
 
 ;; dictem - Emacs interface to the dictem
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/dictem-1.0.4"))
-(require 'dictem)
+(when (not (osx))
+  (add-to-list 'load-path (expand-file-name "~/.emacs.d/dictem-1.0.4"))
+  (require 'dictem)
 
-(setq dictem-server "localhost")
-(dictem-initialize)
-(define-key mode-specific-map [?s] 'dictem-run-search)
-(global-set-key "\C-cs" 'dictem-run-search)
-(global-set-key "\C-cm" 'dictem-run-match)
+  (setq dictem-server "localhost")
+  (dictem-initialize)
+  (define-key mode-specific-map [?s] 'dictem-run-search)
+  (global-set-key "\C-cs" 'dictem-run-search)
+  (global-set-key "\C-cm" 'dictem-run-match)
 
-(define-key dictem-mode-map [tab] 'dictem-next-link)
-(define-key dictem-mode-map [(backtab)] 'dictem-previous-link)
+  (define-key dictem-mode-map [tab] 'dictem-next-link)
+  (define-key dictem-mode-map [(backtab)] 'dictem-previous-link))
 
 ;; For creating hyperlinks on database names and found matches.
 ;; Click on them with `mouse-2'
@@ -253,6 +268,8 @@
 
 (global-set-key (kbd "H-k") 'kill-line)
 (global-set-key (kbd "H-s") 'save-buffer)
+(when (osx)
+  (global-set-key (kbd "<f13>") 'save-buffer))
 (global-set-key (kbd "<XF86Tools>") 'save-buffer)
 
 (defun demi/end-of-line-return ()
@@ -279,6 +296,9 @@
         (concat
          "/usr/local/bin:/usr/local/sbin:"
          (getenv "PATH")))
+
+(when (osx)
+  (setenv "PYTHONPATH" "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/:"))
 
 (setenv "PAGER" "cat")
 
@@ -494,10 +514,11 @@
 
 (require 'fringe-helper)
 
-(require 'git-gutter-fringe)
-(global-git-gutter-mode +1)
-(setq-default indicate-buffer-boundaries 'left)
-(setq-default indicate-empty-lines +1)
+(when (not (osx))
+  (require 'git-gutter-fringe)
+  (global-git-gutter-mode +1)
+  (setq-default indicate-buffer-boundaries 'left)
+  (setq-default indicate-empty-lines +1))
 
 ;; google-translate
 
@@ -730,30 +751,112 @@
 (dolist (hook '(text-mode-hook org-mode-hook magit-log-edit-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
 
+(when (not (osx))
+  (dolist (hook '(change-log-mode-hook log-edit-mode-hook org-agenda-mode-hook))
+    (add-hook hook (lambda () (flyspell-mode -1))))
+
+  ;; Add spell-checking in comments for all programming language modes
+  (if (fboundp 'prog-mode)
+      (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+    (dolist (hook '(lisp-mode-hook
+                    emacs-lisp-mode-hook
+                    scheme-mode-hook
+                    clojure-mode-hook
+                    ruby-mode-hook
+                    yaml-mode
+                    python-mode-hook
+                    shell-mode-hook
+                    php-mode-hook
+                    css-mode-hook
+                    haskell-mode-hook
+                    caml-mode-hook
+                    nxml-mode-hook
+                    crontab-mode-hook
+                    perl-mode-hook
+                    tcl-mode-hook
+                    javascript-mode-hook))
+      (add-hook hook 'flyspell-prog-mode)))
+
+  (eval-after-load 'flyspell
+    '(add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
+
+
+;; flymake configuration
+
+(setq flymake-gui-warnings-enabled nil)
+
+(setq flymake-start-syntax-check-on-find-file nil)
+
+;;;; Source: https://gist.github.com/gregnewman/209934
+;;;; Syntax Check using flymake and PyFlakes EMACS 23.x GUI
+;;;; Emacs 23.x on Mac OS X has problems respecting system
+;;;; paths so we have to add it manually with setq
+
+;; (setq pyflakes "/usr/local/bin/pyflakes")
+
+;; (when (load "flymake" t)
+;;   (defun flymake-pyflakes-init ()
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-inplace))
+;;            (local-file (file-relative-name
+;;                         temp-file
+;;                         (file-name-directory buffer-file-name))))
+;;       (list pyflakes (list local-file))))
+;;   (add-to-list 'flymake-allowed-file-name-masks
+;;                '("\\.py\\'" flymake-pyflakes-init)))
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
+
+(defun set-exec-path-from-shell-PATH ()
+  "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
+
+This is particularly useful under Mac OSX, where GUI apps are not started from a shell."
+  (interactive)
+  (let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(set-exec-path-from-shell-PATH)
+
+
+;;;; Syntax Check using flymake and PyFlakes NON-EMACS 23.x
+
+;; (when (load "flymake" t)
+;;   (defun flymake-pyflakes-init ()
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-inplace))
+;;            (local-file (file-relative-name
+;;                         temp-file
+;;                         (file-name-directory buffer-file-name))))
+;;       (list "pyflakes" (list local-file))))
+;;   (add-to-list 'flymake-allowed-file-name-masks
+;;                '("\\.py\\'" flymake-pyflakes-init)))
+
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
+
 ;; (dolist (hook '(change-log-mode-hook log-edit-mode-hook org-agenda-mode-hook))
 ;;   (add-hook hook (lambda () (flyspell-mode -1))))
 
 ;; Add spell-checking in comments for all programming language modes
-(if (fboundp 'prog-mode)
-    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-  (dolist (hook '(lisp-mode-hook
-                  emacs-lisp-mode-hook
-                  scheme-mode-hook
-                  clojure-mode-hook
-                  ruby-mode-hook
-                  yaml-mode
-                  python-mode-hook
-                  shell-mode-hook
-                  php-mode-hook
-                  css-mode-hook
-                  haskell-mode-hook
-                  caml-mode-hook
-                  nxml-mode-hook
-                  crontab-mode-hook
-                  perl-mode-hook
-                  tcl-mode-hook
-                  javascript-mode-hook))
-    (add-hook hook 'flyspell-prog-mode)))
+;; (if (fboundp 'prog-mode)
+;;     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;;   (dolist (hook '(lisp-mode-hook
+;;                   emacs-lisp-mode-hook
+;;                   scheme-mode-hook
+;;                   clojure-mode-hook
+;;                   ruby-mode-hook
+;;                   yaml-mode
+;;                   python-mode-hook
+;;                   shell-mode-hook
+;;                   php-mode-hook
+;;                   css-mode-hook
+;;                   haskell-mode-hook
+;;                   caml-mode-hook
+;;                   nxml-mode-hook
+;;                   crontab-mode-hook
+;;                   perl-mode-hook
+;;                   tcl-mode-hook
+;;                   javascript-mode-hook))
+;;     (add-hook hook 'flyspell-prog-mode)))
 
 (eval-after-load 'flyspell
     '(add-to-list 'flyspell-prog-text-faces 'nxml-text-face))
@@ -1004,7 +1107,7 @@ Return an alist with elements like (data . number_results)."
 
 ;; iregister configuration
 
-(add-to-list 'load-path (oo-elisp-path "iregisters.el/"))
+(add-to-list 'load-path (oo-elisp-path "iregister.el/"))
 (require 'iregister)
 
 (global-set-key (kbd "H-v") 'iregister-jump-to-next-marker)
@@ -1072,9 +1175,10 @@ current line instead."
 
 ;; lunar-mode
 
-(add-to-list 'load-path (oo-elisp-path "lunar-mode-line/"))
-(require 'lunar-mode-line)
-(display-lunar-phase-mode)
+(when (not (osx))
+  (add-to-list 'load-path (oo-elisp-path "lunar-mode-line/"))
+  (require 'lunar-mode-line)
+  (display-lunar-phase-mode))
 
 ;; lorem-ipsum
 
@@ -1313,6 +1417,16 @@ current line instead."
 (global-set-key (kbd "<XF86Launch6>") 'beginning-of-buffer)
 (global-set-key (kbd "<XF86Launch7>") 'end-of-buffer)
 
+(when (osx)
+  (global-set-key (kbd "<home>") 'move-beginning-of-line)
+  (global-set-key (kbd "<end>") 'move-end-of-line)
+
+  (global-set-key (kbd "<f2>") 'beginning-of-buffer)
+  (global-set-key (kbd "<f16>") 'end-of-buffer)
+  (global-set-key (kbd "<s-f15>") 'beginning-of-buffer)
+  (global-set-key (kbd "<s-f16>") 'end-of-buffer)
+  (global-set-key (kbd "<H-help>") 'clipboard-yank))
+
 (global-set-key (kbd "C-H-t") 'backward-paragraph)
 (global-set-key (kbd "C-H-h") 'forward-paragraph)
 
@@ -1392,9 +1506,10 @@ current line instead."
 
 ;; org-mode configuration
 
-(load-file "~/.emacs.d/demi-org.el")
+(when (not (osx))
+  (load-file "~/.emacs.d/demi-org.el"))
 
-(require 'demi-org)
+;; (require 'demi-org)
 
 ;; org-babel configuration
 
@@ -1483,9 +1598,9 @@ current line instead."
 
 ;; readability
 
-(load-file "~/.emacs.d/demi-readability.el")
-
-(require 'demi-readability)
+(when (not (osx))
+  (load-file "~/.emacs.d/demi-readability.el")
+  (require 'demi-readability))
 
 ;; rename-file-and-buffer
 
@@ -1522,9 +1637,9 @@ current line instead."
 
 ;; sauron
 
-(load-file "~/.emacs.d/demi-sauron.el")
-
-(require 'demi-sauron)
+(when (not (osx))
+  (load-file "~/.emacs.d/demi-sauron.el")
+  (require 'demi-sauron))
 
 ;; smartparens
 
@@ -1637,10 +1752,10 @@ current line instead."
 
 ;; smart-return
 
-(add-to-list 'load-path (oo-elisp-path "emacs-smart-return/"))
-
-(require 'smart-return)
-(global-set-key (kbd "H-<return>") 'smart-return)
+(when (not (osx))
+  (add-to-list 'load-path (oo-elisp-path "emacs-smart-return/"))
+  (require 'smart-return)
+  (global-set-key (kbd "H-<return>") 'smart-return))
 
 ;; smex
 
@@ -1680,7 +1795,6 @@ current line instead."
 ;; Find file as root via the tramp
 
 (load-file "~/.emacs.d/demi-tramp-find-file-root.el")
-
 (require 'demi-tramp-find-file-root)
 
 ;; undo-tree
@@ -1700,9 +1814,9 @@ current line instead."
 
 ;; w3m
 
-(load-file "~/.emacs.d/demi-w3m.el")
-
-(require 'demi-w3m)
+(when (not (osx))
+  (load-file "~/.emacs.d/demi-w3m.el")
+  (require 'demi-w3m))
 
 ;; Swap two windows
 
@@ -1760,9 +1874,10 @@ frames with exactly two windows."
 
 ;; workgroups configuration
 
-(add-to-list 'load-path (oo-elisp-path "workgroups.el/"))
-(require 'workgroups)
-(setq wg-prefix-key (kbd "C-c z"))
+(when (not (osx))
+  (add-to-list 'load-path (oo-elisp-path "workgroups.el/"))
+  (require 'workgroups)
+  (setq wg-prefix-key (kbd "C-c z")))
 
 ;; ecco configuration
 
@@ -1771,8 +1886,9 @@ frames with exactly two windows."
 
 ;; org-projectile
 
-(add-to-list 'load-path (oo-ghq-path "github.com/IvanMalison/org-projectile"))
-(require 'org-projectile)
+(when (not (osx))
+  (add-to-list 'load-path (oo-ghq-path "github.com/IvanMalison/org-projectile"))
+  (require 'org-projectile))
 
 ;; xml tools
 
@@ -1947,6 +2063,32 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 ;; Hydra configuration
 
+(defvar hydra-last-command nil "")
+
+(defun hydra/exec-command (command)
+  (setq hydra-last-command command)
+  (eval command))
+
+(defun hydra-adjust-last-command ()
+  (interactive)
+  (let ((previous-command (nth 0 hydra-last-command)))
+    (when (not (null hydra-last-command))
+      (cond ((eq previous-command 'backward-word) (forward-word))
+            ((eq previous-command 'backward-sexp) (forward-sexp))
+            ((eq previous-command 'forward-word) (backward-word))
+            ((eq previous-command 'forward-sexp) (backward-sexp))))))
+
+(defun hydra-undo-last-command ()
+  (interactive)
+  (let ((previous-command (nth 0 hydra-last-command)))
+    (when (not (null hydra-last-command))
+      (cond ((eq previous-command 'backward-word) (progn (forward-word 2) (backward-word)))
+            ((eq previous-command 'backward-sexp) (progn (forward-sexp 2) (backward-sexp)))
+            ((eq previous-command 'forward-word) (progn (backward-word 2) (forward-word)))
+            ((eq previous-command 'forward-sexp) (progn (backward-sexp 2) (forward-sexp)))))))
+
+(setq hydra-is-helpful nil)
+
 (global-set-key
  (kbd "M-d")
  (defhydra kill-word ()
@@ -1963,14 +2105,16 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
       (defhydra backward ()
         "backward"
         ("p" previous-line "previous line")
-        ("b" backward-word "backward word")
-        ("s" backward-sexp "backward sexp")
+        ("b" (hydra/exec-command '(backward-word)) "backward word")
+        ("s" (hydra/exec-command '(backward-sexp)) "backward sexp")
         ("y" (lambda ()
                (interactive)
-               (forward-symbol -1)) "backward symbol")
+               (hydra/exec-command '(forward-sexp -1))) "backward symbol")
         ("u" backward-up-list "backward up list")
         ("l" backward-list "backward list")
         ("e" backward-sentence "backward sentence")
+        ("." hydra-undo-last-command "undo command")
+        ("," hydra-adjust-last-command "adjust last command")
         ("g" nil "cancel")
         ("M-b" nil "cancel")))
 
@@ -1986,8 +2130,8 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
       (defhydra forward ()
         "forward"
         ("n" next-line "next line")
-        ("f" forward-word "forward word")
-        ("s" forward-sexp "forward sexp")
+        ("f" (hydra/exec-command '(forward-word)) "forward word")
+        ("s" (hydra/exec-command '(forward-sexp)) "forward sexp")
         ("y" (lambda ()
                (interactive)
                (forward-symbol 1)) "forward symbol")
@@ -1995,6 +2139,10 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
         ("i" down-list "down list")
         ("l" forward-list "forward list")
         ("e" forward-sentence "forward sentence")
+        ("{" next-multiframe-window "next multiframe window")
+        ("}" other-frame "next frame")
+        ("." hydra-undo-last-command "undo command")
+        ("," hydra-adjust-last-command "adjust last command")
         ("g" nil "cancel")
         ("M-f" nil "cancel")
         ("C-n" nil "cancel")))
@@ -2058,7 +2206,7 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
         ("C-a" nil "cancel")))
 
 (global-set-key
- (kbd "C-e")
+ (kbd "C-a")
  hydra-beginning)
 
 (setq hydra-end
@@ -2155,16 +2303,18 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (defalias 'list-buffers 'ibuffer)
 
-(load-file "~/.emacs.d/annot.el")
+(when (not (osx))
+  (load-file "~/.emacs.d/annot.el"))
 
 (setq c-default-style "linux" c-basic-offset 4)
 (add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
 
-(add-to-list 'load-path (oo-elisp-path "ljupdate/"))
-(require 'ljupdate)
+;; (add-to-list 'load-path (oo-elisp-path "ljupdate/"))
+;; (require 'ljupdate)
 
-(load-file "~/.emacs.d/ezbl.el")
-(require 'ezbl)
+(when (not (osx))
+  (load-file "~/.emacs.d/ezbl.el")
+  (require 'ezbl))
 
 (autoload 'turn-on-eldoc-mode "eldoc" nil t)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
@@ -2243,8 +2393,9 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 ; lisp-interaction-mode-hook
 
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
-(require 'xdvi-search)
+(when (not (osx))
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
+  (require 'xdvi-search))
 
 (setq org-cycle-emulate-tab 'white)
 

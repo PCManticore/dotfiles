@@ -94,6 +94,7 @@
 (depends-on "grizzl")
 (depends-on "guide-key")
 
+(depends-on "hc-zenburn-theme")
 (depends-on "hungry-delete")
 (depends-on "helm")
 (depends-on "helm-dash")

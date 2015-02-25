@@ -7,7 +7,7 @@
 # }}}
 
 # {{{ Source resty
-. resty
+. ${HOME}/.zsh/resty
 # }}}
 
 # {{{ Environment

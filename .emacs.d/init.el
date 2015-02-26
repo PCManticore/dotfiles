@@ -2101,8 +2101,18 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
    ("g" nil "cancel")
    ("M-d" nil "cancel")))
 
+(defun hydra-pre-cursor-color ()
+  (set-cursor-color "red"))
+
+(defun hydra-post-cursor-color ()
+  (set-cursor-color "light blue"))
+
 (setq hydra-backward
-      (defhydra backward ()
+      (defhydra backward
+          (:pre
+           (hydra-pre-cursor-color)
+           :post
+           (hydra-post-cursor-color))
         "backward"
         ("p" previous-line "previous line")
         ("b" (hydra/exec-command '(backward-word)) "backward word")
@@ -2127,7 +2137,11 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
  hydra-backward)
 
 (setq hydra-forward
-      (defhydra forward ()
+      (defhydra forward
+          (:pre
+           (hydra-pre-cursor-color)
+           :post
+           (hydra-post-cursor-color))
         "forward"
         ("n" next-line "next line")
         ("f" (hydra/exec-command '(forward-word)) "forward word")
@@ -2185,6 +2199,26 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
         ("t" (lambda ()
                (interactive)
                (just-one-space)) "delete horizontal space")
+        ("'" (lambda ()
+               (interactive)
+               (let ((start nil)
+                     (end nil))
+                 (save-excursion
+                   (setq start (search-backward "\""))
+                   (setq start (+ start 1)))
+                 (save-excursion
+                   (setq end (search-forward "\""))
+                   (setq end (- end 1)))
+                 (kill-region start end))) "Kill string")
+        ("\"" (lambda ()
+                (interactive)
+                (let ((start nil)
+                      (end nil))
+                  (save-excursion
+                    (setq start (search-backward "\"")))
+                  (save-excursion
+                    (setq end (search-forward "\"")))
+                  (kill-region start end))) "Kill string")
         ("g" nil "cancel")
         ("C-k" nil "cancel")))
 

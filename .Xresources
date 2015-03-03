@@ -24,7 +24,7 @@ Emacs.FontBackend: xft
 ! Emacs*font: Liberation Mono-18
 ! Emacs*font: Source Sans Pro Light-16
 ! Emacs*font: xft:source code pro:medium:size=15
-Emacs*font: Source Code Pro Medium:size=22
+Emacs*font: Source Code Pro Light:size=22
 ipython.font: DeJavu Sans Mono-16
 ! Skype.font: Liberation Mono-18
 

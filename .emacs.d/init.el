@@ -4,8 +4,9 @@
   (eq system-type 'darwin))
 
 (when (osx)
-  (set-default-font "-*-Source Code Pro-normal-normal-normal-*-22-*-*-*-m-0-iso10646-1")
-  (add-to-list 'default-frame-alist '(font . "Source Code Pro-22")))
+  (set-default-font "-*-Source Code Pro-light-normal-normal-*-22-*-*-*-m-0-iso10646-1")
+  ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
+  (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-1-light-22")))
 
 (provide 'start)
 (require 'start) ;; Ensure this file is loaded before compile it.
@@ -1568,6 +1569,10 @@ current line instead."
   '(progn
      (define-key python-mode-map (kbd "C-h f") 'elpy-doc)))
 
+(require 'py-autopep8)
+(add-hook 'before-save-hook 'py-autopep8-before-save)
+(setq py-autopep8-options '("--max-line-length=100"))
+
 ;; javascript
 
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
@@ -2178,11 +2183,14 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
         "kill"
         ("k" kill-line "kill line")
         ("o" kill-whole-line "kill whole line")
-        ("r" (lambda ()
+        ("l" (lambda ()
                (interactive)
                (move-beginning-of-line nil)
                (kill-line)
                (indent-for-tab-command)) "replace line")
+        ("r" (lambda ()
+               (interactive)
+               (iregister-copy-to-register (region-beginning) (region-end) '(4))) "kill region")
         ("c" kill-rectangle "kill rectangle")
         ("s" (lambda ()
                (interactive)
@@ -2298,6 +2306,18 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 (require 'diff-hl)
 (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
 (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
+
+;; smerge mode
+
+(autoload 'smerge-mode "smerge-mode" nil t)
+
+(defun sm-try-smerge ()
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward "^<<<<<<< " nil t)
+      (smerge-mode 1))))
+
+(add-hook 'find-file-hook 'sm-try-smerge t)
 
 ;; column number mode
 
@@ -2593,3 +2613,8 @@ narrowed."
 ;; This line actually replaces Emacs' entire narrowing keymap, that's
 ;; how much I like this command. Only copy it if that's what you want.
 (define-key ctl-x-map "n" #'narrow-or-widen-dwim)
+
+(when (osx)
+  (set-default-font "-*-Source Code Pro-light-normal-normal-*-22-*-*-*-m-0-iso10646-1")
+  ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
+  (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-1-light-22")))

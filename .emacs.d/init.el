@@ -6,7 +6,9 @@
 (when (osx)
   (set-default-font "-*-Source Code Pro-light-normal-normal-*-22-*-*-*-m-0-iso10646-1")
   ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
-  (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-1-light-22")))
+  (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-0-light-22"))
+  (set-fontset-font "fontset-default" nil
+                    (font-spec :size 20 :name "Symbola:")))
 
 (provide 'start)
 (require 'start) ;; Ensure this file is loaded before compile it.
@@ -2626,4 +2628,4 @@ narrowed."
 (when (osx)
   (set-default-font "-*-Source Code Pro-light-normal-normal-*-22-*-*-*-m-0-iso10646-1")
   ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
-  (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-1-light-22")))
+  (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-0-light-22")))

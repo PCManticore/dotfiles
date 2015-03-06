@@ -2271,7 +2271,11 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
     (kill-region start end)))
 
 (setq hydra-kill
-      (defhydra kill ()
+      (defhydra kill
+          (:pre
+           (hydra-pre-cursor-color)
+           :post
+           (hydra-post-cursor-color))
         "kill"
         ("k" kill-line "kill line")
         ("o" kill-whole-line "kill whole line")
@@ -2319,7 +2323,11 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
  hydra-kill)
 
 (setq hydra-beginning
-      (defhydra beginning ()
+      (defhydra beginning
+          (:pre
+           (hydra-pre-cursor-color)
+           :post
+           (hydra-post-cursor-color))
         "beginning"
         ("a" beginning-of-line "beginning of line")
         ("b" beginning-of-buffer "beginning of buffer")
@@ -2336,7 +2344,11 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
  hydra-beginning)
 
 (setq hydra-end
-      (defhydra end ()
+      (defhydra end
+          (:pre
+           (hydra-pre-cursor-color)
+           :post
+           (hydra-post-cursor-color))
         "end"
         ("e" end-of-line "end of line")
         ("b" end-of-buffer "end of buffer")
@@ -2356,7 +2368,11 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
     (iregister-copy-to-register (car bounds) (cdr bounds))))
 
 (setq hydra-copy
-      (defhydra copy (:color blue)
+      (defhydra copy
+          (:pre
+           (hydra-pre-cursor-color)
+           :post
+           (hydra-post-cursor-color))
         "copy"
         ("k" (lambda ()
                (interactive)

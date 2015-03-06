@@ -85,9 +85,7 @@
       inhibit-startup-message t
       major-mode 'fundamental-mode
       next-line-add-newlines nil
-      scroll-step 1
-      scroll-conservatively 1
-                                        ; font-lock-maximum-decoration t
+      font-lock-maximum-decoration t
       require-final-newline t
       truncate-partial-width-windows nil
       shift-select-mode nil
@@ -194,6 +192,7 @@
 (toggle-cursor-type-when-idle 1) ; On when idle
 
 (setq curchg-default-cursor-color "light blue")
+(setq-default x-stretch-cursor t)
 
 ;; dictem - Emacs interface to the dictem
 
@@ -633,12 +632,22 @@
 
 (erc-fill-mode t)
 (setq erc-fill-column 70)
-(setq scroll-conservatively 123) ;; any number higher then 100
 (erc-ring-mode t)
 (erc-netsplit-mode t)
 (erc-timestamp-mode t)
 (setq erc-timestamp-format "[%R-%m/%d]")
 (erc-button-mode nil)
+
+;; scrolling behavior
+
+(setq redisplay-dont-pause t
+      scroll-margin 1
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position 1)
+
+(setq mouse-wheel-follow-mouse 't)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
 
 ;; logging:
 (setq erc-log-insert-log-on-open t)

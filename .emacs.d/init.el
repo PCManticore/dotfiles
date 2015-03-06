@@ -2118,10 +2118,14 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
    ("M-d" nil "cancel")))
 
 (defun hydra-pre-cursor-color ()
-  (set-cursor-color "red"))
+  (setq curchg-default-cursor-color "red")
+  (setq curchg-default-cursor-type 'hollow)
+  (toggle-cursor-type-when-idle nil))
 
 (defun hydra-post-cursor-color ()
-  (set-cursor-color "light blue"))
+  (setq curchg-default-cursor-color "light blue")
+  (setq curchg-default-cursor-type 'bar)
+  (toggle-cursor-type-when-idle t))
 
 (setq hydra-backward
       (defhydra backward
@@ -2189,6 +2193,19 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
   (let ((bounds (bounds-of-thing-at-point thing)))
     (iregister-copy-to-register (car bounds) (cdr bounds) '(4))))
 
+(defun hydra-kill-string (char1 char2 hungry)
+  (let ((start nil)
+        (end nil))
+    (save-excursion
+      (setq start (search-backward char1))
+      (when (null hungry)
+        (setq start (+ start 1))))
+    (save-excursion
+      (setq end (search-forward char2))
+      (when (null hungry)
+        (setq end (- end 1))))
+    (kill-region start end)))
+
 (setq hydra-kill
       (defhydra kill ()
         "kill"
@@ -2218,26 +2235,18 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
         ("t" (lambda ()
                (interactive)
                (just-one-space)) "delete horizontal space")
+        ("(" (lambda ()
+               (interactive)
+               (hydra-kill-string "(" ")" nil)) "Kill string")
+        (")" (lambda ()
+               (interactive)
+               (hydra-kill-string "(" ")" t)) "Kill string")
         ("'" (lambda ()
                (interactive)
-               (let ((start nil)
-                     (end nil))
-                 (save-excursion
-                   (setq start (search-backward "\""))
-                   (setq start (+ start 1)))
-                 (save-excursion
-                   (setq end (search-forward "\""))
-                   (setq end (- end 1)))
-                 (kill-region start end))) "Kill string")
+               (hydra-kill-string "'" "'" nil)) "Kill string")
         ("\"" (lambda ()
                 (interactive)
-                (let ((start nil)
-                      (end nil))
-                  (save-excursion
-                    (setq start (search-backward "\"")))
-                  (save-excursion
-                    (setq end (search-forward "\"")))
-                  (kill-region start end))) "Kill string")
+                (hydra-kill-string "\"" "\"" t)) "Kill string")
         ("g" nil "cancel")
         ("C-k" nil "cancel")))
 

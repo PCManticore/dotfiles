@@ -2077,6 +2077,70 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
         try-expand-dabbrev-all-buffers
         try-expand-dabbrev-from-kill))
 
+;; django configuration
+
+;; (autoload 'django-html-mode "django-html-mode")
+(add-to-list 'auto-mode-alist '("\\.[sx]?html?\\'" . web-mode))
+
+(defun django-insert-trans (from to &optional buffer)
+  (interactive "*r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region from to)
+      (goto-char from)
+      (iso-iso2sgml from to)
+      (insert "{% trans \"")
+      (goto-char (point-max))
+      (insert "\" %}")
+      (point-max))))
+
+(defun django-insert-transpy (from to &optional buffer)
+  (interactive "*r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region from to)
+      (goto-char from)
+      (iso-iso2sgml from to)
+      (insert "_(")
+      (goto-char (point-max))
+      (insert ")")
+      (point-max))))
+
+(add-hook 'sgml-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\C-g" 'django-insert-trans)
+            (setq indent-tabs-mode nil)))
+
+;; (add-hook 'python-mode-hook
+;;           '(lambda ()
+;;              (outline-minor-mode 1)
+;;              (setq
+;;               tab-width 4
+;;               python-indent 4
+;;               outline-regexp py-outline-regexp
+;;               outline-level 'py-outline-level)
+;;              (local-set-key "\C-c\C-t" 'django-insert-transpy)))
+
+;; pylookup configuration
+
+(setq pylookup-dir "~/.emacs.d/pylookup")
+(add-to-list 'load-path pylookup-dir)
+
+(eval-when-compile (require 'pylookup))
+
+(setq pylookup-program (concat pylookup-dir "/pylookup.py"))
+(setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
+
+;; set search option if you want
+;; (setq pylookup-search-options '("--insensitive" "0" "--desc" "0"))
+
+;; to speedup, just load it on demand
+(autoload 'pylookup-lookup "pylookup"
+  "Lookup SEARCH-TERM in the Python HTML indexes." t)
+
+(autoload 'pylookup-update "pylookup"
+  "Run pylookup-update and create the database at `pylookup-db-file'." t)
+          
 ;; Hydra configuration
 
 (defvar hydra-last-command nil "")

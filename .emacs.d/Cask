@@ -56,7 +56,7 @@
 (depends-on "elisp-slime-nav")
 (depends-on "elpy")
 (depends-on "elscreen")
-;; (depends-on "emacs-w3m")
+(depends-on "w3m")
 (depends-on "emmet-mode")
 (depends-on "emms")
 (depends-on "epc")
@@ -163,6 +163,7 @@
 (depends-on "outorg")
 (depends-on "outshine")
 
+(depends-on "pallet")
 (depends-on "package")
 (depends-on "page-break-lines")
 (depends-on "paredit")

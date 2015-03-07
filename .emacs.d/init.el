@@ -2169,18 +2169,6 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (setq hydra-is-helpful nil)
 
-(global-set-key
- (kbd "M-d")
- (defhydra kill-word ()
-   "kill-word"
-   ("d" kill-word "kill word")
-   ("w" kill-word "kill word")
-   ("s" kill-sexp "kill sexp")
-   ("a" kill-paragraph "kill paragraph")
-   ("e" kill-sentence "kill sentence")
-   ("g" nil "cancel")
-   ("M-d" nil "cancel")))
-
 (defun hydra-pre-cursor-color ()
   (setq curchg-default-cursor-color "red")
   (setq curchg-default-cursor-type 'hollow)
@@ -2190,6 +2178,22 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
   (setq curchg-default-cursor-color "light blue")
   (setq curchg-default-cursor-type 'bar)
   (toggle-cursor-type-when-idle t))
+
+(global-set-key
+ (kbd "M-d")
+ (defhydra kill-word
+     (:pre
+      (hydra-pre-cursor-color)
+      :post
+      (hydra-post-cursor-color))
+   "kill-word"
+   ("d" kill-word "kill word")
+   ("w" kill-word "kill word")
+   ("s" kill-sexp "kill sexp")
+   ("a" kill-paragraph "kill paragraph")
+   ("e" kill-sentence "kill sentence")
+   ("g" nil "cancel")
+   ("M-d" nil "cancel")))
 
 (setq hydra-backward
       (defhydra backward
@@ -2257,6 +2261,29 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
   (let ((bounds (bounds-of-thing-at-point thing)))
     (iregister-copy-to-register (car bounds) (cdr bounds) '(4))))
 
+(defun hydra-kill-string-in-quotes (hungry)
+  (let ((single-start nil)
+        (double-start nil)
+        (single nil)
+        (start nil)
+        (end nil))
+    (save-excursion
+      (setq single-start (search-backward "'")))
+    (save-excursion
+      (setq double-start (search-backward "\"")))
+    (save-excursion
+      (if (> single-start double-start)
+          (progn
+            (setq start single-start)
+            (setq end (search-forward "'")))
+        (progn
+          (setq start double-start)
+          (setq end (search-forward "\"")))))
+    (when (null hungry)
+      (setq start (+ start 1))
+      (setq end (- end 1)))
+    (iregister-copy-to-register start end '(4))))
+
 (defun hydra-kill-string (char1 char2 hungry)
   (let ((start nil)
         (end nil))
@@ -2286,7 +2313,7 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
                (indent-for-tab-command)) "replace line")
         ("r" (lambda ()
                (interactive)
-               (iregister-copy-to-register (region-beginning) (region-end) '(4))) "kill region")
+               (iregister-copy-to-register (region-start) (region-end) '(4))) "kill region")
         ("c" kill-rectangle "kill rectangle")
         ("s" (lambda ()
                (interactive)
@@ -2309,12 +2336,21 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
         (")" (lambda ()
                (interactive)
                (hydra-kill-string "(" ")" t)) "Kill string")
+        ("-" (lambda ()
+               (interactive)
+               (hydra-kill-string " " " " nil)
+               (just-one-space)) "Kill string")
         ("'" (lambda ()
                (interactive)
-               (hydra-kill-string "'" "'" nil)) "Kill string")
+               (hydra-kill-string-in-quotes nil)) "Kill string")
         ("\"" (lambda ()
                 (interactive)
-                (hydra-kill-string "\"" "\"" t)) "Kill string")
+                (hydra-kill-string-in-quotes t)) "Kill string")
+        ("z" (lambda (char)
+               (interactive "cCharacter: ")
+               (let ((start (point))
+                     (end (search-forward (char-to-string char))))
+                 (iregister-copy-to-register start end '(4)))))
         ("g" nil "cancel")
         ("C-k" nil "cancel")))
 

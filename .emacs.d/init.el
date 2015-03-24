@@ -1214,6 +1214,23 @@ current line instead."
 (setenv "SSH_AUTH_SOCK" "")
 (setenv "SSH_AGENT_PID" "")
 
+;; Source http://endlessparentheses.com/easily-create-github-prs-from-magit.html
+(defun demi/visit-pull-request-url ()
+  "Visit the current branch's PR on Github."
+  (interactive)
+  (browse-url
+   (format "https://github.com/%s/compare/%s"
+           (replace-regexp-in-string
+            "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+            (magit-get "remote"
+                       (magit-get-current-remote)
+                       "url"))
+           (magit-get-current-branch))))
+
+(eval-after-load 'magit
+  '(define-key magit-mode-map "V"
+     #'demi/visit-pull-request-url))
+
 ;; makefile-mode configuration
 
 (defun makefile-indentation ()

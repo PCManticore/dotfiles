@@ -2140,7 +2140,11 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (autoload 'pylookup-update "pylookup"
   "Run pylookup-update and create the database at `pylookup-db-file'." t)
-          
+
+;; wakatime configuration
+
+(global-wakatime-mode)
+
 ;; Hydra configuration
 
 (defvar hydra-last-command nil "")

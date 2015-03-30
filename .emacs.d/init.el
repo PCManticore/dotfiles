@@ -2159,303 +2159,26 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (autoload 'pylookup-update "pylookup"
   "Run pylookup-update and create the database at `pylookup-db-file'." t)
-          
-;; Hydra configuration
 
-(defvar hydra-last-command nil "")
+;; isearch configuration
 
-(defun hydra/exec-command (command)
-  (setq hydra-last-command command)
-  (eval command))
-
-(defun hydra-adjust-last-command ()
+(define-key isearch-mode-map (kbd "C-v") 'my-isearch-forward-to-beginning)
+(defun my-isearch-forward-to-beginning ()
+  "Do a forward search and jump to the beginning of the search-term."
   (interactive)
-  (let ((previous-command (nth 0 hydra-last-command)))
-    (when (not (null hydra-last-command))
-      (cond ((eq previous-command 'backward-word) (forward-word))
-            ((eq previous-command 'backward-sexp) (forward-sexp))
-            ((eq previous-command 'forward-word) (backward-word))
-            ((eq previous-command 'forward-sexp) (backward-sexp))))))
+  (isearch-repeat 'forward)
+  (goto-char isearch-other-end))
 
-(defun hydra-undo-last-command ()
+(defun my-isearch-forward ()
+  "Do a forward search and jump to the beginning of the search-term."
   (interactive)
-  (let ((previous-command (nth 0 hydra-last-command)))
-    (when (not (null hydra-last-command))
-      (cond ((eq previous-command 'backward-word) (progn (forward-word 2) (backward-word)))
-            ((eq previous-command 'backward-sexp) (progn (forward-sexp 2) (backward-sexp)))
-            ((eq previous-command 'forward-word) (progn (backward-word 2) (forward-word)))
-            ((eq previous-command 'forward-sexp) (progn (backward-sexp 2) (forward-sexp)))))))
+  (isearch-forward)
+  (goto-char isearch-other-end))
 
-(setq hydra-is-helpful nil)
+(define-key isearch-mode-map (kbd "C-s") 'my-isearch-forward-to-beginning)
+(define-key isearch-mode-map (kbd "C-v") 'isearch-repeat-forward)
+(global-set-key (kbd "C-s") 'my-isearch-forward)
 
-(defun hydra-pre-cursor-color ()
-  (setq curchg-default-cursor-color "red")
-  (setq curchg-default-cursor-type 'hollow)
-  (toggle-cursor-type-when-idle nil))
-
-(defun hydra-post-cursor-color ()
-  (setq curchg-default-cursor-color "light blue")
-  (setq curchg-default-cursor-type 'bar)
-  (toggle-cursor-type-when-idle t))
-
-(global-set-key
- (kbd "M-d")
- (defhydra kill-word
-     (:pre
-      (hydra-pre-cursor-color)
-      :post
-      (hydra-post-cursor-color))
-   "kill-word"
-   ("d" kill-word "kill word")
-   ("w" kill-word "kill word")
-   ("s" kill-sexp "kill sexp")
-   ("a" kill-paragraph "kill paragraph")
-   ("e" kill-sentence "kill sentence")
-   ("g" nil "cancel")
-   ("M-d" nil "cancel")))
-
-(setq hydra-backward
-      (defhydra backward
-          (:pre
-           (hydra-pre-cursor-color)
-           :post
-           (hydra-post-cursor-color))
-        "backward"
-        ("p" previous-line "previous line")
-        ("b" (hydra/exec-command '(backward-word)) "backward word")
-        ("s" (hydra/exec-command '(backward-sexp)) "backward sexp")
-        ("y" (lambda ()
-               (interactive)
-               (hydra/exec-command '(forward-sexp -1))) "backward symbol")
-        ("u" backward-up-list "backward up list")
-        ("l" backward-list "backward list")
-        ("e" backward-sentence "backward sentence")
-        ("." hydra-undo-last-command "undo command")
-        ("," hydra-adjust-last-command "adjust last command")
-        ("g" nil "cancel")
-        ("M-b" nil "cancel")))
-
-(global-set-key
- (kbd "M-b")
- hydra-backward)
-
-(global-set-key
- (kbd "C-p")
- hydra-backward)
-
-(setq hydra-forward
-      (defhydra forward
-          (:pre
-           (hydra-pre-cursor-color)
-           :post
-           (hydra-post-cursor-color))
-        "forward"
-        ("n" next-line "next line")
-        ("f" (hydra/exec-command '(forward-word)) "forward word")
-        ("s" (hydra/exec-command '(forward-sexp)) "forward sexp")
-        ("y" (lambda ()
-               (interactive)
-               (forward-symbol 1)) "forward symbol")
-        ("u" up-list "up list")
-        ("i" down-list "down list")
-        ("l" forward-list "forward list")
-        ("e" forward-sentence "forward sentence")
-        ("{" next-multiframe-window "next multiframe window")
-        ("}" other-frame "next frame")
-        ("." hydra-undo-last-command "undo command")
-        ("," hydra-adjust-last-command "adjust last command")
-        ("g" nil "cancel")
-        ("M-f" nil "cancel")
-        ("C-n" nil "cancel")))
-
-(global-set-key
- (kbd "M-f")
- hydra-forward)
-
-(global-set-key
- (kbd "C-n")
- hydra-forward)
-
-(defun hydra-kill-thing-at-point (thing)
-  (let ((bounds (bounds-of-thing-at-point thing)))
-    (iregister-copy-to-register (car bounds) (cdr bounds) '(4))))
-
-(defun hydra-kill-string-in-quotes (hungry)
-  (let ((single-start nil)
-        (double-start nil)
-        (single nil)
-        (start nil)
-        (end nil))
-    (save-excursion
-      (setq single-start (search-backward "'")))
-    (save-excursion
-      (setq double-start (search-backward "\"")))
-    (save-excursion
-      (if (> single-start double-start)
-          (progn
-            (setq start single-start)
-            (setq end (search-forward "'")))
-        (progn
-          (setq start double-start)
-          (setq end (search-forward "\"")))))
-    (when (null hungry)
-      (setq start (+ start 1))
-      (setq end (- end 1)))
-    (iregister-copy-to-register start end '(4))))
-
-(defun hydra-kill-string (char1 char2 hungry)
-  (let ((start nil)
-        (end nil))
-    (save-excursion
-      (setq start (search-backward char1))
-      (when (null hungry)
-        (setq start (+ start 1))))
-    (save-excursion
-      (setq end (search-forward char2))
-      (when (null hungry)
-        (setq end (- end 1))))
-    (kill-region start end)))
-
-(setq hydra-kill
-      (defhydra kill
-          (:pre
-           (hydra-pre-cursor-color)
-           :post
-           (hydra-post-cursor-color))
-        "kill"
-        ("k" kill-line "kill line")
-        ("o" kill-whole-line "kill whole line")
-        ("l" (lambda ()
-               (interactive)
-               (move-beginning-of-line nil)
-               (kill-line)
-               (indent-for-tab-command)) "replace line")
-        ("r" (lambda ()
-               (interactive)
-               (iregister-copy-to-register (region-start) (region-end) '(4))) "kill region")
-        ("c" kill-rectangle "kill rectangle")
-        ("s" (lambda ()
-               (interactive)
-               (hydra-kill-thing-at-point 'sexp)) "kill sexp at point")
-        ("y" (lambda ()
-               (interactive)
-               (hydra-kill-thing-at-point 'symbol)) "kill symbol at point")
-        ("w" (lambda ()
-               (interactive)
-               (hydra-kill-thing-at-point 'word)) "kill word at point")
-        ("h" (lambda ()
-               (interactive)
-               (delete-horizontal-space)) "delete horizontal space")
-        ("t" (lambda ()
-               (interactive)
-               (just-one-space)) "delete horizontal space")
-        ("(" (lambda ()
-               (interactive)
-               (hydra-kill-string "(" ")" nil)) "Kill string")
-        (")" (lambda ()
-               (interactive)
-               (hydra-kill-string "(" ")" t)) "Kill string")
-        ("-" (lambda ()
-               (interactive)
-               (hydra-kill-string " " " " nil)
-               (just-one-space)) "Kill string")
-        ("'" (lambda ()
-               (interactive)
-               (hydra-kill-string-in-quotes nil)) "Kill string")
-        ("\"" (lambda ()
-                (interactive)
-                (hydra-kill-string-in-quotes t)) "Kill string")
-        ("z" (lambda (char)
-               (interactive "cCharacter: ")
-               (let ((start (point))
-                     (end (search-forward (char-to-string char))))
-                 (iregister-copy-to-register start end '(4)))))
-        ("g" nil "cancel")
-        ("C-k" nil "cancel")))
-
-(global-set-key
- (kbd "C-k")
- hydra-kill)
-
-(setq hydra-beginning
-      (defhydra beginning
-          (:pre
-           (hydra-pre-cursor-color)
-           :post
-           (hydra-post-cursor-color))
-        "beginning"
-        ("a" beginning-of-line "beginning of line")
-        ("b" beginning-of-buffer "beginning of buffer")
-        ("s" (lambda ()
-               (interactive)
-               (beginning-of-sexp)) "beginning of sexp")
-        ("d" beginning-of-defun of "beginning of defun")
-        ("l" beginning-of-line-text)
-        ("g" nil "cancel")
-        ("C-a" nil "cancel")))
-
-(global-set-key
- (kbd "C-a")
- hydra-beginning)
-
-(setq hydra-end
-      (defhydra end
-          (:pre
-           (hydra-pre-cursor-color)
-           :post
-           (hydra-post-cursor-color))
-        "end"
-        ("e" end-of-line "end of line")
-        ("b" end-of-buffer "end of buffer")
-        ("s" (lambda ()
-               (interactive)
-               (end-of-sexp)) "end of sexp")
-        ("d" end-of-defun of "end of defun")
-        ("g" nil "cancel")
-        ("C-e" nil "cancel")))
-
-(global-set-key
- (kbd "C-e")
- hydra-end)
-
-(defun hydra-copy-thing-at-point (thing)
-  (let ((bounds (bounds-of-thing-at-point thing)))
-    (iregister-copy-to-register (car bounds) (cdr bounds))))
-
-(setq hydra-copy
-      (defhydra copy
-          (:pre
-           (hydra-pre-cursor-color)
-           :post
-           (hydra-post-cursor-color))
-        "copy"
-        ("k" (lambda ()
-               (interactive)
-               (hydra-copy-thing-at-point 'line)) "copy line")
-        ("r" (lambda ()
-               (interactive)
-               (move-beginning-of-line nil)
-               (iregister-copy-to-register (point) (line-end-position))
-               (kill-line)
-               (indent-for-tab-command)) "copy and replace line")
-        ("d" (lambda ()
-               (interactive)
-               (hydra-copy-thing-at-point 'defun)) "copy defun at point")
-        ("s" (lambda ()
-               (interactive)
-               (hydra-copy-thing-at-point 'sexp)) "copy sexp at point")
-        ("y" (lambda ()
-               (interactive)
-               (hydra-copy-thing-at-point 'symbol)) "copy symbol at point")
-        ("w" (lambda ()
-               (interactive)
-               (hydra-copy-thing-at-point 'word)) "copy word at point")
-        ("g" nil "cancel")
-        ("C-w" nil "cancel")))
-
-(global-set-key
- (kbd "C-w")
- hydra-copy)
 ;; diff-hl
 
 (require 'diff-hl)
@@ -2481,6 +2204,27 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 ;; detachable cursor - experimental package
 
 ;; (add-to-list 'load-path "/str/development/projects/open-source/elisp/dtc.el/")
+
+;; sparky - experimental package
+
+(add-to-list 'load-path (oo-elisp-path "sparky.el/"))
+
+(require 'sparky)
+
+(defun sparky-pre-cursor-color ()
+  (setq curchg-default-cursor-color "red")
+  (setq curchg-default-cursor-type 'hollow)
+  (flet ((message (arg) nil))
+    (toggle-cursor-type-when-idle nil)))
+
+(defun sparky-post-cursor-color ()
+  (setq curchg-default-cursor-color "light blue")
+  (setq curchg-default-cursor-type 'bar)
+  (flet ((message (arg) nil))
+    (toggle-cursor-type-when-idle t)))
+
+(add-hook 'sparky-enter-hook 'sparky-pre-cursor-color)
+(add-hook 'sparky-quit-hook 'sparky-post-cursor-color)
 
 ;; (require 'dtc)
 ;; ;; (require 'dtc-experimental)

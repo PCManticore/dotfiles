@@ -2056,7 +2056,7 @@ Attribution: URL `http://www.masteringemacs.org/articles/2010/11/29/evaluating-e
 (key-chord-define-global "3." 'gnt/insert-ellipsis)
 (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
 (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
-(key-chord-define-global "xx" 'execute-extended-command)
+(key-chord-define-global "xx" 'smex)
 
 
 (key-chord-mode 1)

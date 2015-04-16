@@ -463,6 +463,16 @@ zle -N insert-selecta-path-in-command-line
 # Bind the key to the newly created widget
 bindkey "^S" "insert-selecta-path-in-command-line"
 
+## Source a .zshrc.local file if exists
+autoload -U add-zsh-hook
+load-local-conf() {
+     # check file exists, is regular file and is readable:
+     if [[ -f .zshrc.local && -r .zshrc.local ]]; then
+       source .zshrc.local
+     fi
+}
+add-zsh-hook chpwd load-local-conf
+
 ## View history by means of percol
 if exists percol; then
     function percol_select_history() {

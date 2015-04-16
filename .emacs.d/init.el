@@ -3,12 +3,18 @@
 (defun osx ()
   (eq system-type 'darwin))
 
+;; (when (osx)
+;;   (set-default-font "-*-Source Code Pro-light-normal-normal-*-20-*-*-*-m-0-iso10646-1")
+;;   ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
+;;   (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-0-light-20"))
+;;   ;; (set-fontset-font "fontset-default" nil
+;;   ;;                   (font-spec :size 20 :name "Symbola:"))
+;;   )
+
 (when (osx)
-  (set-default-font "-*-Source Code Pro-light-normal-normal-*-22-*-*-*-m-0-iso10646-1")
-  ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
-  (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-0-light-22"))
-  (set-fontset-font "fontset-default" nil
-                    (font-spec :size 20 :name "Symbola:")))
+  (set-face-attribute 'default nil :family "Source Code Pro")
+  (set-face-attribute 'default nil :height 200)
+  (set-face-attribute 'default nil :weight 'light))
 
 (provide 'start)
 (require 'start) ;; Ensure this file is loaded before compile it.
@@ -871,7 +877,38 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;     (add-hook hook 'flyspell-prog-mode)))
 
 (eval-after-load 'flyspell
-    '(add-to-list 'flyspell-prog-text-faces 'nxml-text-face))
+  '(add-to-list 'flyspell-prog-text-faces 'nxml-text-face))
+
+;;; Web development configuration (identation)
+;;; Source: http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html
+
+(defun my-setup-indent (n)
+  ;; web development
+  (setq coffee-tab-width n) ; coffeescript
+  (setq javascript-indent-level n) ; javascript-mode
+  (setq js-indent-level n) ; js-mode
+  (setq js2-basic-offset n) ; js2-mode
+  (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
+  (setq web-mode-css-indent-offset n) ; web-mode, css in html file
+  (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
+  (setq css-indent-offset n) ; css-mode
+  )
+
+(defun my-office-code-style ()
+  (interactive)
+  (message "Office code style!")
+  (setq indent-tabs-mode nil)
+  (my-setup-indent 4) ; indent 4 spaces width
+  )
+
+(defun my-personal-code-style ()
+  (interactive)
+  (message "My personal code style!")
+  (setq indent-tabs-mode nil) ; use space instead of tab
+  (my-setup-indent 2) ; indent 2 spaces width
+  )
+
+(my-office-code-style)
 
 ;; i3
 
@@ -1214,6 +1251,9 @@ current line instead."
 (setenv "SSH_AUTH_SOCK" "")
 (setenv "SSH_AGENT_PID" "")
 
+(setq magit-auto-revert-mode nil)
+(setq magit-last-seen-setup-instructions "1.4.0")
+
 ;; Source http://endlessparentheses.com/easily-create-github-prs-from-magit.html
 (defun demi/visit-pull-request-url ()
   "Visit the current branch's PR on Github."
@@ -1538,6 +1578,24 @@ current line instead."
 (when (not (osx))
   (load-file "~/.emacs.d/demi-org.el"))
 
+(when (osx)
+  (add-hook
+   'org-clock-in-hook
+   (lambda ()
+     (call-process
+      "/usr/bin/osascript"
+      nil 0 nil "-e"
+      (concat
+       "tell application \"org-clock-statusbar\" to clock in \""
+       org-clock-current-task "\""))))
+  (add-hook
+   'org-clock-out-hook
+   (lambda ()
+     (call-process
+      "/usr/bin/osascript"
+      nil 0 nil
+      "-e" "tell application \"org-clock-statusbar\" to clock out"))))
+
 ;; (require 'demi-org)
 
 ;; org-babel configuration
@@ -1623,6 +1681,9 @@ current line instead."
 (add-hook 'js2-mode-hook 'javascript-custom-setup)
 (defun javascript-custom-setup ()
   (moz-minor-mode 1))
+
+(load-file "~/.emacs.d/init-js.el")
+(require 'init-js)
 
 ;; rainbow-delimiters
 
@@ -2050,6 +2111,34 @@ Attribution: URL `http://www.masteringemacs.org/articles/2010/11/29/evaluating-e
   "Insert an ellipsis into the current buffer."
   (interactive)
   (insert "…"))
+
+(defun py/lines ()
+  (interactive)
+  (insert "print '\\n\\n\\n'"))
+
+(defun py/break ()
+  (interactive)
+  (insert "print '#####################'"))
+
+(defun py/print (text)
+  (interactive "sText: ")
+  (insert "print '\\n#####################'\n")
+  (insert "print '##### " text "'\n")
+  (insert "print '#####################\\n'\n")
+  (save-excursion
+    (search-backward "print " nil t 3)
+    (indent-for-tab-command)
+    (next-line)
+    (indent-for-tab-command)
+    (next-line)
+    (indent-for-tab-command)))
+
+(defun js/print (text)
+  (interactive "sText: ")
+  (insert (format "console.log('%s')" text))
+  (save-excursion
+    (search-backward "console.log(" nil t)
+    (indent-for-tab-command)))
 
 ;; key-chord configuration
 
@@ -2513,7 +2602,12 @@ narrowed."
 ;; how much I like this command. Only copy it if that's what you want.
 (define-key ctl-x-map "n" #'narrow-or-widen-dwim)
 
+;; (when (osx)
+;;   (set-default-font "-*-Source Code Pro-light-normal-normal-*-20-*-*-*-m-0-iso10646-1")
+;;   ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
+;;   (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-0-light-20")))
+
 (when (osx)
-  (set-default-font "-*-Source Code Pro-light-normal-normal-*-22-*-*-*-m-0-iso10646-1")
-  ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
-  (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-0-light-22")))
+  (set-face-attribute 'default nil :family "Source Code Pro")
+  (set-face-attribute 'default nil :height 200)
+  (set-face-attribute 'default nil :weight 'light))

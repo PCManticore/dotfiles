@@ -303,6 +303,7 @@ alias cpu-perfomance="cat /proc/cpuinfo | grep bogo"
 # the kernel really likes to use the swap and 0 means the kernel avoids to use the
 # swap.
 alias swappiness="cat /proc/sys/vm/swappiness"
+alias mysql='mysql --auto-vertical-output --prompt="mysql (\d) > "'
 
 # Turn on/off shell divider
 function sd() {

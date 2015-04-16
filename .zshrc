@@ -694,3 +694,5 @@ fi
 ## if switching to the root then go to HOME directory
 cd ${HOME}
 # }}}
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting

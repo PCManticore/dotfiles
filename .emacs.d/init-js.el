@@ -97,17 +97,21 @@
 ;;                                     'javascript-jscs)
 ;;                                    (buffer-file-name))))))))
 
-(defun js2-mode-before-save-hook ()
-  (message "js2-mode-before-save-hook is called!")
-  (when (eq major-mode 'js2-mode)
-    (shell-command
-     (format "jscs --fix --config %s %s"
-             (flycheck-locate-config-file-ancestor-directories
-              ".jscs.json"
-              'javascript-jscs)
-             (buffer-file-name)))))
+(defun js2-mode-after-save-hook ()
+  (let ((pos (point)))
+    (message "js2-mode-before-save-hook is called!")
+    (when (eq major-mode 'js2-mode)
+      (shell-command
+       (format "jscs --fix --config %s %s"
+               (flycheck-locate-config-file-ancestor-directories
+                ".jscs.json"
+                'javascript-jscs)
+               (buffer-file-name)))
+      (revert-buffer nil t t)
+      (goto-char pos)
+      (save-buffer))))
 
-(add-hook 'before-save-hook #'js2-mode-before-save-hook)
+(add-hook 'after-save-hook #'js2-mode-after-save-hook)
 
 (flycheck-define-checker javascript-jscs
   "A JavaScript code style checker.

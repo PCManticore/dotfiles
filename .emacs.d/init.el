@@ -2274,6 +2274,11 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
 (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
 
+;; Emacs WebKit
+
+(add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/linuxdeepin/deepin-emacs/site-lisp/extensions/webkit/")
+(require 'webkit)
+
 ;; smerge mode
 
 (autoload 'smerge-mode "smerge-mode" nil t)

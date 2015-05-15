@@ -2320,6 +2320,12 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 (add-hook 'sparky-enter-hook 'sparky-pre-cursor-color)
 (add-hook 'sparky-quit-hook 'sparky-post-cursor-color)
 
+(sparky--define-key sparky-mark-map "x" 'iregister-copy-to-register-kill)
+(sparky--define-key sparky-mark-map "X" 'kill-region)
+
+(sparky--define-key sparky-mark-forward-map "x" 'iregister-copy-to-register-kill)
+(sparky--define-key sparky-mark-forward-map "X" 'kill-region)
+
 ;; (require 'dtc)
 ;; ;; (require 'dtc-experimental)
 ;; (require 'dtc-metad)

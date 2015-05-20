@@ -2326,6 +2326,20 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 (sparky--define-key sparky-mark-forward-map "x" 'iregister-copy-to-register-kill)
 (sparky--define-key sparky-mark-forward-map "X" 'kill-region)
 
+(sparky--define-key sparky-mark-map "'"
+                    (lambda ()
+                      (interactive)
+                      (if (region-active-p)
+                          (er/expand-region 1)
+                        (er/mark-inside-quotes))))
+
+(sparky--define-key sparky-mark-map ")"
+                    (lambda ()
+                      (interactive)
+                      (if (region-active-p)
+                          (er/expand-region 1)
+                        (er/mark-inside-pairs))))
+
 ;; (require 'dtc)
 ;; ;; (require 'dtc-experimental)
 ;; (require 'dtc-metad)

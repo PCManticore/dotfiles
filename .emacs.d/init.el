@@ -912,8 +912,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;; i3
 
-(require 'i3)
-(require 'i3-integration)
+;; (require 'i3)
+;; (require 'i3-integration)
 
 ;; helm configuration
 
@@ -1653,11 +1653,27 @@ current line instead."
 
 (eval-after-load "python"
   '(progn
-     (define-key python-mode-map (kbd "C-h f") 'elpy-doc)))
+     (define-key python-mode-map (kbd "C-h f") 'elpy-doc)
+     (define-key python-mode-map (kbd "M-.") 'jedi:goto-definition)))
 
 (require 'py-autopep8)
 (add-hook 'before-save-hook 'py-autopep8-before-save)
 (setq py-autopep8-options '("--max-line-length=100"))
+
+;; (setq python-environment-directory "~/projects/ncc-web-jun")
+(setq jedi:environment-root "~/projects/ncc-web-jun/.virtualenv/")
+
+(setq jedi:server-args
+      '("--virtual-env" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/"))
+
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+(setq jedi:environment-virtualenv "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/")
+;(setq python-environment-virtualenv
+;      ("virtualenv" "--system-site-packages" "--quiet"))
+;(setq python-environment-virtualenv
+;      (append python-environment-virtualenv
+;              '("--python" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/bin/python")))
 
 ;; javascript
 
@@ -2276,8 +2292,9 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 ;; Emacs WebKit
 
-(add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/linuxdeepin/deepin-emacs/site-lisp/extensions/webkit/")
-(require 'webkit)
+(when (not (osx))
+  (add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/linuxdeepin/deepin-emacs/site-lisp/extensions/webkit/")
+  (require 'webkit))
 
 ;; smerge mode
 
@@ -2597,7 +2614,8 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
   (before my-PC-do-completion activate)
   (expand-abbrev))
 
-(global-aggressive-indent-mode)
+(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+(add-hook 'css-mode-hook #'aggressive-indent-mode)
 
 (defun narrow-or-widen-dwim (p)
   "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.

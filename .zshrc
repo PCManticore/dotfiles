@@ -12,7 +12,7 @@
 
 # {{{ Environment
 export HOMEBIN="${HOME}/bin"
-export PATH="${HOMEBIN}:/usr/lib/distcc/bin:${PATH}:/usr/local/bin:${HOME}/.cask/bin:${HOME}/go/bin"
+export PATH="${HOMEBIN}:/usr/lib/distcc/bin:${PATH}:/usr/local/bin:/usr/local/sbin:${HOME}/.cask/bin:${HOME}/go/bin"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -304,6 +304,8 @@ alias cpu-perfomance="cat /proc/cpuinfo | grep bogo"
 # swap.
 alias swappiness="cat /proc/sys/vm/swappiness"
 alias mysql='mysql --auto-vertical-output --prompt="mysql (\d) > "'
+alias clean_pyc='find . -name \*.pyc -delete'
+alias whatismyip='curl -L http://dazzlepod.com/ip/me.json'
 
 # Turn on/off shell divider
 function sd() {
@@ -462,6 +464,23 @@ function insert-selecta-path-in-command-line() {
 zle -N insert-selecta-path-in-command-line
 # Bind the key to the newly created widget
 bindkey "^S" "insert-selecta-path-in-command-line"
+
+# Run Selecta in the current git branch, output modified files.
+function insert-git-modified-file() {
+    local selected_path
+    # Print a newline or we'll clobber the old prompt.
+    echo
+    # Find the path; abort if the user doesn't select anything.
+    selected_path=$(git ls-files -m | selecta) || return
+    # Append the selection to the current command buffer.
+    eval 'LBUFFER="$LBUFFER$selected_path"'
+    # Redraw the prompt since Selecta has drawn several new lines of text.
+    zle reset-prompt
+}
+# Create the zle widget
+zle -N insert-git-modified-file
+# Bind the key to the newly created widget
+bindkey '^Xm' "insert-git-modified-file"
 
 ## Source a .zshrc.local file if exists
 autoload -U add-zsh-hook

@@ -1573,7 +1573,7 @@ current line instead."
   (interactive)
   (other-window 1))
 
-;; org-mode configuration
+;;; org-mode configuration
 
 (when (not (osx))
   (load-file "~/.emacs.d/demi-org.el"))
@@ -1595,6 +1595,89 @@ current line instead."
       "/usr/bin/osascript"
       nil 0 nil
       "-e" "tell application \"org-clock-statusbar\" to clock out"))))
+
+;; pomodoro (found at https://github.com/grayhemp/emacs-configuration/blob/master/organizing.el)
+
+;; Use org-clock
+(require 'org-clock)
+
+;; Turn org-clock sound on
+(setq org-clock-sound t)
+
+;; Set default countdown timer time to 25 min (Pomodoro)
+(setq org-timer-default-timer 25)
+
+;; The countdown timer is started automatically when a task is
+;; clocking in, if it has not been started yet.
+(setq org-timer-current-timer nil)
+(setq pomodoro-is-active nil)
+(add-hook 'org-clock-in-prepare-hook
+	  '(lambda ()
+	     (if (not pomodoro-is-active)
+		 (let ((minutes (read-number "Start timer: " 25)))
+		   (if org-timer-current-timer (org-timer-cancel-timer))
+		   (org-timer-set-timer minutes)))
+	     (setq pomodoro-is-active t)))
+;(setq org-clock-in-prepare-hook nil)
+
+;; The timer is finished automatically when a task is clocking
+;; out. When finishing the timer it asks for a time interval of a
+;; break, 5 minutes by default.
+(add-hook 'org-clock-out-hook
+	  '(lambda ()
+	     (when (not org-clock-clocking-in)
+               (progn
+                 (org-timer-cancel-timer)
+                 (setq pomodoro-is-active nil)))))
+;(setq org-clock-out-hook nil)
+
+;; Raise a notification after countdown done
+(add-hook
+ 'org-timer-done-hook
+ '(lambda ()
+    (start-process-shell-command
+     "appt-notification" nil
+     "~/bin/appt-notification /System/Library/Sounds/Glass.aiff")))
+                                        ;(setq org-timer-done-hook nil)
+
+(defun pomodoro-start ()
+  (interactive)
+  (org-clock-in))
+
+(defvar pomodoro-count 0)
+
+(defun pomodoro-day-new ()
+  (interactive)
+  (setq pomodoro-count 0)
+  (org-insert-heading)
+  (org-time-stamp nil)
+  (org-do-promote)
+  (org-insert-heading)
+  (insert "P1")
+  (org-do-demote)
+  (org-clock-in))
+
+(defun pomodoro-new ()
+  (interactive)
+  (setq pomodoro-count (+ pomodoro-count 1))
+  (org-insert-heading nil)
+  (insert "P" (int-to-string pomodoro-count) " ")
+  (org-time-stamp t)
+  (org-clock-in))
+
+;; Emacs macro to add a pomodoro item
+(fset 'pomodoro
+      "[ ]")
+
+;; Emacs macro to add a pomodoro table
+;;
+(fset 'pomodoro-table
+      [?| ?  ?T ?a ?s ?k ?  ?| ?  ?\[ ?  ?\] ?  ?| tab])
+
+;; osx-org-clock-menu-bar configuration
+
+(load-file (oo-elisp-path "osx-org-clock-menubar/osx-org-clock-menubar.el"))
+(require 'osx-org-clock-menubar)
 
 ;; (require 'demi-org)
 

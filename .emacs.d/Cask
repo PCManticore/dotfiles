@@ -143,6 +143,7 @@
 (depends-on "nose")
 (depends-on "org")
 (depends-on "org-jira")
+(depends-on "org-pomodoro")
 (depends-on "org2blog")
 (depends-on "outorg")
 (depends-on "outshine")

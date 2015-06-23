@@ -1629,16 +1629,27 @@ current line instead."
                (progn
                  (org-timer-cancel-timer)
                  (setq pomodoro-is-active nil)))))
-;(setq org-clock-out-hook nil)
+                                        ;(setq org-clock-out-hook nil)
+
+(defun pomodoro-notification ()
+  (interactive)
+  (start-process-shell-command
+   "mplayer" nil
+   "mplayer /System/Library/Sounds/Glass.aiff")
+  (sit-for 0.5))
 
 ;; Raise a notification after countdown done
 (add-hook
  'org-timer-done-hook
  '(lambda ()
-    (start-process-shell-command
-     "appt-notification" nil
-     "~/bin/appt-notification /System/Library/Sounds/Glass.aiff")))
-                                        ;(setq org-timer-done-hook nil)
+    (progn
+      (when (osx)
+        (start-process-shell-command
+         "pomodoro-notification" nil
+         "osascript -e 'tell app \"System Events\" to display alert \"Time is over!\" message \"Time is over.\"'"))
+      (pomodoro-notification)
+      (pomodoro-notification)
+      (pomodoro-notification))))
 
 (defun pomodoro-start ()
   (interactive)

@@ -1649,7 +1649,7 @@ current line instead."
 ;; python
 
 (elpy-enable)
-(elpy-use-ipython)
+;; (elpy-use-ipython)
 
 (eval-after-load "python"
   '(progn
@@ -1863,7 +1863,8 @@ current line instead."
 ;; Theme
 
 (add-to-list 'custom-theme-load-path "~/emacs/packages/themes/")
-(load-theme 'hc-zenburn t)
+;; (load-theme 'hc-zenburn t)
+(load-theme 'base16-default-dark t)
 ;; (setq solarized-distinct-fringe-background +1)
 ;; (setq solarized-high-contrast-mode-line +1)
 ;; (setq solarized-use-less-bold +1)

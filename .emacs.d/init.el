@@ -912,8 +912,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;; i3
 
-(require 'i3)
-(require 'i3-integration)
+;; (require 'i3)
+;; (require 'i3-integration)
 
 ;; helm configuration
 
@@ -1573,7 +1573,7 @@ current line instead."
   (interactive)
   (other-window 1))
 
-;; org-mode configuration
+;;; org-mode configuration
 
 (when (not (osx))
   (load-file "~/.emacs.d/demi-org.el"))
@@ -1595,6 +1595,100 @@ current line instead."
       "/usr/bin/osascript"
       nil 0 nil
       "-e" "tell application \"org-clock-statusbar\" to clock out"))))
+
+;; pomodoro (found at https://github.com/grayhemp/emacs-configuration/blob/master/organizing.el)
+
+;; Use org-clock
+(require 'org-clock)
+
+;; Turn org-clock sound on
+(setq org-clock-sound t)
+
+;; Set default countdown timer time to 25 min (Pomodoro)
+(setq org-timer-default-timer 25)
+
+;; The countdown timer is started automatically when a task is
+;; clocking in, if it has not been started yet.
+(setq org-timer-current-timer nil)
+(setq pomodoro-is-active nil)
+(add-hook 'org-clock-in-prepare-hook
+	  '(lambda ()
+	     (if (not pomodoro-is-active)
+		 (let ((minutes (read-number "Start timer: " 25)))
+		   (if org-timer-current-timer (org-timer-cancel-timer))
+		   (org-timer-set-timer minutes)))
+	     (setq pomodoro-is-active t)))
+;(setq org-clock-in-prepare-hook nil)
+
+;; The timer is finished automatically when a task is clocking
+;; out. When finishing the timer it asks for a time interval of a
+;; break, 5 minutes by default.
+(add-hook 'org-clock-out-hook
+	  '(lambda ()
+	     (when (not org-clock-clocking-in)
+               (progn
+                 (org-timer-cancel-timer)
+                 (setq pomodoro-is-active nil)))))
+                                        ;(setq org-clock-out-hook nil)
+
+(defun pomodoro-notification ()
+  (interactive)
+  (start-process-shell-command
+   "mplayer" nil
+   "mplayer /System/Library/Sounds/Glass.aiff")
+  (sit-for 0.5))
+
+;; Raise a notification after countdown done
+(add-hook
+ 'org-timer-done-hook
+ '(lambda ()
+    (progn
+      (when (osx)
+        (start-process-shell-command
+         "pomodoro-notification" nil
+         "osascript -e 'tell app \"System Events\" to display alert \"Time is over!\" message \"Time is over.\"'"))
+      (pomodoro-notification)
+      (pomodoro-notification)
+      (pomodoro-notification))))
+
+(defun pomodoro-start ()
+  (interactive)
+  (org-clock-in))
+
+(defvar pomodoro-count 0)
+
+(defun pomodoro-day-new ()
+  (interactive)
+  (setq pomodoro-count 0)
+  (org-insert-heading)
+  (org-time-stamp nil)
+  (org-do-promote)
+  (org-insert-heading)
+  (insert "P1")
+  (org-do-demote)
+  (org-clock-in))
+
+(defun pomodoro-new ()
+  (interactive)
+  (setq pomodoro-count (+ pomodoro-count 1))
+  (org-insert-heading nil)
+  (insert "P" (int-to-string pomodoro-count) " ")
+  (org-time-stamp t)
+  (org-clock-in))
+
+;; Emacs macro to add a pomodoro item
+(fset 'pomodoro
+      "[ ]")
+
+;; Emacs macro to add a pomodoro table
+;;
+(fset 'pomodoro-table
+      [?| ?  ?T ?a ?s ?k ?  ?| ?  ?\[ ?  ?\] ?  ?| tab])
+
+;; osx-org-clock-menu-bar configuration
+
+(load-file (oo-elisp-path "osx-org-clock-menubar/osx-org-clock-menubar.el"))
+(require 'osx-org-clock-menubar)
 
 ;; (require 'demi-org)
 
@@ -1653,11 +1747,27 @@ current line instead."
 
 (eval-after-load "python"
   '(progn
-     (define-key python-mode-map (kbd "C-h f") 'elpy-doc)))
+     (define-key python-mode-map (kbd "C-h f") 'elpy-doc)
+     (define-key python-mode-map (kbd "M-.") 'jedi:goto-definition)))
 
 (require 'py-autopep8)
 (add-hook 'before-save-hook 'py-autopep8-before-save)
 (setq py-autopep8-options '("--max-line-length=100"))
+
+;; (setq python-environment-directory "~/projects/ncc-web-jun")
+(setq jedi:environment-root "~/projects/ncc-web-jun/.virtualenv/")
+
+(setq jedi:server-args
+      '("--virtual-env" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/"))
+
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+(setq jedi:environment-virtualenv "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/")
+;(setq python-environment-virtualenv
+;      ("virtualenv" "--system-site-packages" "--quiet"))
+;(setq python-environment-virtualenv
+;      (append python-environment-virtualenv
+;              '("--python" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/bin/python")))
 
 ;; javascript
 
@@ -2277,8 +2387,9 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 ;; Emacs WebKit
 
-(add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/linuxdeepin/deepin-emacs/site-lisp/extensions/webkit/")
-(require 'webkit)
+(when (not (osx))
+  (add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/linuxdeepin/deepin-emacs/site-lisp/extensions/webkit/")
+  (require 'webkit))
 
 ;; smerge mode
 
@@ -2326,6 +2437,20 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (sparky--define-key sparky-mark-forward-map "x" 'iregister-copy-to-register-kill)
 (sparky--define-key sparky-mark-forward-map "X" 'kill-region)
+
+(sparky--define-key sparky-mark-map "'"
+                    (lambda ()
+                      (interactive)
+                      (if (region-active-p)
+                          (er/expand-region 1)
+                        (er/mark-inside-quotes))))
+
+(sparky--define-key sparky-mark-map ")"
+                    (lambda ()
+                      (interactive)
+                      (if (region-active-p)
+                          (er/expand-region 1)
+                        (er/mark-inside-pairs))))
 
 ;; (require 'dtc)
 ;; ;; (require 'dtc-experimental)
@@ -2584,7 +2709,8 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
   (before my-PC-do-completion activate)
   (expand-abbrev))
 
-(global-aggressive-indent-mode)
+(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+(add-hook 'css-mode-hook #'aggressive-indent-mode)
 
 (defun narrow-or-widen-dwim (p)
   "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.

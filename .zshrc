@@ -306,6 +306,7 @@ alias swappiness="cat /proc/sys/vm/swappiness"
 alias mysql='mysql --auto-vertical-output --prompt="mysql (\d) > "'
 alias clean_pyc='find . -name \*.pyc -delete'
 alias whatismyip='curl -L http://dazzlepod.com/ip/me.json'
+alias gitstat='git diff --shortstat "@{10 hour ago}"'
 
 # Turn on/off shell divider
 function sd() {

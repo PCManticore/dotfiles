@@ -1646,10 +1646,11 @@ current line instead."
       (when (osx)
         (start-process-shell-command
          "pomodoro-notification" nil
-         "osascript -e 'tell app \"System Events\" to display alert \"Time is over!\" message \"Time is over.\"'"))
-      (pomodoro-notification)
-      (pomodoro-notification)
-      (pomodoro-notification))))
+         "osascript -e 'tell app \"System Events\" to display alert \"Time is over!\" message \"Time is over.\"'")
+        (pomodoro-notification)
+        (pomodoro-notification)
+        (pomodoro-notification)
+        (org-clock-out)))))
 
 (defun pomodoro-start ()
   (interactive)
@@ -1672,7 +1673,7 @@ current line instead."
   (interactive)
   (setq pomodoro-count (+ pomodoro-count 1))
   (org-insert-heading nil)
-  (insert "P" (int-to-string pomodoro-count) " ")
+  (insert "Po" (int-to-string pomodoro-count) " ")
   (org-time-stamp t)
   (org-clock-in))
 
@@ -1763,11 +1764,17 @@ current line instead."
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
 (setq jedi:environment-virtualenv "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/")
-;(setq python-environment-virtualenv
-;      ("virtualenv" "--system-site-packages" "--quiet"))
-;(setq python-environment-virtualenv
-;      (append python-environment-virtualenv
-;              '("--python" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/bin/python")))
+                                        ;(setq python-environment-virtualenv
+                                        ;      ("virtualenv" "--system-site-packages" "--quiet"))
+                                        ;(setq python-environment-virtualenv
+                                        ;      (append python-environment-virtualenv
+                                        ;              '("--python" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/bin/python")))
+
+;;; yapf
+
+(require 'py-yapf)
+;; (add-hook 'python-mode-hook 'py-yapf-enable-on-save)
+
 
 ;; javascript
 
@@ -1973,13 +1980,15 @@ current line instead."
 ;; Theme
 
 (add-to-list 'custom-theme-load-path "~/emacs/packages/themes/")
-(load-theme 'hc-zenburn t)
+;; (load-theme 'hc-zenburn t)
 ;; (setq solarized-distinct-fringe-background +1)
 ;; (setq solarized-high-contrast-mode-line +1)
 ;; (setq solarized-use-less-bold +1)
 ;; (setq solarized-use-more-italic nil)
 ;; (setq solarized-emphasize-indicators nil)
 ;; (load-theme 'solarized-dark)
+;; (load-theme 'monochrome t)
+(load-theme 'tao-yin)
 
 ;; Toggles between russian and ukrainian input methods
 
@@ -2245,7 +2254,7 @@ Attribution: URL `http://www.masteringemacs.org/articles/2010/11/29/evaluating-e
 
 (defun js/print (text)
   (interactive "sText: ")
-  (insert (format "console.log('%s')" text))
+  (insert (format "console.log('%s');" text))
   (save-excursion
     (search-backward "console.log(" nil t)
     (indent-for-tab-command)))

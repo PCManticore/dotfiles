@@ -93,7 +93,7 @@
       inhibit-startup-message t
       major-mode 'fundamental-mode
       next-line-add-newlines nil
-      font-lock-maximum-decoration t
+      font-lock-maximum-decoration nil
       require-final-newline t
       truncate-partial-width-windows nil
       shift-select-mode nil
@@ -1688,8 +1688,9 @@ current line instead."
 
 ;; osx-org-clock-menu-bar configuration
 
-(load-file (oo-elisp-path "osx-org-clock-menubar/osx-org-clock-menubar.el"))
-(require 'osx-org-clock-menubar)
+(when (osx)
+  (load-file (oo-elisp-path "osx-org-clock-menubar/osx-org-clock-menubar.el"))
+  (require 'osx-org-clock-menubar))
 
 ;; (require 'demi-org)
 
@@ -1744,7 +1745,7 @@ current line instead."
 ;; python
 
 (elpy-enable)
-(elpy-use-ipython)
+;; (elpy-use-ipython)
 
 (eval-after-load "python"
   '(progn
@@ -1979,16 +1980,16 @@ current line instead."
 
 ;; Theme
 
-(add-to-list 'custom-theme-load-path "~/emacs/packages/themes/")
+(add-to-list 'custom-theme-load-path "~/emacs/packages/themes/tao-theme-emacs/")
 ;; (load-theme 'hc-zenburn t)
+;; (load-theme 'base16-default-dark t)
 ;; (setq solarized-distinct-fringe-background +1)
 ;; (setq solarized-high-contrast-mode-line +1)
 ;; (setq solarized-use-less-bold +1)
 ;; (setq solarized-use-more-italic nil)
 ;; (setq solarized-emphasize-indicators nil)
 ;; (load-theme 'solarized-dark)
-;; (load-theme 'monochrome t)
-(load-theme 'tao-yin)
+(load-theme 'tao-yin t)
 
 ;; Toggles between russian and ukrainian input methods
 

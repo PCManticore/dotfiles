@@ -98,6 +98,7 @@ zstyle ':completion:*' list-colors ''
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 #  * Don't complete the same twice for kill/diff.
 zstyle ':completion:*:(kill|diff):*'       ignore-line yes
+zstyle -e ':completion:*' special-dirs '[[ $PREFIX = (../)#(|.|..) ]] && reply=(..)'
 
 # Magic tab-completion trickery to pull hostnames from ~/.ssh/known_hosts:
 hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[0-9]*}%%\ *}%%,*})
@@ -129,8 +130,8 @@ _complete_menu() {
     zle complete-menu
 }
 zle -N _complete_menu
-bindkey '^F' _complete_menu
-bindkey -M menuselect '^F' accept-and-infer-next-history
+bindkey '^T' _complete_menu
+bindkey -M menuselect '^T' accept-and-infer-next-history
 bindkey -M menuselect '/'  accept-and-infer-next-history
 bindkey -M menuselect '^?' undo
 bindkey -M menuselect ' ' accept-and-hold
@@ -269,22 +270,27 @@ function cdf() { cd *$1*/ }
 alias i=sxiv
 alias ..="cd .."
 alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
 alias ls="ls -aF --color=always"
 alias ll="ls -l"
 alias lfi="ls -l | egrep -v '^d'"
 alias ldi="ls -l | egrep '^d'"
 alias lst="ls -htl | grep `date +%Y-%m-%d`"
+alias lsbiggest="ls -lSrh"
 alias grep="grep --color=always"
 alias list-fonts="fc-list | cut -f2 -d: | sort -u"
 alias ven=". venv/bin/activate"
 alias shareclip="wgetpaste -x -C"
 alias du="du -kh"
+alias duds="du -h -d 1 | ack '\d+\.?\d+G' | sort -hr"
 alias df="df -kh"
 alias xtr="extract"
 alias ec="emacsclient -a emacs -n "
 alias ect="emacsclient -a emacs -t "
 alias ping="ping -c 5"
 alias psptree="ps auxwwwf"
+alias pspn="ps -fC"
 alias upmem="ps -eo pmem,pcpu,rss,vsize,args | sort -k 1"
 alias cp="cp -ia"
 alias mv="mv -i"
@@ -295,6 +301,7 @@ alias ahss="ah s 10"
 alias aht="ah t --"
 alias ahc="ah gt --all"
 alias chubuntu="mount /dev/sda6 /mnt/ubuntu; chroot /mnt/ubuntu"
+alias j="autojump"
 # retrieve kernel config
 alias kconfig="modprobe configs && zcat /proc/config.gz > kconfig"
 # The bogomips line tells something about its performance
@@ -307,6 +314,13 @@ alias mysql='mysql --auto-vertical-output --prompt="mysql (\d) > "'
 alias clean_pyc='find . -name \*.pyc -delete'
 alias whatismyip='curl -L http://dazzlepod.com/ip/me.json'
 alias gitstat='git diff --shortstat "@{10 hour ago}"'
+
+function crtime() {
+    # Return the creation date of a file on ext2, 3, 4 filesystems.
+    # $1 - partition (e.g. /dev/sda1)
+    # $2 - filename
+    debugfs -R "stat <$(stat --printf=%i $2)>" $1 | grep crtime
+}
 
 # Turn on/off shell divider
 function sd() {
@@ -419,6 +433,12 @@ function up()
     test $DIR != "/" && echo $DIR/$TARGET
 }
 
+# Create a file with particular size
+function touchsize()
+{
+    truncate --size $1 $2
+}
+
 # Switch projects
 function switch_project() {
     base_dir="$1"
@@ -465,6 +485,9 @@ function insert-selecta-path-in-command-line() {
 zle -N insert-selecta-path-in-command-line
 # Bind the key to the newly created widget
 bindkey "^S" "insert-selecta-path-in-command-line"
+
+# autojump
+source /etc/profile.d/autojump.zsh
 
 # Run Selecta in the current git branch, output modified files.
 function insert-git-modified-file() {

@@ -274,6 +274,12 @@
        (revert-buffer)
        (dired-goto-file (expand-file-name file)))))
 
+;; Allow Emacs to treat all new files as modified
+(add-hook 'find-file-hooks 'assume-new-is-modified)
+(defun assume-new-is-modified ()
+  (when (not (file-exists-p (buffer-file-name)))
+    (set-buffer-modified-p t)))
+
 (require 'dired+)
 
 ;; dired-details configuration

@@ -217,4 +217,5 @@
 (depends-on "whole-line-or-region")
 (depends-on "xml-rpc")
 (depends-on "yasnippet")
+(depends-on "yafolding")
 (depends-on "zop-to-char")

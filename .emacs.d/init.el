@@ -639,8 +639,8 @@
                                              'open-network-stream)))
                (erc :server ,server :port ,port :nick ,nick :password ,pass))))))
 
-(asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "andrik" nil nil)
-(asf-erc-bouncer-connect erc-twice "rc.twice-irc.de" 6667 "andrik" nil nil)
+(asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "tkhno" nil nil)
+(asf-erc-bouncer-connect erc-twice "rc.twice-irc.de" 6667 "tkhno" nil nil)
 
 ;; fires up a new frame and opens your servers in there. You will need
 ;; to modify it to suit your needs.

@@ -1,5 +1,7 @@
 ;; source :: http://www.emacswiki.org/emacs/start.el
 
+(toggle-debug-on-quit)
+
 (defun osx ()
   (eq system-type 'darwin))
 
@@ -357,7 +359,7 @@
 
 (defun eshell/today ()
   (org-batch-agenda "a"))
-  ;; (save-window-excursion (prog1 (org-batch-agenda "a") (message ""))))
+;; (save-window-excursion (prog1 (org-batch-agenda "a") (message ""))))
 
 (defun eshell/todo ()
   (save-window-excursion (prog1 (org-batch-agenda "t") (message ""))))
@@ -382,7 +384,7 @@
      ;; requiring it after an eshell session is started works fine.
      ;; (require 'eshell-vc)
      (setenv "PAGER" "cat")
-     ; (set-face-attribute 'eshell-prompt nil :foreground "turquoise1")
+                                        ; (set-face-attribute 'eshell-prompt nil :foreground "turquoise1")
      (add-hook 'eshell-mode-hook ;; for some reason this needs to be a hook
                '(lambda () (define-key eshell-mode-map "\C-a" 'eshell-bol)))
      (add-hook 'eshell-mode-hook
@@ -396,7 +398,7 @@
      (add-to-list 'eshell-command-completions-alist
                   '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))
      ;; (add-to-list 'eshell-output-filter-functions 'eshell-handle-ansi-color)
-))
+     ))
 
 (defmacro with-face (str &rest properties)
   `(propertize ,str 'face (list ,@properties)))
@@ -573,7 +575,7 @@
 (setq google-translate-show-phonetic t)
 (setq google-translate-input-method-auto-toggling t)
 (setq google-translate-preferable-input-methods-alist '((nil . ("en"))
-                   (ukrainian-programmer-dvorak . ("ru" "uk"))))
+                                                        (ukrainian-programmer-dvorak . ("ru" "uk"))))
 
 (setq google-translate-translation-directions-alist
       '(("en" . "ru")
@@ -951,6 +953,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;; helm configuration
 
+(require 'helm)
 (require 'helm-config)
 
 ;;; Google Suggestions
@@ -1074,24 +1077,6 @@ Return an alist with elements like (data . number_results)."
 ;; (defun helm-google-suggest-emacs-lisp ()
 ;;   "Try to emacs lisp complete with google suggestions."
 ;;   (helm-google-suggest-set-candidates "emacs lisp"))
-
-;; (setq helm-howdoi
-;;       '((name . "howdoi google")
-;;         (candidates . (lambda ()
-;;                         (funcall helm-google-suggest-default-function)))
-;;         (action . (("howdoi" . howdoi-query)))
-;;         (volatile)
-;;         (requires-pattern . 3)
-;;         (delayed)))
-
-;; ;; and then you can call howdoi via helm like this:
-;; ;; (helm :sources 'helm-howdoi)
-
-;; (defun helm-howdoi-with-google-suggest ()
-;;   (interactive)
-;;   (helm :sources 'helm-howdoi))
-
-;; (global-set-key (kbd "C-c o g") 'helm-howdoi-with-google-suggest)
 
 ;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
 ;; (define-key helm-map (kbd "C-M-i") 'helm-select-action)
@@ -1276,7 +1261,7 @@ current line instead."
 (eval-after-load 'info
   '(progn (info-initialize)
           (add-to-list 'Info-directory-list (oo-elisp-path "magit/"))))
-(require 'magit)
+;; (require 'magit)
 
 (add-hook 'magit-log-edit-mode-hook 'flyspell-mode)
 
@@ -2132,6 +2117,18 @@ frames with exactly two windows."
 
 (add-to-list 'load-path (oo-ghq-path "github.com/capitaomorte/ecco/"))
 (require 'ecco)
+
+;; projectile
+
+(require 'projectile)
+(projectile-global-mode)
+
+;; perspective
+
+(persp-mode)
+(require 'persp-projectile)
+
+(key-chord-define-global "ss" 'projectile-persp-switch-project)
 
 ;; org-projectile
 

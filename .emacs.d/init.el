@@ -707,8 +707,8 @@
 
 ;; ezbl configuration
 
-(add-to-list 'load-path (oo-elisp-path "ezbl/"))
-(require 'ezbl)
+;; (add-to-list 'load-path (oo-elisp-path "ezbl/"))
+;; (require 'ezbl)
 
 ;; fancy narrow
 ;; (require 'fancy-narrow)
@@ -1752,7 +1752,7 @@ current line instead."
      (define-key python-mode-map (kbd "M-.") 'jedi:goto-definition)))
 
 (require 'py-autopep8)
-(add-hook 'before-save-hook 'py-autopep8-before-save)
+;; (add-hook 'before-save-hook 'py-autopep8-before-save)
 (setq py-autopep8-options '("--max-line-length=100"))
 
 ;; (setq python-environment-directory "~/projects/ncc-web-jun")
@@ -1800,6 +1800,7 @@ current line instead."
 
 (require 'rainbow-delimiters)
 (add-hook 'python-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'python-mode-hook 'fci-mode-80)
 
 ;; readability
 
@@ -2389,9 +2390,9 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 ;; Emacs WebKit
 
-(when (not (osx))
-  (add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/linuxdeepin/deepin-emacs/site-lisp/extensions/webkit/")
-  (require 'webkit))
+;; (when (not (osx))
+;;   (add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/linuxdeepin/deepin-emacs/site-lisp/extensions/webkit/")
+;;   (require 'webkit))
 
 ;; smerge mode
 

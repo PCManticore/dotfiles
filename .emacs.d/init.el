@@ -1,6 +1,6 @@
 ;; source :: http://www.emacswiki.org/emacs/start.el
 
-(toggle-debug-on-quit)
+;; (toggle-debug-on-quit)
 
 (defun osx ()
   (eq system-type 'darwin))

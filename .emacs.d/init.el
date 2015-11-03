@@ -246,6 +246,40 @@
 
 (add-hook 'dired-load-hook 'demi/dired-load-hook)
 
+(eval-after-load 'dired
+  '(progn
+     (define-key dired-mode-map (kbd "c") 'my-dired-create-file)
+     (defun create-new-file (file-list)
+       (defun exsitp-untitled-x (file-list cnt)
+         (while (and (car file-list) (not (string= (car file-list) (concat "untitled" (number-to-string cnt) ".txt"))))
+           (setq file-list (cdr file-list)))
+         (car file-list))
+       (defun exsitp-untitled (file-list)
+         (while (and (car file-list) (not (string= (car file-list) "untitled.txt")))
+           (setq file-list (cdr file-list)))
+         (car file-list))
+       (if (not (exsitp-untitled file-list))
+           "untitled.txt"
+         (let ((cnt 2))
+           (while (exsitp-untitled-x file-list cnt)
+             (setq cnt (1+ cnt)))
+           (concat "untitled" (number-to-string cnt) ".txt"))))
+     (defun my-dired-create-file (file)
+       (interactive
+        (list (read-file-name "Create file: "
+                              (concat (dired-current-directory)
+                                      (create-new-file (directory-files (dired-current-directory)))))))
+       (write-region "" nil (expand-file-name file) t)
+       (dired-add-file file)
+       (revert-buffer)
+       (dired-goto-file (expand-file-name file)))))
+
+;; Allow Emacs to treat all new files as modified
+(add-hook 'find-file-hooks 'assume-new-is-modified)
+(defun assume-new-is-modified ()
+  (when (not (file-exists-p (buffer-file-name)))
+    (set-buffer-modified-p t)))
+
 (require 'dired+)
 
 ;; dired-details configuration
@@ -605,8 +639,8 @@
                                              'open-network-stream)))
                (erc :server ,server :port ,port :nick ,nick :password ,pass))))))
 
-(asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "andrik" nil nil)
-(asf-erc-bouncer-connect erc-twice "rc.twice-irc.de" 6667 "andrik" nil nil)
+(asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "tkhno" nil nil)
+(asf-erc-bouncer-connect erc-twice "rc.twice-irc.de" 6667 "tkhno" nil nil)
 
 ;; fires up a new frame and opens your servers in there. You will need
 ;; to modify it to suit your needs.
@@ -1646,10 +1680,11 @@ current line instead."
       (when (osx)
         (start-process-shell-command
          "pomodoro-notification" nil
-         "osascript -e 'tell app \"System Events\" to display alert \"Time is over!\" message \"Time is over.\"'"))
-      (pomodoro-notification)
-      (pomodoro-notification)
-      (pomodoro-notification))))
+         "osascript -e 'tell app \"System Events\" to display alert \"Time is over!\" message \"Time is over.\"'")
+        (pomodoro-notification)
+        (pomodoro-notification)
+        (pomodoro-notification)
+        (org-clock-out)))))
 
 (defun pomodoro-start ()
   (interactive)
@@ -1672,7 +1707,7 @@ current line instead."
   (interactive)
   (setq pomodoro-count (+ pomodoro-count 1))
   (org-insert-heading nil)
-  (insert "P" (int-to-string pomodoro-count) " ")
+  (insert "Po" (int-to-string pomodoro-count) " ")
   (org-time-stamp t)
   (org-clock-in))
 
@@ -1764,11 +1799,17 @@ current line instead."
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
 (setq jedi:environment-virtualenv "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/")
-;(setq python-environment-virtualenv
-;      ("virtualenv" "--system-site-packages" "--quiet"))
-;(setq python-environment-virtualenv
-;      (append python-environment-virtualenv
-;              '("--python" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/bin/python")))
+                                        ;(setq python-environment-virtualenv
+                                        ;      ("virtualenv" "--system-site-packages" "--quiet"))
+                                        ;(setq python-environment-virtualenv
+                                        ;      (append python-environment-virtualenv
+                                        ;              '("--python" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/bin/python")))
+
+;;; yapf
+
+(require 'py-yapf)
+;; (add-hook 'python-mode-hook 'py-yapf-enable-on-save)
+
 
 ;; javascript
 
@@ -2249,7 +2290,7 @@ Attribution: URL `http://www.masteringemacs.org/articles/2010/11/29/evaluating-e
 
 (defun js/print (text)
   (interactive "sText: ")
-  (insert (format "console.log('%s')" text))
+  (insert (format "console.log('%s');" text))
   (save-excursion
     (search-backward "console.log(" nil t)
     (indent-for-tab-command)))

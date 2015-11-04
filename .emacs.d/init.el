@@ -1763,6 +1763,31 @@ current line instead."
 
 ;; python
 
+;; virtualenvwrapper
+
+(require 'virtualenvwrapper)
+(venv-initialize-interactive-shells) ;; if you want interactive shell support
+(venv-initialize-eshell) ;; if you want eshell support
+(setq venv-location "~/.virtualenvs/")
+
+;; python-mode
+
+(require 'python-mode)
+
+;; use IPython
+(setq-default py-shell-name "ipython")
+(setq-default py-which-bufname "IPython")
+
+;; switch to the interpreter after executing code
+(setq py-shell-switch-buffers-on-execute-p t)
+(setq py-switch-buffers-on-execute-p t)
+;; don't split windows
+(setq py-split-windows-on-execute-p nil)
+;; try to automagically figure out indentation
+(setq py-smart-indentation t)
+
+;;;;
+
 (elpy-enable)
 ;; (elpy-use-ipython)
 
@@ -1789,6 +1814,20 @@ current line instead."
                                         ;(setq python-environment-virtualenv
                                         ;      (append python-environment-virtualenv
                                         ;              '("--python" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/bin/python")))
+
+;; nose
+
+(require 'nose)
+
+(add-hook 'python-mode-hook '(lambda ()
+                               (nose-mode)
+                               (define-key nose-mode-map "\C-c\C-ta" 'nosetests-all)
+                               (define-key nose-mode-map "\C-c\C-tm" 'nosetests-module)
+                               (define-key nose-mode-map "\C-c\C-t." 'nosetests-one)
+                               (define-key nose-mode-map "\C-c\C-t\C-t" 'nosetests-again)
+                               (define-key nose-mode-map "\C-c\C-tpa" 'nosetests-pdb-all)
+                               (define-key nose-mode-map "\C-c\C-tpm" 'nosetests-pdb-module)
+                               (define-key nose-mode-map "\C-c\C-tp." 'nosetests-pdb-one)))
 
 ;;; yapf
 
@@ -1876,6 +1915,9 @@ current line instead."
 ;; smartparens
 
 (smartparens-global-mode)
+
+(add-hook 'python-mode-hook '(lambda ()
+                               (smartparens-mode -1)))
 
 ;; Source: https://github.com/Fuco1/smartparens/wiki/Example-configuration
 

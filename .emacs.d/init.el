@@ -1,5 +1,7 @@
 ;; source :: http://www.emacswiki.org/emacs/start.el
 
+;; (toggle-debug-on-quit)
+
 (defun osx ()
   (eq system-type 'darwin))
 
@@ -582,7 +584,7 @@
 (setq google-translate-show-phonetic t)
 (setq google-translate-input-method-auto-toggling t)
 (setq google-translate-preferable-input-methods-alist '((nil . ("en"))
-                   (ukrainian-programmer-dvorak . ("ru" "uk"))))
+                                                        (ukrainian-programmer-dvorak . ("ru" "uk"))))
 
 (setq google-translate-translation-directions-alist
       '(("en" . "ru")
@@ -983,6 +985,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;; helm configuration
 
+(require 'helm)
 (require 'helm-config)
 
 ;;; Google Suggestions
@@ -1106,24 +1109,6 @@ Return an alist with elements like (data . number_results)."
 ;; (defun helm-google-suggest-emacs-lisp ()
 ;;   "Try to emacs lisp complete with google suggestions."
 ;;   (helm-google-suggest-set-candidates "emacs lisp"))
-
-;; (setq helm-howdoi
-;;       '((name . "howdoi google")
-;;         (candidates . (lambda ()
-;;                         (funcall helm-google-suggest-default-function)))
-;;         (action . (("howdoi" . howdoi-query)))
-;;         (volatile)
-;;         (requires-pattern . 3)
-;;         (delayed)))
-
-;; ;; and then you can call howdoi via helm like this:
-;; ;; (helm :sources 'helm-howdoi)
-
-;; (defun helm-howdoi-with-google-suggest ()
-;;   (interactive)
-;;   (helm :sources 'helm-howdoi))
-
-;; (global-set-key (kbd "C-c o g") 'helm-howdoi-with-google-suggest)
 
 ;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
 ;; (define-key helm-map (kbd "C-M-i") 'helm-select-action)
@@ -1308,7 +1293,7 @@ current line instead."
 (eval-after-load 'info
   '(progn (info-initialize)
           (add-to-list 'Info-directory-list (oo-elisp-path "magit/"))))
-(require 'magit)
+;; (require 'magit)
 
 (add-hook 'magit-log-edit-mode-hook 'flyspell-mode)
 
@@ -1810,6 +1795,31 @@ current line instead."
 
 ;; python
 
+;; virtualenvwrapper
+
+(require 'virtualenvwrapper)
+(venv-initialize-interactive-shells) ;; if you want interactive shell support
+(venv-initialize-eshell) ;; if you want eshell support
+(setq venv-location "~/.virtualenvs/")
+
+;; python-mode
+
+(require 'python-mode)
+
+;; use IPython
+(setq-default py-shell-name "ipython")
+(setq-default py-which-bufname "IPython")
+
+;; switch to the interpreter after executing code
+(setq py-shell-switch-buffers-on-execute-p t)
+(setq py-switch-buffers-on-execute-p t)
+;; don't split windows
+(setq py-split-windows-on-execute-p nil)
+;; try to automagically figure out indentation
+(setq py-smart-indentation t)
+
+;;;;
+
 (elpy-enable)
 ;; (elpy-use-ipython)
 
@@ -1819,7 +1829,7 @@ current line instead."
      (define-key python-mode-map (kbd "M-.") 'jedi:goto-definition)))
 
 (require 'py-autopep8)
-(add-hook 'before-save-hook 'py-autopep8-before-save)
+;; (add-hook 'before-save-hook 'py-autopep8-before-save)
 (setq py-autopep8-options '("--max-line-length=100"))
 
 ;; (setq python-environment-directory "~/projects/ncc-web-jun")
@@ -1836,6 +1846,20 @@ current line instead."
                                         ;(setq python-environment-virtualenv
                                         ;      (append python-environment-virtualenv
                                         ;              '("--python" "/Users/atykhonov/projects/ncc-web-jun/.virtualenv/bin/python")))
+
+;; nose
+
+(require 'nose)
+
+(add-hook 'python-mode-hook '(lambda ()
+                               (nose-mode)
+                               (define-key nose-mode-map "\C-c\C-ta" 'nosetests-all)
+                               (define-key nose-mode-map "\C-c\C-tm" 'nosetests-module)
+                               (define-key nose-mode-map "\C-c\C-t." 'nosetests-one)
+                               (define-key nose-mode-map "\C-c\C-t\C-t" 'nosetests-again)
+                               (define-key nose-mode-map "\C-c\C-tpa" 'nosetests-pdb-all)
+                               (define-key nose-mode-map "\C-c\C-tpm" 'nosetests-pdb-module)
+                               (define-key nose-mode-map "\C-c\C-tp." 'nosetests-pdb-one)))
 
 ;;; yapf
 
@@ -1873,6 +1897,7 @@ current line instead."
 
 (require 'rainbow-delimiters)
 (add-hook 'python-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'python-mode-hook 'fci-mode-80)
 
 ;; readability
 
@@ -1922,6 +1947,9 @@ current line instead."
 ;; smartparens
 
 (smartparens-global-mode)
+
+(add-hook 'python-mode-hook '(lambda ()
+                               (smartparens-mode -1)))
 
 ;; Source: https://github.com/Fuco1/smartparens/wiki/Example-configuration
 
@@ -2163,6 +2191,18 @@ frames with exactly two windows."
 
 ;; (add-to-list 'load-path (oo-ghq-path "github.com/capitaomorte/ecco/"))
 ;; (require 'ecco)
+
+;; projectile
+
+(require 'projectile)
+(projectile-global-mode)
+
+;; perspective
+
+(persp-mode)
+(require 'persp-projectile)
+
+(key-chord-define-global "ss" 'projectile-persp-switch-project)
 
 ;; org-projectile
 

@@ -6,7 +6,7 @@
  '(ac-auto-start 1)
  '(ansi-color-names-vector
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
- '(browse-url-browser-function (quote eww-browse-url))
+ '(browse-url-browser-function (quote browse-url-firefox))
  '(custom-safe-themes
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "603a9c7f3ca3253cb68584cb26c408afcf4e674d7db86badcfe649dd3c538656" "40bc0ac47a9bd5b8db7304f8ef628d71e2798135935eb450483db0dbbfff8b11" "3f04f37604c5f5cc3c71bc1a4a604ed8be340d0f150946b25658e403ccbad6d2" "8a36587d6cbcc30c85372568ed29d45ec393a32e3c779cba8cfd5fade229025d" "1abda075ebacaa3795d675bb2be0a905322ac856f9c0c259da63f9ccfe1962ec" "d76af04d97252fafacedc7860f862f60d61fdcfbd026aeba90f8d07d8da51375" "01d8c9140c20e459dcc18addb6faebd7803f7d6c46d626c7966d3f18284c4502" "5d8caed7f4ed8929fd79e863de3a38fbb1aaa222970b551edfd2e84552fec020" "d3a86848a5e9bf123f3dd3bf82ab96995837b50f780dd7d5f65dc72c2b81a955" "6dbd0dd4c344f1ca534422cc5a1fd3ed822dcde947ae983948b70c7284a0ed33" "3539b3cc5cbba41609117830a79f71309a89782f23c740d4a5b569935f9b7726" "9f3a4edb56d094366afed2a9ba3311bbced0f32ca44a47a765d8ef4ce5b8e4ea" "ced74ff794aad9ac93266bf9a9a92c5641c01b05715c6862e30459a24844eec9" "00f09a2728377a37e9a24d631de94cc7440e0803e218474cac287061951c205c" "fe6fb0cb1aa50dc563d81aad98c470a30f4e89db6d55a108f1083f33317ad413" "73ae6088787f6f72ef52f19698b25bc6f0edf47b9e677bf0a85e3a1e8a7a3b17" "3f7db1a70bee5e15a3d72b016a7e05f6d813b6868e88961c46019b57d0b29452" "5d139820639cd941c60033dcdd462bf5fffa76da549e6bdf1d83945803d30f01" "6184465774e662dc5f3ddb0751b20d97aaff2ae95d5cf3c885b6c1944ddcb371" "54a8c782a7a66e9aeb542af758f7f9f1a5702b956f425ffe15fccf5339f01f1e" "cc495c40747ae22dd2de6e250cbd9a408e3588b59989368af565deeeff334126" "d72836155cd3b3e52fd86a9164120d597cbe12a67609ab90effa54710b2ac53b" "17f35b689dd41e49cb740bfb810ac8a53d13292cbebf68f41f772787d8b3aebf" "e7ec0cc3ce134cc0bd420b98573bbd339a908ac24162b8034c98e1ba5ee1f9f6" "113ae6902d98261317b5507e55ac6e7758af81fc4660c34130490252640224a2" "0ed983facae99849805b2f7be926561cb58474eb18e5296d9bb3ad7f9b088a5b" "c56d90af9285708041991bbc780a073182cbe91721de17c6e7a8aac1380336b3" "2a86b339554590eb681ecf866b64ce4814d58e6d093966b1bf5a184acf78874d" "f15a7ce08b9e13553c1f230678e9ceb5b372f8da26c9fb815eb20df3492253b7" "8f1cedf54f137f71382e3367e1843d10e173add99abe3a5f7d3285f5cc18f1a9" "8022cea21aa4daca569aee5c1b875fbb3f3248a5debc6fc8cf5833f2936fbb22" "e3c90203acbde2cf8016c6ba3f9c5300c97ddc63fcb78d84ca0a144d402eedc6" "a0fdc9976885513b03b000b57ddde04621d94c3a08f3042d1f6e2dbc336d25c7" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "1297a022df4228b81bc0436230f211bad168a117282c20ddcba2db8c6a200743" "756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "f1066dac827f4bb0267b507bd9c5f58845c056c1c1643fae92f9c56902a2f118" "007b69ffec046a5842e34fea287b23c49175dfd6c6d5a0d9cdf150a2e8a8979f" default)))
@@ -51,6 +51,8 @@
  '(ido-default-buffer-method (quote selected-window))
  '(indicate-buffer-boundaries (quote left))
  '(initial-buffer-choice t)
+ '(jenkins-api-url
+   "http://jenkins-product.srt.mirantis.net:8080/job/custom_8.0_iso/api/xml")
  '(mail-source-delete-incoming t)
  '(mediawiki-site-alist
    (quote
@@ -116,8 +118,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#161616" :foreground "#C2C2C2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight light :height 160 :width normal :foundry "nil" :family "Source Code Pro"))))
- '(gnus-hl-line ((t (:inherit (hl-line default) :background "gray50"))) t)
+ '(default ((t (:inherit nil :stipple nil :background "#161616" :foreground "#C2C2C2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "adobe" :family "Source Code Pro"))))
+ '(gnus-hl-line ((t (:inherit (hl-line default) :background "gray50"))))
  '(gnus-summary-low-read ((t (:inherit zenburn-green :foreground "#7F9F7F" :weight ultra-light))))
  '(hl-line-face ((t (:background "gray12"))) t)
  '(markdown-header-delimiter-face ((t (:inherit font-lock-function-name-face :underline t :weight bold))))

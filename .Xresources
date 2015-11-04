@@ -229,6 +229,8 @@ XTerm*scaleHeight: 1.1
 XTerm*visualbell: true
 XTerm*bellIsUrgent: true
 
+URxvt.urgentOnBell: true
+
 URxvt.depth: 32
 ! URxvt.background: [95]#000000
 URxvt.background: [95]#313131

@@ -12,7 +12,7 @@
 
 # {{{ Environment
 export HOMEBIN="${HOME}/bin"
-export PATH="${HOMEBIN}:/usr/lib/distcc/bin:${PATH}:/usr/local/bin:/usr/local/sbin:${HOME}/.cask/bin:${HOME}/go/bin"
+export PATH="${HOMEBIN}:/usr/bin/mh/:/usr/lib/distcc/bin:${PATH}:/usr/local/bin:/usr/local/sbin:${HOME}/.cask/bin:${HOME}/go/bin"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -67,6 +67,7 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt APPEND_HISTORY
 setopt EXTENDED_HISTORY
+setopt beep  # bell on error
 
 # Prompt requirements
 setopt extended_glob prompt_subst
@@ -238,19 +239,19 @@ function zkbd_file() {
     return 1
 }
 
-[[ ! -d ~/.zkbd ]] && mkdir ~/.zkbd
-keyfile=$(zkbd_file)
+# [[ ! -d ~/.zkbd ]] && mkdir ~/.zkbd
+# keyfile=$(zkbd_file)
 ret=$?
 if [[ ${ret} -ne 0 ]]; then
-    zkbd
-    keyfile=$(zkbd_file)
-    ret=$?
+    # zkbd
+    # keyfile=$(zkbd_file)
+    # ret=$?
 fi
-if [[ ${ret} -eq 0 ]] ; then
-    source "${keyfile}"
-else
-    printf 'Failed to setup keys using zkbd.\n'
-fi
+# if [[ ${ret} -eq 0 ]] ; then
+# source "${keyfile}"
+# else
+#    printf 'Failed to setup keys using zkbd.\n'
+# fi
 unfunction zkbd_file; unset keyfile ret
 
 [[ -n "${key[Home]}"    ]]  && bindkey  "${key[Home]}"    beginning-of-line
@@ -314,6 +315,11 @@ alias mysql='mysql --auto-vertical-output --prompt="mysql (\d) > "'
 alias clean_pyc='find . -name \*.pyc -delete'
 alias whatismyip='curl -L http://dazzlepod.com/ip/me.json'
 alias gitstat='git diff --shortstat "@{10 hour ago}"'
+alias jc='java -jar /home/tkhno/projects/open-source/tools/jenkins-cli/jenkins-cli.jar -s http://jenkins-product.srt.mirantis.net:8080/'
+alias psi='python setup.py install'
+alias pir='pip install -r requirements.txt'
+alias gca='git commit --amend'
+alias bel="tput bel"
 
 function crtime() {
     # Return the creation date of a file on ext2, 3, 4 filesystems.
@@ -487,7 +493,7 @@ zle -N insert-selecta-path-in-command-line
 bindkey "^S" "insert-selecta-path-in-command-line"
 
 # autojump
-source /etc/profile.d/autojump.zsh
+# source /etc/profile.d/autojump.zsh
 
 # Run Selecta in the current git branch, output modified files.
 function insert-git-modified-file() {
@@ -739,3 +745,6 @@ cd ${HOME}
 # }}}
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+. /usr/local/bin/virtualenvwrapper.sh
+
+setxkbmap -layout us,ua -variant dvp, -option compose:102 -option keypad:atm -option numpad:shift3 -option kpdl:semi -option ctrl:swapcaps -option grp:shifts_toggle

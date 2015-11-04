@@ -35,9 +35,13 @@
     (progn
       (setq open-source-path "/Users/atykhonov/.ghq/")
       (setq open-source-elisp "/Users/atykhonov/elisp/"))
-  (progn
-    (setq open-source-path "/str/development/projects/open-source/.ghq/")
-    (setq open-source-elisp "/str/development/projects/open-source/elisp/")))
+  (if (str-exists)
+      (progn
+	(setq open-source-path "/str/development/projects/open-source/.ghq/")
+	(setq open-source-elisp "/str/development/projects/open-source/elisp/"))
+    (progn
+      (setq open-source-path "~/projects/open-source/.ghq/")
+      (setq open-source-elisp "~/projects/open-source/elisp/"))))
 
 (defun oo-elisp-path (path)
   (concat open-source-elisp path))
@@ -68,10 +72,10 @@
 (package-initialize)
 
 
-(when (not (osx))
-  (add-to-list 'load-path (oo-elisp-path "bisect.el/"))
-  (require 'bisect)
-  (bisect-load))
+;; (when (not (osx))
+;;   (add-to-list 'load-path (oo-elisp-path "bisect.el/"))
+;;   (require 'bisect)
+;;   (bisect-load))
 
 (let ((sensitive-file "~/.emacs.d/sensitive.el"))
   (when (file-readable-p sensitive-file)
@@ -154,14 +158,19 @@
 (global-set-key (kbd "C-c C-b i") 'bump-version-minor)
 (global-set-key (kbd "C-c C-b m") 'bump-version-major)
 
+;; magit gerrit
+
+(setq-default magit-gerrit-ssh-creds "atykhonov@review.openstack.org")
+
+
 ;; Cedet
 
 (semantic-mode 1)
 
 (add-to-list 'load-path (oo-elisp-path "cedet/contrib"))
 
-(when (not (osx))
-  (require 'eassist))
+;; (when (not (osx))
+;;   (require 'eassist))
 
 (eval-after-load "eassist"
   '(global-set-key [f3] 'psw-switch-function))
@@ -357,7 +366,7 @@
 
 (defun eshell/today ()
   (org-batch-agenda "a"))
-  ;; (save-window-excursion (prog1 (org-batch-agenda "a") (message ""))))
+;; (save-window-excursion (prog1 (org-batch-agenda "a") (message ""))))
 
 (defun eshell/todo ()
   (save-window-excursion (prog1 (org-batch-agenda "t") (message ""))))
@@ -382,7 +391,7 @@
      ;; requiring it after an eshell session is started works fine.
      ;; (require 'eshell-vc)
      (setenv "PAGER" "cat")
-     ; (set-face-attribute 'eshell-prompt nil :foreground "turquoise1")
+                                        ; (set-face-attribute 'eshell-prompt nil :foreground "turquoise1")
      (add-hook 'eshell-mode-hook ;; for some reason this needs to be a hook
                '(lambda () (define-key eshell-mode-map "\C-a" 'eshell-bol)))
      (add-hook 'eshell-mode-hook
@@ -396,7 +405,7 @@
      (add-to-list 'eshell-command-completions-alist
                   '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))
      ;; (add-to-list 'eshell-output-filter-functions 'eshell-handle-ansi-color)
-))
+     ))
 
 (defmacro with-face (str &rest properties)
   `(propertize ,str 'face (list ,@properties)))
@@ -617,6 +626,29 @@
 
 (add-hook 'org-mode-hook 'demi/guide-key-org-mode-hook)
 
+;; circe configuration
+
+(setq circe-network-options
+      '(("Freenode"
+         :tls t
+         :nick "tkhno"
+         :sasl-username "tkhno"
+         :channels ("#emacs" "##linux"
+                    "#fuel" "#fuel-dev" "#fuel-infra" "#fuel-ui" "#fuel-tracker"
+                    "#fuel-docs" "#fuel-qa" "#fuel-python"
+                    "#mirantis" "#openstack"))))
+
+(setq lui-max-buffer-size 30000
+      lui-flyspell-p t)
+
+(eval-after-load "circe"
+  '(progn
+     (require 'lui-irc-colors)
+     (add-to-list 'lui-pre-output-hook 'lui-irc-colors)))
+
+;; Do not show JOIN, PART and QUIT messages.
+(setq circe-reduce-lurker-spam t)
+
 ;; erc configuration
 
 (setq erc-hide-list '("JOIN" "QUIT"))
@@ -741,8 +773,8 @@
 
 ;; ezbl configuration
 
-(add-to-list 'load-path (oo-elisp-path "ezbl/"))
-(require 'ezbl)
+;; (add-to-list 'load-path (oo-elisp-path "ezbl/"))
+;; (require 'ezbl)
 
 ;; fancy narrow
 ;; (require 'fancy-narrow)
@@ -1193,8 +1225,8 @@ Return an alist with elements like (data . number_results)."
 (add-to-list 'load-path (oo-elisp-path "iregister.el/"))
 (require 'iregister)
 
-(global-set-key (kbd "H-v") 'iregister-jump-to-next-marker)
-(global-set-key (kbd "H-z") 'iregister-jump-to-previous-marker)
+(global-set-key (kbd "s-v") 'iregister-jump-to-next-marker)
+(global-set-key (kbd "s-z") 'iregister-jump-to-previous-marker)
 
 (global-set-key (kbd "M-l") 'iregister-latest-text)
 (global-set-key (kbd "M-c") 'iregister-text)
@@ -1609,8 +1641,8 @@ current line instead."
 
 ;;; org-mode configuration
 
-(when (not (osx))
-  (load-file "~/.emacs.d/demi-org.el"))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/demi-org.el"))
 
 (when (osx)
   (add-hook
@@ -1844,9 +1876,9 @@ current line instead."
 
 ;; readability
 
-(when (not (osx))
-  (load-file "~/.emacs.d/demi-readability.el")
-  (require 'demi-readability))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/demi-readability.el")
+;;   (require 'demi-readability))
 
 ;; rename-file-and-buffer
 
@@ -1883,9 +1915,9 @@ current line instead."
 
 ;; sauron
 
-(when (not (osx))
-  (load-file "~/.emacs.d/demi-sauron.el")
-  (require 'demi-sauron))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/demi-sauron.el")
+;;   (require 'demi-sauron))
 
 ;; smartparens
 
@@ -2062,9 +2094,9 @@ current line instead."
 
 ;; w3m
 
-(when (not (osx))
-  (load-file "~/.emacs.d/demi-w3m.el")
-  (require 'demi-w3m))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/demi-w3m.el")
+;;   (require 'demi-w3m))
 
 ;; Swap two windows
 
@@ -2122,21 +2154,21 @@ frames with exactly two windows."
 
 ;; workgroups configuration
 
-(when (not (osx))
-  (add-to-list 'load-path (oo-elisp-path "workgroups.el/"))
-  (require 'workgroups)
-  (setq wg-prefix-key (kbd "C-c z")))
+;; (when (not (osx))
+;;   (add-to-list 'load-path (oo-elisp-path "workgroups.el/"))
+;;   (require 'workgroups)
+;;   (setq wg-prefix-key (kbd "C-c z")))
 
 ;; ecco configuration
 
-(add-to-list 'load-path (oo-ghq-path "github.com/capitaomorte/ecco/"))
-(require 'ecco)
+;; (add-to-list 'load-path (oo-ghq-path "github.com/capitaomorte/ecco/"))
+;; (require 'ecco)
 
 ;; org-projectile
 
-(when (not (osx))
-  (add-to-list 'load-path (oo-ghq-path "github.com/IvanMalison/org-projectile"))
-  (require 'org-projectile))
+;; (when (not (osx))
+;;   (add-to-list 'load-path (oo-ghq-path "github.com/IvanMalison/org-projectile"))
+;;   (require 'org-projectile))
 
 ;; xml tools
 
@@ -2430,9 +2462,9 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 ;; Emacs WebKit
 
-(when (not (osx))
-  (add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/linuxdeepin/deepin-emacs/site-lisp/extensions/webkit/")
-  (require 'webkit))
+;; (when (not (osx))
+;;   (add-to-list 'load-path "/str/development/projects/open-source/.ghq/github.com/linuxdeepin/deepin-emacs/site-lisp/extensions/webkit/")
+;;   (require 'webkit))
 
 ;; smerge mode
 
@@ -2525,8 +2557,8 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (defalias 'list-buffers 'ibuffer)
 
-(when (not (osx))
-  (load-file "~/.emacs.d/annot.el"))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/annot.el"))
 
 (setq c-default-style "linux" c-basic-offset 4)
 (add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -2534,9 +2566,9 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 ;; (add-to-list 'load-path (oo-elisp-path "ljupdate/"))
 ;; (require 'ljupdate)
 
-(when (not (osx))
-  (load-file "~/.emacs.d/ezbl.el")
-  (require 'ezbl))
+;; (when (not (osx))
+;;   (load-file (oo-elisp-path "ezbl.el"))
+;;   (require 'ezbl))
 
 (autoload 'turn-on-eldoc-mode "eldoc" nil t)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
@@ -2615,9 +2647,9 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 ; lisp-interaction-mode-hook
 
-(when (not (osx))
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
-  (require 'xdvi-search))
+;; (when (not (osx))
+;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
+;;   (require 'xdvi-search))
 
 (setq org-cycle-emulate-tab 'white)
 
@@ -2726,9 +2758,9 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (global-set-key (kbd "H-SPC") 'hippie-expand)
 
-(add-to-list 'load-path (oo-ghq-path "code.google.com/p/emacs-soap-client/"))
-(require 'soap-client)
-(setq jiralib-url "https://qbeats.atlassian.net/")
+;; (add-to-list 'load-path (oo-ghq-path "code.google.com/p/emacs-soap-client/"))
+;; (require 'soap-client)
+;; (setq jiralib-url "https://qbeats.atlassian.net/")
 
 (add-to-list
  'directory-abbrev-alist
@@ -2763,32 +2795,3 @@ Narrowing to org-src-block actually calls `org-edit-src-code'.
 
 With prefix P, don't widen, just narrow even if buffer is already
 narrowed."
-  (interactive "P")
-  (declare (interactive-only))
-  (cond ((and (buffer-narrowed-p) (not p)) (widen))
-        ((region-active-p)
-         (narrow-to-region (region-beginning) (region-end)))
-        ((derived-mode-p 'org-mode)
-         ;; `org-edit-src-code' is not a real narrowing command.
-         ;; Remove this first conditional if you don't want it.
-         (cond ((ignore-errors (org-edit-src-code))
-                (delete-other-windows))
-               ((org-at-block-p)
-                (org-narrow-to-block))
-               (t (org-narrow-to-subtree))))
-        (t (narrow-to-defun))))
-
-;; (define-key endless/toggle-map "n" #'narrow-or-widen-dwim)
-;; This line actually replaces Emacs' entire narrowing keymap, that's
-;; how much I like this command. Only copy it if that's what you want.
-(define-key ctl-x-map "n" #'narrow-or-widen-dwim)
-
-;; (when (osx)
-;;   (set-default-font "-*-Source Code Pro-light-normal-normal-*-20-*-*-*-m-0-iso10646-1")
-;;   ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
-;;   (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-0-light-20")))
-
-(when (osx)
-  (set-face-attribute 'default nil :family "Source Code Pro")
-  (set-face-attribute 'default nil :height 200)
-  (set-face-attribute 'default nil :weight 'light))

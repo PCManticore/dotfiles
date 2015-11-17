@@ -37,9 +37,13 @@
     (progn
       (setq open-source-path "/Users/atykhonov/.ghq/")
       (setq open-source-elisp "/Users/atykhonov/elisp/"))
-  (progn
-    (setq open-source-path "/str/development/projects/open-source/.ghq/")
-    (setq open-source-elisp "/str/development/projects/open-source/elisp/")))
+  (if (str-exists)
+      (progn
+	(setq open-source-path "/str/development/projects/open-source/.ghq/")
+	(setq open-source-elisp "/str/development/projects/open-source/elisp/"))
+    (progn
+      (setq open-source-path "~/projects/open-source/.ghq/")
+      (setq open-source-elisp "~/projects/open-source/elisp/"))))
 
 (defun oo-elisp-path (path)
   (concat open-source-elisp path))
@@ -70,10 +74,10 @@
 (package-initialize)
 
 
-(when (not (osx))
-  (add-to-list 'load-path (oo-elisp-path "bisect.el/"))
-  (require 'bisect)
-  (bisect-load))
+;; (when (not (osx))
+;;   (add-to-list 'load-path (oo-elisp-path "bisect.el/"))
+;;   (require 'bisect)
+;;   (bisect-load))
 
 (let ((sensitive-file "~/.emacs.d/sensitive.el"))
   (when (file-readable-p sensitive-file)
@@ -156,14 +160,19 @@
 (global-set-key (kbd "C-c C-b i") 'bump-version-minor)
 (global-set-key (kbd "C-c C-b m") 'bump-version-major)
 
+;; magit gerrit
+
+(setq-default magit-gerrit-ssh-creds "atykhonov@review.openstack.org")
+
+
 ;; Cedet
 
 (semantic-mode 1)
 
 (add-to-list 'load-path (oo-elisp-path "cedet/contrib"))
 
-(when (not (osx))
-  (require 'eassist))
+;; (when (not (osx))
+;;   (require 'eassist))
 
 (eval-after-load "eassist"
   '(global-set-key [f3] 'psw-switch-function))
@@ -619,6 +628,29 @@
 
 (add-hook 'org-mode-hook 'demi/guide-key-org-mode-hook)
 
+;; circe configuration
+
+(setq circe-network-options
+      '(("Freenode"
+         :tls t
+         :nick "tkhno"
+         :sasl-username "tkhno"
+         :channels ("#emacs" "##linux"
+                    "#fuel" "#fuel-dev" "#fuel-infra" "#fuel-ui" "#fuel-tracker"
+                    "#fuel-docs" "#fuel-qa" "#fuel-python"
+                    "#mirantis" "#openstack"))))
+
+(setq lui-max-buffer-size 30000
+      lui-flyspell-p t)
+
+(eval-after-load "circe"
+  '(progn
+     (require 'lui-irc-colors)
+     (add-to-list 'lui-pre-output-hook 'lui-irc-colors)))
+
+;; Do not show JOIN, PART and QUIT messages.
+(setq circe-reduce-lurker-spam t)
+
 ;; erc configuration
 
 (setq erc-hide-list '("JOIN" "QUIT"))
@@ -1059,8 +1091,8 @@ Return an alist with elements like (data . number_results)."
   (let ((arg (concat helm-google-suggest-search-url
                      (url-hexify-string candidate))))
     (helm-aif helm-google-suggest-default-browser-function
-              (funcall it arg)
-              (helm-browse-url arg))))
+        (funcall it arg)
+      (helm-browse-url arg))))
 
 (defvar helm-google-suggest-default-function
   'helm-google-suggest-set-candidates
@@ -1178,8 +1210,8 @@ Return an alist with elements like (data . number_results)."
 (add-to-list 'load-path (oo-elisp-path "iregister.el/"))
 (require 'iregister)
 
-(global-set-key (kbd "H-v") 'iregister-jump-to-next-marker)
-(global-set-key (kbd "H-z") 'iregister-jump-to-previous-marker)
+(global-set-key (kbd "s-v") 'iregister-jump-to-next-marker)
+(global-set-key (kbd "s-z") 'iregister-jump-to-previous-marker)
 
 (global-set-key (kbd "M-l") 'iregister-latest-text)
 (global-set-key (kbd "M-c") 'iregister-text)
@@ -1594,8 +1626,8 @@ current line instead."
 
 ;;; org-mode configuration
 
-(when (not (osx))
-  (load-file "~/.emacs.d/demi-org.el"))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/demi-org.el"))
 
 (when (osx)
   (add-hook
@@ -1637,7 +1669,7 @@ current line instead."
 		   (if org-timer-current-timer (org-timer-cancel-timer))
 		   (org-timer-set-timer minutes)))
 	     (setq pomodoro-is-active t)))
-;(setq org-clock-in-prepare-hook nil)
+                                        ;(setq org-clock-in-prepare-hook nil)
 
 ;; The timer is finished automatically when a task is clocking
 ;; out. When finishing the timer it asks for a time interval of a
@@ -1870,9 +1902,9 @@ current line instead."
 
 ;; readability
 
-(when (not (osx))
-  (load-file "~/.emacs.d/demi-readability.el")
-  (require 'demi-readability))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/demi-readability.el")
+;;   (require 'demi-readability))
 
 ;; rename-file-and-buffer
 
@@ -1909,9 +1941,9 @@ current line instead."
 
 ;; sauron
 
-(when (not (osx))
-  (load-file "~/.emacs.d/demi-sauron.el")
-  (require 'demi-sauron))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/demi-sauron.el")
+;;   (require 'demi-sauron))
 
 ;; smartparens
 
@@ -2088,9 +2120,9 @@ current line instead."
 
 ;; w3m
 
-(when (not (osx))
-  (load-file "~/.emacs.d/demi-w3m.el")
-  (require 'demi-w3m))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/demi-w3m.el")
+;;   (require 'demi-w3m))
 
 ;; Swap two windows
 
@@ -2148,15 +2180,15 @@ frames with exactly two windows."
 
 ;; workgroups configuration
 
-(when (not (osx))
-  (add-to-list 'load-path (oo-elisp-path "workgroups.el/"))
-  (require 'workgroups)
-  (setq wg-prefix-key (kbd "C-c z")))
+;; (when (not (osx))
+;;   (add-to-list 'load-path (oo-elisp-path "workgroups.el/"))
+;;   (require 'workgroups)
+;;   (setq wg-prefix-key (kbd "C-c z")))
 
 ;; ecco configuration
 
-(add-to-list 'load-path (oo-ghq-path "github.com/capitaomorte/ecco/"))
-(require 'ecco)
+;; (add-to-list 'load-path (oo-ghq-path "github.com/capitaomorte/ecco/"))
+;; (require 'ecco)
 
 ;; projectile
 
@@ -2172,9 +2204,9 @@ frames with exactly two windows."
 
 ;; org-projectile
 
-(when (not (osx))
-  (add-to-list 'load-path (oo-ghq-path "github.com/IvanMalison/org-projectile"))
-  (require 'org-projectile))
+;; (when (not (osx))
+;;   (add-to-list 'load-path (oo-ghq-path "github.com/IvanMalison/org-projectile"))
+;;   (require 'org-projectile))
 
 ;; xml tools
 
@@ -2186,12 +2218,12 @@ nothing but whitespace between them.  It then indents the markup
 by using nxml's indentation rules."
   (interactive "r")
   (save-excursion
-      ;; (nxml-mode)
-      (goto-char begin)
-      (while (search-forward-regexp "\>[ \\t]*\<" nil t)
-        (backward-char) (insert "\n"))
-      (indent-region begin end))
-    (message "Ah, much better!"))
+    ;; (nxml-mode)
+    (goto-char begin)
+    (while (search-forward-regexp "\>[ \\t]*\<" nil t)
+      (backward-char) (insert "\n"))
+    (indent-region begin end))
+  (message "Ah, much better!"))
 
 (defun cheeso-pretty-print-xml-region (begin end)
   "Pretty format XML markup in region. You need to have nxml-mode
@@ -2563,8 +2595,8 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (defalias 'list-buffers 'ibuffer)
 
-(when (not (osx))
-  (load-file "~/.emacs.d/annot.el"))
+;; (when (not (osx))
+;;   (load-file "~/.emacs.d/annot.el"))
 
 (setq c-default-style "linux" c-basic-offset 4)
 (add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -2572,16 +2604,16 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 ;; (add-to-list 'load-path (oo-elisp-path "ljupdate/"))
 ;; (require 'ljupdate)
 
-(when (not (osx))
-  (load-file "~/.emacs.d/ezbl.el")
-  (require 'ezbl))
+;; (when (not (osx))
+;;   (load-file (oo-elisp-path "ezbl.el"))
+;;   (require 'ezbl))
 
 (autoload 'turn-on-eldoc-mode "eldoc" nil t)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
-; Don't show whitespace in diff, but show context
+                                        ; Don't show whitespace in diff, but show context
 (setq vc-diff-switches '("-b" "-B" "-u"))
 
 ;; (load-file "/str/learning/elisp/ssh.el")
@@ -2651,11 +2683,11 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
             (font-lock-add-keywords nil
                                     '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 
-; lisp-interaction-mode-hook
+                                        ; lisp-interaction-mode-hook
 
-(when (not (osx))
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
-  (require 'xdvi-search))
+;; (when (not (osx))
+;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
+;;   (require 'xdvi-search))
 
 (setq org-cycle-emulate-tab 'white)
 
@@ -2764,9 +2796,9 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 
 (global-set-key (kbd "H-SPC") 'hippie-expand)
 
-(add-to-list 'load-path (oo-ghq-path "code.google.com/p/emacs-soap-client/"))
-(require 'soap-client)
-(setq jiralib-url "https://qbeats.atlassian.net/")
+;; (add-to-list 'load-path (oo-ghq-path "code.google.com/p/emacs-soap-client/"))
+;; (require 'soap-client)
+;; (setq jiralib-url "https://qbeats.atlassian.net/")
 
 (add-to-list
  'directory-abbrev-alist
@@ -2782,12 +2814,12 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
    (setq local-abbrev-table my-tramp-abbrev-table)))
 
 (defadvice minibuffer-complete
-  (before my-minibuffer-complete activate)
+    (before my-minibuffer-complete activate)
   (expand-abbrev))
 
 ;; If you use partial-completion-mode
 (defadvice PC-do-completion
-  (before my-PC-do-completion activate)
+    (before my-PC-do-completion activate)
   (expand-abbrev))
 
 (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)

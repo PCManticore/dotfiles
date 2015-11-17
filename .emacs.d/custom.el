@@ -6,7 +6,7 @@
  '(ac-auto-start 1)
  '(ansi-color-names-vector
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
- '(browse-url-browser-function (quote eww-browse-url))
+ '(browse-url-browser-function (quote browse-url-firefox))
  '(custom-safe-themes
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default)))
@@ -42,6 +42,8 @@
  '(ido-default-buffer-method (quote selected-window))
  '(indicate-buffer-boundaries (quote left))
  '(initial-buffer-choice t)
+ '(jenkins-api-url
+   "http://jenkins-product.srt.mirantis.net:8080/job/custom_8.0_iso/api/xml")
  '(mail-source-delete-incoming t)
  '(mediawiki-site-alist
    (quote
@@ -107,8 +109,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#161616" :foreground "#C2C2C2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight light :height 160 :width normal :foundry "nil" :family "Source Code Pro"))))
- '(gnus-hl-line ((t (:inherit (hl-line default) :background "gray50"))) t)
+ '(default ((t (:inherit nil :stipple nil :background "#161616" :foreground "#C2C2C2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "adobe" :family "Source Code Pro"))))
+ '(gnus-hl-line ((t (:inherit (hl-line default) :background "gray50"))))
  '(gnus-summary-low-read ((t (:inherit zenburn-green :foreground "#7F9F7F" :weight ultra-light))))
  '(hl-line-face ((t (:background "gray12"))) t)
  '(markdown-header-delimiter-face ((t (:inherit font-lock-function-name-face :underline t :weight bold))))

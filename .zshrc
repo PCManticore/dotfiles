@@ -314,6 +314,9 @@ alias mysql='mysql --auto-vertical-output --prompt="mysql (\d) > "'
 alias clean_pyc='find . -name \*.pyc -delete'
 alias whatismyip='curl -L http://dazzlepod.com/ip/me.json'
 alias gitstat='git diff --shortstat "@{10 hour ago}"'
+alias gca='git commit --amend'
+alias gar='git commit --amend --no-edit && git review'
+alias grr='git add -u . && git commit --amend --no-edit && git review'
 
 function crtime() {
     # Return the creation date of a file on ext2, 3, 4 filesystems.

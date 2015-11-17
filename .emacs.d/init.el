@@ -1794,7 +1794,8 @@ current line instead."
 (eval-after-load "python"
   '(progn
      (define-key python-mode-map (kbd "C-h f") 'elpy-doc)
-     (define-key python-mode-map (kbd "M-.") 'jedi:goto-definition)))
+     (define-key python-mode-map (kbd "M-.") 'jedi:goto-definition)
+     (define-key python-mode-map (kbd "M-q") 'py-fill-paragraph)))
 
 (require 'py-autopep8)
 ;; (add-hook 'before-save-hook 'py-autopep8-before-save)
@@ -1915,9 +1916,6 @@ current line instead."
 ;; smartparens
 
 (smartparens-global-mode)
-
-(add-hook 'python-mode-hook '(lambda ()
-                               (smartparens-mode -1)))
 
 ;; Source: https://github.com/Fuco1/smartparens/wiki/Example-configuration
 
@@ -2830,5 +2828,5 @@ narrowed."
 
 (when (osx)
   (set-face-attribute 'default nil :family "Source Code Pro")
-  (set-face-attribute 'default nil :height 200)
+  (set-face-attribute 'default nil :height 160)
   (set-face-attribute 'default nil :weight 'light))

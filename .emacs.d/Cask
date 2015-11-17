@@ -187,6 +187,7 @@
 (depends-on "rainbow-delimiters")
 (depends-on "rainbow-mode")
 (depends-on "request")
+(depends-on "httprepl")
 (depends-on "restclient")
 (depends-on "rich-minority")
 (depends-on "s")

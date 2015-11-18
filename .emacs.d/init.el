@@ -793,6 +793,10 @@
   (interactive)
   (fci-mode-with-rule-column 72))
 
+(defun fci-mode-79 ()
+  (interactive)
+  (fci-mode-with-rule-column 79))
+
 (defun fci-mode-80 ()
   (interactive)
   (fci-mode-with-rule-column 80))
@@ -1897,7 +1901,7 @@ current line instead."
 
 (require 'rainbow-delimiters)
 (add-hook 'python-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'python-mode-hook 'fci-mode-80)
+(add-hook 'python-mode-hook 'fci-mode-79)
 
 ;; readability
 
@@ -2202,7 +2206,7 @@ frames with exactly two windows."
 (persp-mode)
 (require 'persp-projectile)
 
-(key-chord-define-global "ss" 'projectile-persp-switch-project)
+(key-chord-define-global "cc" 'projectile-persp-switch-project)
 
 ;; org-projectile
 
@@ -2220,12 +2224,12 @@ nothing but whitespace between them.  It then indents the markup
 by using nxml's indentation rules."
   (interactive "r")
   (save-excursion
-      ;; (nxml-mode)
-      (goto-char begin)
-      (while (search-forward-regexp "\>[ \\t]*\<" nil t)
-        (backward-char) (insert "\n"))
-      (indent-region begin end))
-    (message "Ah, much better!"))
+    ;; (nxml-mode)
+    (goto-char begin)
+    (while (search-forward-regexp "\>[ \\t]*\<" nil t)
+      (backward-char) (insert "\n"))
+    (indent-region begin end))
+  (message "Ah, much better!"))
 
 (defun cheeso-pretty-print-xml-region (begin end)
   "Pretty format XML markup in region. You need to have nxml-mode
@@ -2834,4 +2838,4 @@ whichever applies first.
 Narrowing to org-src-block actually calls `org-edit-src-code'.
 
 With prefix P, don't widen, just narrow even if buffer is already
-narrowed."
+narrowed.")

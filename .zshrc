@@ -318,7 +318,10 @@ alias gitstat='git diff --shortstat "@{10 hour ago}"'
 alias jc='java -jar /home/tkhno/projects/open-source/tools/jenkins-cli/jenkins-cli.jar -s http://jenkins-product.srt.mirantis.net:8080/'
 alias psi='python setup.py install'
 alias pir='pip install -r requirements.txt'
+alias pit='pip install -r test-requirements.txt'
+alias pirt='pir && pit'
 alias gca='git commit --amend'
+alias gar='git commit --amend && git review'
 alias bel="tput bel"
 
 function crtime() {

@@ -32,6 +32,13 @@ export GOPATH="${HOME}/go"
 export DISTCC_HOSTS="gnt.home"
 export REPORTTIME=5
 
+# {{{ Source python argcomplete
+. ${HOMEBIN}/python-argcomplete.sh
+# evaluate fjj
+eval "$(register-python-argcomplete ~/bin/fjj)"
+# }}}
+
+# {{{
 # By default, zsh considers many characters part of a word (e.g., _ and -).
 # Narrow that down to allow easier skipping through words via M-f and M-b.
 export WORDCHARS='*?[]~&;!$%^<>'
@@ -72,6 +79,10 @@ setopt beep  # bell on error
 # Prompt requirements
 setopt extended_glob prompt_subst
 autoload colors zsh/terminfo
+
+# Bash autocompletion
+autoload bashcompinit
+bashcompinit
 
 # Load zgit (https://github.com/jcorbin/zsh-git)
 autoload -U zgitinit
@@ -323,6 +334,9 @@ alias pirt='pir && pit'
 alias gca='git commit --amend'
 alias gar='git commit --amend && git review'
 alias bel="tput bel"
+alias gca='git commit --amend'
+alias gar='git commit --amend --no-edit && git review'
+alias grr='git add -u . && git commit --amend --no-edit && git review'
 
 function crtime() {
     # Return the creation date of a file on ext2, 3, 4 filesystems.

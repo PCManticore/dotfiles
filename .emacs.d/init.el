@@ -551,6 +551,29 @@
 (jumpc)
 (jumpc-bind-vim-key)
 
+;; grapnel configuration
+
+(require 'grapnel)
+
+(setq grapnel-program "/usr/bin/curl --digest -n ")
+
+                                        ; `callit' is just an example
+(defun callit ()
+  (interactive)
+  (let ((success-callback 'success-callback)
+        (url "https://review.openstack.org/a/changes/243240/"))
+    (grapnel-retrieve-url
+     url
+     `((401 . (lambda (res hdrs) (message "%s" res)))
+       (success . (lambda (res hdrs) (message "%s" res)))
+       (failure . (lambda (response headers)
+                    (error "Failed with: %s for %s"
+                           (cadr (assoc "response-code" headers))
+                           ,url)))
+       (error . (lambda (response)
+                  (error "Error: %s" response))))
+     "GET")))
+
 ;; js configuration
 
 (setq js-indent-level 4)
@@ -1095,8 +1118,8 @@ Return an alist with elements like (data . number_results)."
   (let ((arg (concat helm-google-suggest-search-url
                      (url-hexify-string candidate))))
     (helm-aif helm-google-suggest-default-browser-function
-              (funcall it arg)
-              (helm-browse-url arg))))
+        (funcall it arg)
+      (helm-browse-url arg))))
 
 (defvar helm-google-suggest-default-function
   'helm-google-suggest-set-candidates
@@ -1667,20 +1690,20 @@ current line instead."
 (setq org-timer-current-timer nil)
 (setq pomodoro-is-active nil)
 (add-hook 'org-clock-in-prepare-hook
-	  '(lambda ()
-	     (if (not pomodoro-is-active)
-		 (let ((minutes (read-number "Start timer: " 25)))
-		   (if org-timer-current-timer (org-timer-cancel-timer))
-		   (org-timer-set-timer minutes)))
-	     (setq pomodoro-is-active t)))
-;(setq org-clock-in-prepare-hook nil)
+          '(lambda ()
+             (if (not pomodoro-is-active)
+                 (let ((minutes (read-number "Start timer: " 25)))
+                   (if org-timer-current-timer (org-timer-cancel-timer))
+                   (org-timer-set-timer minutes)))
+             (setq pomodoro-is-active t)))
+                                        ;(setq org-clock-in-prepare-hook nil)
 
 ;; The timer is finished automatically when a task is clocking
 ;; out. When finishing the timer it asks for a time interval of a
 ;; break, 5 minutes by default.
 (add-hook 'org-clock-out-hook
-	  '(lambda ()
-	     (when (not org-clock-clocking-in)
+          '(lambda ()
+             (when (not org-clock-clocking-in)
                (progn
                  (org-timer-cancel-timer)
                  (setq pomodoro-is-active nil)))))
@@ -1830,7 +1853,8 @@ current line instead."
 (eval-after-load "python"
   '(progn
      (define-key python-mode-map (kbd "C-h f") 'elpy-doc)
-     (define-key python-mode-map (kbd "M-.") 'jedi:goto-definition)))
+     (define-key python-mode-map (kbd "M-.") 'jedi:goto-definition)
+     (define-key python-mode-map (kbd "M-q") 'py-fill-paragraph)))
 
 (require 'py-autopep8)
 ;; (add-hook 'before-save-hook 'py-autopep8-before-save)
@@ -1951,9 +1975,6 @@ current line instead."
 ;; smartparens
 
 (smartparens-global-mode)
-
-(add-hook 'python-mode-hook '(lambda ()
-                               (smartparens-mode -1)))
 
 ;; Source: https://github.com/Fuco1/smartparens/wiki/Example-configuration
 
@@ -2619,7 +2640,7 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
-; Don't show whitespace in diff, but show context
+                                        ; Don't show whitespace in diff, but show context
 (setq vc-diff-switches '("-b" "-B" "-u"))
 
 ;; (load-file "/str/learning/elisp/ssh.el")
@@ -2689,7 +2710,7 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
             (font-lock-add-keywords nil
                                     '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 
-; lisp-interaction-mode-hook
+                                        ; lisp-interaction-mode-hook
 
 ;; (when (not (osx))
 ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
@@ -2820,12 +2841,12 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
    (setq local-abbrev-table my-tramp-abbrev-table)))
 
 (defadvice minibuffer-complete
-  (before my-minibuffer-complete activate)
+    (before my-minibuffer-complete activate)
   (expand-abbrev))
 
 ;; If you use partial-completion-mode
 (defadvice PC-do-completion
-  (before my-PC-do-completion activate)
+    (before my-PC-do-completion activate)
   (expand-abbrev))
 
 (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
@@ -2838,4 +2859,33 @@ whichever applies first.
 Narrowing to org-src-block actually calls `org-edit-src-code'.
 
 With prefix P, don't widen, just narrow even if buffer is already
-narrowed.")
+narrowed."
+  (interactive "P")
+  (declare (interactive-only))
+  (cond ((and (buffer-narrowed-p) (not p)) (widen))
+        ((region-active-p)
+         (narrow-to-region (region-beginning) (region-end)))
+        ((derived-mode-p 'org-mode)
+         ;; `org-edit-src-code' is not a real narrowing command.
+         ;; Remove this first conditional if you don't want it.
+         (cond ((ignore-errors (org-edit-src-code))
+                (delete-other-windows))
+               ((org-at-block-p)
+                (org-narrow-to-block))
+               (t (org-narrow-to-subtree))))
+        (t (narrow-to-defun))))
+
+;; (define-key endless/toggle-map "n" #'narrow-or-widen-dwim)
+;; This line actually replaces Emacs' entire narrowing keymap, that's
+;; how much I like this command. Only copy it if that's what you want.
+(define-key ctl-x-map "n" #'narrow-or-widen-dwim)
+
+;; (when (osx)
+;;   (set-default-font "-*-Source Code Pro-light-normal-normal-*-20-*-*-*-m-0-iso10646-1")
+;;   ;; (add-to-list 'default-frame-alist '(font . "Source Code Pro-22"))
+;;   (add-to-list 'default-frame-alist '(font . "Source Code Pro-iso10646-0-light-20")))
+
+(when (osx)
+  (set-face-attribute 'default nil :family "Source Code Pro")
+  (set-face-attribute 'default nil :height 160)
+  (set-face-attribute 'default nil :weight 'light))

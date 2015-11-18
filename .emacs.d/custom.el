@@ -14,7 +14,7 @@
  '(default-frame-alist
     (quote
      ((tool-bar-lines . 0)
-      (font . "Source Code Pro-14")
+      (font . "Source Code Pro-12")
       (cursor-type . box)
       (cursor-color . "Red")
       (internal-border-width . 0)

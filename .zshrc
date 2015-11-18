@@ -363,6 +363,17 @@ function zman() {
 # find file case insensitively
 function ff() { find . -type f -iname '*'"$*"'*' -ls ; }
 
+# check whether function is defined
+function is_func_defined() {
+    declare -f -F $1 > /dev/null
+    return $?
+}
+
+# print current working dir name
+function pwdn() {
+    ${PWD##*/}
+}
+
 # Sometimes, very rare, there is a need to switch to the qwerty and back to dvorak
 function asdf() { setxkbmap -model pc101 -layout dvorak }
 function aoeu() { setxkbmap -model pc101 -layout us }

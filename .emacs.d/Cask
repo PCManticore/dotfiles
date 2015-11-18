@@ -91,6 +91,7 @@
 (depends-on "god-mode")
 (depends-on "google-this")
 (depends-on "goto-chg")
+(depends-on "grapnel")
 (depends-on "grizzl")
 (depends-on "guide-key")
 (depends-on "hackernews")

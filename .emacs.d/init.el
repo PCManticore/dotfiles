@@ -551,6 +551,29 @@
 (jumpc)
 (jumpc-bind-vim-key)
 
+;; grapnel configuration
+
+(require 'grapnel)
+
+(setq grapnel-program "/usr/bin/curl --digest -n ")
+
+; `callit' is just an example
+(defun callit ()
+  (interactive)
+  (let ((success-callback 'success-callback)
+        (url "https://review.openstack.org/a/changes/243240/"))
+    (grapnel-retrieve-url
+     url
+     `((401 . (lambda (res hdrs) (message "%s" res)))
+       (success . (lambda (res hdrs) (message "%s" res)))
+       (failure . (lambda (response headers)
+                    (error "Failed with: %s for %s"
+                           (cadr (assoc "response-code" headers))
+                           ,url)))
+       (error . (lambda (response)
+                  (error "Error: %s" response))))
+     "GET")))
+
 ;; js configuration
 
 (setq js-indent-level 4)

@@ -32,12 +32,6 @@ export GOPATH="${HOME}/go"
 export DISTCC_HOSTS="gnt.home"
 export REPORTTIME=5
 
-# {{{ Source python argcomplete
-. ${HOMEBIN}/python-argcomplete.sh
-# evaluate fjj
-eval "$(register-python-argcomplete ~/bin/fjj)"
-# }}}
-
 # {{{
 # By default, zsh considers many characters part of a word (e.g., _ and -).
 # Narrow that down to allow easier skipping through words via M-f and M-b.
@@ -239,6 +233,13 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
 # }}}
 
+# {{{ Source python argcomplete
+. ${HOMEBIN}/python-argcomplete.sh
+# evaluate fjj
+eval "$(register-python-argcomplete ~/bin/fjj)"
+# }}}
+
+
 # {{{ Setup zkbd (key bindings)
 
 autoload zkbd
@@ -330,13 +331,16 @@ alias jc='java -jar /home/tkhno/projects/open-source/tools/jenkins-cli/jenkins-c
 alias psi='python setup.py install'
 alias pir='pip install -r requirements.txt'
 alias pit='pip install -r test-requirements.txt'
-alias pirt='pir && pit'
+alias pirt='pir && pit && pip install nose'
 alias gca='git commit --amend'
 alias gar='git commit --amend && git review'
 alias bel="tput bel"
 alias gca='git commit --amend'
 alias gar='git commit --amend --no-edit && git review'
 alias grr='git add -u . && git commit --amend --no-edit && git review'
+alias fjjcustomiso='fjj -j custom_8.0_iso'
+alias fjjcustompackages='fjj -j custom_packages'
+alias fjjcustombvt='fjj -j 8.0.custom.ubuntu.bvt_2'
 
 function crtime() {
     # Return the creation date of a file on ext2, 3, 4 filesystems.

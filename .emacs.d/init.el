@@ -574,6 +574,24 @@
                   (error "Error: %s" response))))
      "GET")))
 
+(defun shotgun-l1 ()
+  (interactive)
+  (let* ((review-id "243240")
+         (success-callback 'success-callback)
+         (url (format "https://review.openstack.org/a/changes/%s/reviewers" review-id)))
+    (grapnel-retrieve-url
+     url
+     `((401 . (lambda (res hdrs) (message "%s" res)))
+       (success . (lambda (res hdrs) (message "%s" res)))
+       (failure . (lambda (response headers)
+                    (error "Failed with: %s for %s"
+                           (cadr (assoc "response-code" headers))
+                           ,url)))
+       (error . (lambda (response)
+                  (error "Error: %s" response))))
+     "POST"
+     '(("reviewer" . "ivan.kliuk@gmail.com")))))
+
 ;; js configuration
 
 (setq js-indent-level 4)
@@ -654,14 +672,16 @@
 ;; circe configuration
 
 (setq circe-network-options
-      '(("Freenode"
+      '(("irccloud"
+         :host "irc.irccloud.com"
+         :port 6697
          :tls t
          :nick "tkhno"
          :sasl-username "tkhno"
          :channels ("#emacs" "##linux"
                     "#fuel" "#fuel-dev" "#fuel-infra" "#fuel-ui" "#fuel-tracker"
                     "#fuel-docs" "#fuel-qa" "#fuel-python"
-                    "#mirantis" "#openstack"))))
+                    "#mirantis" "#openstack" "#fuel-devops"))))
 
 (setq lui-max-buffer-size 30000
       lui-flyspell-p t)
@@ -696,7 +716,8 @@
                                              'open-network-stream)))
                (erc :server ,server :port ,port :nick ,nick :password ,pass))))))
 
-(asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "tkhno" nil nil)
+;; (asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "tkhno" nil nil)
+(asf-erc-bouncer-connect erc-irccloud "irc.irccloud.com" 6667 "tkhno" nil nil)
 (asf-erc-bouncer-connect erc-twice "rc.twice-irc.de" 6667 "tkhno" nil nil)
 
 ;; fires up a new frame and opens your servers in there. You will need
@@ -704,15 +725,19 @@
 (defun my-irc ()
   "Start to waste time on IRC with ERC."
   (interactive)
-  (call-interactively 'erc-freenode)
+  ;; (call-interactively 'erc-freenode)
+  (call-interactively 'erc-irccloud)
   (sit-for 1)
   (call-interactively 'erc-open))
 
 
 (setq erc-autojoin-channels-alist
-      '(("freenode.net" "#emacs" "#org-mode"
+      '(("irccloud.com" "#emacs" "#org-mode"
          "#hacklabto" "##linux" "#wiki"
-         "#nethack" "#gnustep" "#gentoo" "django-cms")
+         "#nethack" "#gnustep" "#gentoo" "django-cms"
+         "#fuel" "#fuel-dev" "#fuel-infra" "#fuel-ui" "#fuel-tracker"
+         "#fuel-docs" "#fuel-qa" "#fuel-python"
+         "#mirantis" "#openstack" "#fuel-devops")
         ("oftc.net" "#bitlbee")
         ("rc.twice-irc.de" "#i3")))
 

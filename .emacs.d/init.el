@@ -160,6 +160,11 @@
 (global-set-key (kbd "C-c C-b i") 'bump-version-minor)
 (global-set-key (kbd "C-c C-b m") 'bump-version-major)
 
+;; resize-mode
+
+(add-to-list 'load-path (oo-elisp-path "resize-mode"))
+(require 'resize-mode)
+
 ;; magit gerrit
 
 (setq-default magit-gerrit-ssh-creds "atykhonov@review.openstack.org")
@@ -658,7 +663,7 @@
          :tls t
          :nick "tkhno"
          :sasl-username "tkhno"
-         :channels ("#emacs" "##linux"
+         :channels ("#emacs" "##linux" "#gentoo"
                     "#fuel" "#fuel-dev" "#fuel-infra" "#fuel-ui" "#fuel-tracker"
                     "#fuel-docs" "#fuel-qa" "#fuel-python"
                     "#mirantis" "#openstack"))))

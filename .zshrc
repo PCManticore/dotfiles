@@ -7,7 +7,7 @@
 # }}}
 
 # {{{ Source resty
-. ${HOME}/.zsh/resty
+# . ${HOME}/.zsh/resty
 # }}}
 
 # {{{ Environment
@@ -659,6 +659,12 @@ function emerge_info() {
     fi
 }
 
+function aide_info() {
+    if [ -f "${HOME}/.aide-info" ]; then
+        cat "${HOME}/.aide-info"
+    fi
+}
+
 function zgit_branch_except_home() {
     if [ $(pwd) != ${HOME} ]; then
         echo $(zgit_branch)
@@ -739,6 +745,7 @@ function setprompt () {
             PROMPT+='%{$FG[223]%}%(!.%1~.%~) %{$reset%}'
             PROMPT+='%_$(prompt_char)%{$reset_color%}$nbsp'
             PROMPT+='$(emerge_info)'
+            PROMPT+='$(aide_info)'
 
             RPROMPT='$(zgit_branch_except_home)'
             ;;
@@ -761,4 +768,4 @@ cd ${HOME}
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 . /usr/local/bin/virtualenvwrapper.sh
 
-setxkbmap -layout us,ua -variant dvp, -option compose:102 -option keypad:atm -option numpad:shift3 -option kpdl:semi -option ctrl:swapcaps -option grp:shifts_toggle
+# setxkbmap -layout us,ua -variant dvp, -option compose:102 -option keypad:atm -option numpad:shift3 -option kpdl:semi -option ctrl:swapcaps -option grp:shifts_toggle

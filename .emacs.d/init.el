@@ -562,7 +562,7 @@
 
 (setq grapnel-program "/usr/bin/curl --digest -n ")
 
-; `callit' is just an example
+                                        ; `callit' is just an example
 (defun callit ()
   (interactive)
   (let ((success-callback 'success-callback)
@@ -578,6 +578,24 @@
        (error . (lambda (response)
                   (error "Error: %s" response))))
      "GET")))
+
+(defun shotgun-l1 ()
+  (interactive)
+  (let* ((review-id "243240")
+         (success-callback 'success-callback)
+         (url (format "https://review.openstack.org/a/changes/%s/reviewers" review-id)))
+    (grapnel-retrieve-url
+     url
+     `((401 . (lambda (res hdrs) (message "%s" res)))
+       (success . (lambda (res hdrs) (message "%s" res)))
+       (failure . (lambda (response headers)
+                    (error "Failed with: %s for %s"
+                           (cadr (assoc "response-code" headers))
+                           ,url)))
+       (error . (lambda (response)
+                  (error "Error: %s" response))))
+     "POST"
+     '(("reviewer" . "ivan.kliuk@gmail.com")))))
 
 ;; js configuration
 
@@ -659,14 +677,16 @@
 ;; circe configuration
 
 (setq circe-network-options
-      '(("Freenode"
+      '(("irccloud"
+         :host "irc.irccloud.com"
+         :port 6697
          :tls t
          :nick "tkhno"
          :sasl-username "tkhno"
          :channels ("#emacs" "##linux" "#gentoo"
                     "#fuel" "#fuel-dev" "#fuel-infra" "#fuel-ui" "#fuel-tracker"
                     "#fuel-docs" "#fuel-qa" "#fuel-python"
-                    "#mirantis" "#openstack"))))
+                    "#mirantis" "#openstack" "#fuel-devops"))))
 
 (setq lui-max-buffer-size 30000
       lui-flyspell-p t)
@@ -701,7 +721,8 @@
                                              'open-network-stream)))
                (erc :server ,server :port ,port :nick ,nick :password ,pass))))))
 
-(asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "tkhno" nil nil)
+;; (asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "tkhno" nil nil)
+(asf-erc-bouncer-connect erc-irccloud "irc.irccloud.com" 6667 "tkhno" nil nil)
 (asf-erc-bouncer-connect erc-twice "rc.twice-irc.de" 6667 "tkhno" nil nil)
 
 ;; fires up a new frame and opens your servers in there. You will need
@@ -709,15 +730,19 @@
 (defun my-irc ()
   "Start to waste time on IRC with ERC."
   (interactive)
-  (call-interactively 'erc-freenode)
+  ;; (call-interactively 'erc-freenode)
+  (call-interactively 'erc-irccloud)
   (sit-for 1)
   (call-interactively 'erc-open))
 
 
 (setq erc-autojoin-channels-alist
-      '(("freenode.net" "#emacs" "#org-mode"
+      '(("irccloud.com" "#emacs" "#org-mode"
          "#hacklabto" "##linux" "#wiki"
-         "#nethack" "#gnustep" "#gentoo" "django-cms")
+         "#nethack" "#gnustep" "#gentoo" "django-cms"
+         "#fuel" "#fuel-dev" "#fuel-infra" "#fuel-ui" "#fuel-tracker"
+         "#fuel-docs" "#fuel-qa" "#fuel-python"
+         "#mirantis" "#openstack" "#fuel-devops")
         ("oftc.net" "#bitlbee")
         ("rc.twice-irc.de" "#i3")))
 
@@ -820,6 +845,10 @@
 (defun fci-mode-72 ()
   (interactive)
   (fci-mode-with-rule-column 72))
+
+(defun fci-mode-79 ()
+  (interactive)
+  (fci-mode-with-rule-column 79))
 
 (defun fci-mode-80 ()
   (interactive)
@@ -1691,20 +1720,20 @@ current line instead."
 (setq org-timer-current-timer nil)
 (setq pomodoro-is-active nil)
 (add-hook 'org-clock-in-prepare-hook
-	  '(lambda ()
-	     (if (not pomodoro-is-active)
-		 (let ((minutes (read-number "Start timer: " 25)))
-		   (if org-timer-current-timer (org-timer-cancel-timer))
-		   (org-timer-set-timer minutes)))
-	     (setq pomodoro-is-active t)))
+          '(lambda ()
+             (if (not pomodoro-is-active)
+                 (let ((minutes (read-number "Start timer: " 25)))
+                   (if org-timer-current-timer (org-timer-cancel-timer))
+                   (org-timer-set-timer minutes)))
+             (setq pomodoro-is-active t)))
                                         ;(setq org-clock-in-prepare-hook nil)
 
 ;; The timer is finished automatically when a task is clocking
 ;; out. When finishing the timer it asks for a time interval of a
 ;; break, 5 minutes by default.
 (add-hook 'org-clock-out-hook
-	  '(lambda ()
-	     (when (not org-clock-clocking-in)
+          '(lambda ()
+             (when (not org-clock-clocking-in)
                (progn
                  (org-timer-cancel-timer)
                  (setq pomodoro-is-active nil)))))
@@ -1926,7 +1955,7 @@ current line instead."
 
 (require 'rainbow-delimiters)
 (add-hook 'python-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'python-mode-hook 'fci-mode-80)
+(add-hook 'python-mode-hook 'fci-mode-79)
 
 ;; readability
 
@@ -2228,7 +2257,7 @@ frames with exactly two windows."
 (persp-mode)
 (require 'persp-projectile)
 
-(key-chord-define-global "ss" 'projectile-persp-switch-project)
+(key-chord-define-global "cc" 'projectile-persp-switch-project)
 
 ;; org-projectile
 

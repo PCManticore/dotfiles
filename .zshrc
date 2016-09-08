@@ -10,9 +10,13 @@
 # . ${HOME}/.zsh/resty
 # }}}
 
+# {{{ Source autosuggestions
+. ${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+# }}}
+
 # {{{ Environment
 export HOMEBIN="${HOME}/bin"
-export PATH="${HOMEBIN}:/usr/bin/mh/:/usr/lib/distcc/bin:${PATH}:/usr/local/bin:/usr/local/sbin:${HOME}/.cask/bin:${HOME}/go/bin"
+export PATH="${HOMEBIN}:/usr/bin/mh/:${PATH}:/usr/local/bin:/usr/local/sbin:${HOME}/.cask/bin:${HOME}/go/bin"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -65,6 +69,8 @@ setopt NO_AUTO_MENU # don't cycle completions
 setopt NO_ALWAYS_LAST_PROMPT # put the prompt always below the completions
 # history management
 setopt HIST_IGNORE_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt APPEND_HISTORY
 setopt EXTENDED_HISTORY
@@ -341,6 +347,8 @@ alias grr='git add -u . && git commit --amend --no-edit && git review'
 alias fjjcustomiso='fjj -j custom_8.0_iso'
 alias fjjcustompackages='fjj -j custom_packages'
 alias fjjcustombvt='fjj -j 8.0.custom.ubuntu.bvt_2'
+alias bc='bc -ql'
+alias paver=./paver.sh
 
 function crtime() {
     # Return the creation date of a file on ext2, 3, 4 filesystems.
@@ -371,6 +379,11 @@ function ff() { find . -type f -iname '*'"$*"'*' -ls ; }
 function is_func_defined() {
     declare -f -F $1 > /dev/null
     return $?
+}
+
+# output the contents of a PEM formatted certificate
+function dumpssl() {
+    openssl x509 -in $1 -noout -text
 }
 
 # print current working dir name
@@ -776,9 +789,12 @@ setprompt
 
 # {{{ On start up
 ## Output quote
-if [ -f ~/.quote ]; then
-    . ~/.quote
+if [[ "${TERM}" == "screen-256color" ]]; then
+    if [ -f ~/.quote ]; then
+        . ~/.quote
+    fi
 fi
+
 ## if switching to the root then go to HOME directory
 cd ${HOME}
 # }}}
@@ -787,3 +803,5 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 . /usr/local/bin/virtualenvwrapper.sh
 
 # setxkbmap -layout us,ua -variant dvp, -option compose:102 -option keypad:atm -option numpad:shift3 -option kpdl:semi -option ctrl:swapcaps -option grp:shifts_toggle
+
+eval "$(direnv hook zsh)"

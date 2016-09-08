@@ -9,7 +9,7 @@
  '(browse-url-browser-function (quote browse-url-firefox))
  '(custom-safe-themes
    (quote
-    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default)))
+    ("bcc6775934c9adf5f3bd1f428326ce0dcd34d743a92df48c128e6438b815b44f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default)))
  '(debug-on-error t)
  '(default-frame-alist
     (quote
@@ -38,12 +38,24 @@
     ("demi" "demi:" "fsbot:" "howdoi" "Google Translate" "google-translate" "wasamasa")))
  '(fci-rule-color "#383838")
  '(global-hl-line-mode t)
+ '(gnus-activate-level 3)
+ '(gnus-agent nil)
+ '(gnus-agent-cache nil)
+ '(gnus-asynchronous t)
+ '(gnus-expert-user nil)
+ '(gnus-group-name-charset-group-alist nil)
+ '(gnus-group-name-charset-method-alist (quote (("nil" . koi8-r))))
+ '(gnus-newsgroup-ignored-charsets (quote (unknown-8bit x-unknown koi8-u)))
+ '(gnus-summary-ignore-duplicates t)
+ '(gnus-use-cache (quote passive))
+ '(gnus-use-header-prefetch t)
  '(httpd-port 8090)
  '(ido-default-buffer-method (quote selected-window))
  '(indicate-buffer-boundaries (quote left))
  '(initial-buffer-choice t)
  '(jenkins-api-url
    "http://jenkins-product.srt.mirantis.net:8080/job/custom_8.0_iso/api/xml")
+ '(js2-basic-offset 4)
  '(mail-source-delete-incoming t)
  '(mediawiki-site-alist
    (quote
@@ -66,6 +78,14 @@
  '(ns-tool-bar-display-mode (quote both) t)
  '(ns-tool-bar-size-mode nil t)
  '(org-time-stamp-custom-formats (quote ("<%d %B %y %a>" . "<%d %B %y %a %H:%M>")))
+ '(php-lineup-cascaded-calls t)
+ '(php-mode-coding-style (quote psr2))
+ '(php-mode-speedbar-open nil)
+ '(php-speedbar-config t)
+ '(phpunit-arg "-c /str/development/projects/echovox/echovoxb2c/app/")
+ '(phpunit-configuration-file "phpunit.xml")
+ '(phpunit-program "/usr/bin/phpunit")
+ '(python-fill-docstring-style "django")
  '(scroll-conservatively 123)
  '(semantic-complete-inline-analyzer-displayor-class (quote semantic-displayor-traditional))
  '(send-mail-function (quote mailclient-send-it))
@@ -77,6 +97,7 @@
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 587)
  '(split-width-threshold 160)
+ '(tls-checktrust t)
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
    (quote

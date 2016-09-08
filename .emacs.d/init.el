@@ -2,6 +2,26 @@
 
 ;; (toggle-debug-on-quit)
 
+;; Automagical EmacsClient functionality
+;;
+;; Basically, if Emacs is already running, this shunts things over to
+;; the existing Emacs; otherwise, it readies itself to accept said
+;; shunting.
+;;
+;; This operates by detecting the existence of an Emacs server socket
+;; file.  If a socket is found ("/tmp/emacs$UID/server"), Emacs will
+;; spin up emacsclient and immediately exit itself.  Otherwise, Emacs
+;; will start a new server.
+(defun server-already-running-p () "Is Emacs already running?"
+       (file-exists-p (format "/tmp/emacs%s/server" (user-uid))))
+(defun server-shunt () "Shunts to emacsclient"
+       (let ((args (append '("emacsclient" "-a" "\"\"" "-c" "-n")
+                           (cdr command-line-args))))
+         (shell-command (substring (format "%S" args) 1 -1))
+         (kill-emacs)))
+(unless (featurep 'server)
+  (if (server-already-running-p) (server-shunt) (server-start)))
+
 (defun osx ()
   (eq system-type 'darwin))
 
@@ -14,7 +34,7 @@
 ;;   )
 
 (when (osx)
-  (set-face-attribute 'default nil :family "Source Code Pro")
+  (set-face-attribute 'default nil :family "mononoki")
   (set-face-attribute 'default nil :height 200)
   (set-face-attribute 'default nil :weight 'light))
 
@@ -23,8 +43,8 @@
 
 ;; end of source
 
-(load "server")
-(unless (server-running-p) (server-start))
+;; (load "server")
+;; (unless (server-running-p) (server-start))
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
@@ -70,9 +90,10 @@
                          ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
                          ("melpa"        . "http://melpa.milkbox.net/packages/")
                          ("marmalade"    . "http://marmalade-repo.org/packages/")))
-
+(setq package-check-signature nil
+      package-enable-at-startup nil) ;; Prevent double loading of libraries
+(add-to-list 'package-archives '("RSW-Packages" . "http://www.plasmas.biz/rswe/") t)
 (package-initialize)
-
 
 ;; (when (not (osx))
 ;;   (add-to-list 'load-path (oo-elisp-path "bisect.el/"))
@@ -164,6 +185,14 @@
 
 (add-to-list 'load-path (oo-elisp-path "resize-mode"))
 (require 'resize-mode)
+
+;; ispell
+
+(require 'ispell)
+
+(when (executable-find "aspell")
+  (setq ispell-program-name "aspell")
+  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=uk")))
 
 ;; magit gerrit
 
@@ -677,16 +706,16 @@
 ;; circe configuration
 
 (setq circe-network-options
-      '(("irccloud"
-         :host "irc.irccloud.com"
-         :port 6697
-         :tls t
-         :nick "tkhno"
-         :sasl-username "tkhno"
-         :channels ("#emacs" "##linux" "#gentoo"
-                    "#fuel" "#fuel-dev" "#fuel-infra" "#fuel-ui" "#fuel-tracker"
-                    "#fuel-docs" "#fuel-qa" "#fuel-python"
-                    "#mirantis" "#openstack" "#fuel-devops"))))
+      '(("Mynode"
+         :host "irc.freenode.net"
+         :port 6667
+         ;; :tls t
+         :nick "atykhonov"
+         :sasl-username "atykhonov"
+         :channels ("#emacs" "##linux" "#gentoo" "#chevah"))))
+
+(load "lui-logging" nil t)
+(enable-lui-logging-globally)
 
 (setq lui-max-buffer-size 30000
       lui-flyspell-p t)
@@ -721,30 +750,25 @@
                                              'open-network-stream)))
                (erc :server ,server :port ,port :nick ,nick :password ,pass))))))
 
-;; (asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "tkhno" nil nil)
-(asf-erc-bouncer-connect erc-irccloud "irc.irccloud.com" 6667 "tkhno" nil nil)
-(asf-erc-bouncer-connect erc-twice "rc.twice-irc.de" 6667 "tkhno" nil nil)
+(asf-erc-bouncer-connect erc-freenode "irc.freenode.net" 6667 "atykhonov" nil nil)
+;; (asf-erc-bouncer-connect erc-irccloud "irc.irccloud.com" 6667 "tkhno" nil nil)
+;; (asf-erc-bouncer-connect erc-twice "rc.twice-irc.de" 6667 "tkhno" nil nil)
 
 ;; fires up a new frame and opens your servers in there. You will need
 ;; to modify it to suit your needs.
 (defun my-irc ()
   "Start to waste time on IRC with ERC."
   (interactive)
-  ;; (call-interactively 'erc-freenode)
-  (call-interactively 'erc-irccloud)
+  (call-interactively 'erc-freenode)
+  ;; (call-interactively 'erc-irccloud)
   (sit-for 1)
   (call-interactively 'erc-open))
 
 
 (setq erc-autojoin-channels-alist
-      '(("irccloud.com" "#emacs" "#org-mode"
+      '(("irc.freenode.net" "#emacs"
          "#hacklabto" "##linux" "#wiki"
-         "#nethack" "#gnustep" "#gentoo" "django-cms"
-         "#fuel" "#fuel-dev" "#fuel-infra" "#fuel-ui" "#fuel-tracker"
-         "#fuel-docs" "#fuel-qa" "#fuel-python"
-         "#mirantis" "#openstack" "#fuel-devops")
-        ("oftc.net" "#bitlbee")
-        ("rc.twice-irc.de" "#i3")))
+         "#nethack" "#gnustep" "#gentoo" "django-cms" "#chevah")))
 
 (setq erc-keywords '("demi" "demi:"
                      "fsbot:"
@@ -1859,6 +1883,22 @@ current line instead."
 (venv-initialize-eshell) ;; if you want eshell support
 (setq venv-location "~/.virtualenvs/")
 
+;; misc
+
+(defun demi-py-fill-paragraph ()
+  (interactive)
+  (let ((fill-column-val fill-column))
+    (save-excursion
+      (setq fill-column 70)
+      (fill-paragraph)
+      (search-backward "\"\"\"")
+      (forward-char 3)
+      (indent-new-comment-line)
+      (search-forward "\"\"\"")
+      (backward-char 3)
+      (indent-new-comment-line)
+      (setq fill-column fill-column-val))))
+
 ;; python-mode
 
 (require 'python-mode)
@@ -1884,7 +1924,7 @@ current line instead."
   '(progn
      (define-key python-mode-map (kbd "C-h f") 'elpy-doc)
      (define-key python-mode-map (kbd "M-.") 'jedi:goto-definition)
-     (define-key python-mode-map (kbd "M-q") 'py-fill-paragraph)))
+     (define-key python-mode-map (kbd "M-q") 'demi-py-fill-paragraph)))
 
 (require 'py-autopep8)
 ;; (add-hook 'before-save-hook 'py-autopep8-before-save)
@@ -1918,6 +1958,18 @@ current line instead."
                                (define-key nose-mode-map "\C-c\C-tpa" 'nosetests-pdb-all)
                                (define-key nose-mode-map "\C-c\C-tpm" 'nosetests-pdb-module)
                                (define-key nose-mode-map "\C-c\C-tp." 'nosetests-pdb-one)))
+
+;; php-mode
+
+(defun php-custom-hook ()
+  (define-key php-mode-map (kbd "M-RET") 'hello))
+
+(defun hello ()
+  (interactive)
+  (newline-and-indent)
+  (insert "->"))
+
+(add-hook 'php-mode-hook 'php-custom-hook)
 
 ;;; yapf
 
@@ -2414,6 +2466,19 @@ Attribution: URL `http://www.masteringemacs.org/articles/2010/11/29/evaluating-e
     (next-line)
     (indent-for-tab-command)))
 
+(defun php/print (text)
+  (interactive "sText: ")
+  (insert "print_r('<pre>');\n")
+  (insert "print_r('##### " text "');\n")
+  (insert "print_r('</pre>');\n")
+  (save-excursion
+    (search-backward "print_r " nil t 3)
+    (indent-for-tab-command)
+    (next-line)
+    (indent-for-tab-command)
+    (next-line)
+    (indent-for-tab-command)))
+
 (defun js/print (text)
   (interactive "sText: ")
   (insert (format "console.log('%s');" text))
@@ -2554,6 +2619,77 @@ Source URL: https://github.com/grettke/home/blob/master/.emacs.el"
 (require 'diff-hl)
 (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
 (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
+
+;; ediff
+
+(require 'ediff)
+
+(defvar ediff-after-quit-hooks nil
+  "* Hooks to run after ediff or emerge is quit.")
+
+(defadvice ediff-quit (after edit-after-quit-hooks activate)
+  (run-hooks 'ediff-after-quit-hooks))
+
+(setq git-mergetool-emacsclient-ediff-active nil)
+
+;; (defun local-ediff-frame-maximize ()
+;;   (let* ((bounds (display-usable-bounds))
+;;          (x (nth 0 bounds))
+;;          (y (nth 1 bounds))
+;;          (width (/ (nth 2 bounds) (frame-char-width)))
+;;          (height (/ (nth 3 bounds) (frame-char-height))))
+;;     (set-frame-width (selected-frame) width)
+;;     (set-frame-height (selected-frame) height)
+;;     (set-frame-position (selected-frame) x y)))
+
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
+
+(defun local-ediff-before-setup-hook ()
+  (setq local-ediff-saved-frame-configuration (current-frame-configuration))
+  (setq local-ediff-saved-window-configuration (current-window-configuration))
+  ;; (local-ediff-frame-maximize)
+  (if git-mergetool-emacsclient-ediff-active
+      (raise-frame)))
+
+(defun local-ediff-quit-hook ()
+  (set-frame-configuration local-ediff-saved-frame-configuration)
+  (set-window-configuration local-ediff-saved-window-configuration))
+
+(defun local-ediff-suspend-hook ()
+  (set-frame-configuration local-ediff-saved-frame-configuration)
+  (set-window-configuration local-ediff-saved-window-configuration))
+
+(add-hook 'ediff-before-setup-hook 'local-ediff-before-setup-hook)
+(add-hook 'ediff-quit-hook 'local-ediff-quit-hook 'append)
+(add-hook 'ediff-suspend-hook 'local-ediff-suspend-hook 'append)
+
+;; Useful for ediff merge from emacsclient.
+(defun git-mergetool-emacsclient-ediff (local remote base merged)
+  (setq git-mergetool-emacsclient-ediff-active t)
+  (if (file-readable-p base)
+      (ediff-merge-files-with-ancestor local remote base nil merged)
+    (ediff-merge-files local remote nil merged))
+  (recursive-edit))
+
+(defun git-mergetool-emacsclient-ediff-after-quit-hook ()
+  (exit-recursive-edit))
+
+(add-hook 'ediff-after-quit-hooks 'git-mergetool-emacsclient-ediff-after-quit-hook 'append)
+
+(defun command-line-diff (switch)
+  (let ((file1 (pop command-line-args-left))
+        (file2 (pop command-line-args-left)))
+    (ediff file1 file2)))
+
+(add-to-list 'command-switch-alist '("diff" . command-line-diff))
+
+;; golden ratio
+
+(add-to-list 'load-path (oo-ghq-path "github.com/roman/golden-ratio.el"))
+(require 'golden-ratio)
+(golden-ratio-mode 1)
+(setq golden-ratio-auto-scale t)
 
 ;; Emacs WebKit
 

@@ -16,7 +16,8 @@
 
 # {{{ Environment
 export HOMEBIN="${HOME}/bin"
-export PATH="${HOMEBIN}:/usr/bin/mh/:${PATH}:/usr/local/bin:/usr/local/sbin:${HOME}/.cask/bin:${HOME}/go/bin"
+export HOMEUSRBIN="${HOME}/usr/bin"
+export PATH="${HOMEBIN}:${HOMEUSRBIN}:/usr/bin/mh/:${PATH}:/usr/local/bin:/usr/local/sbin:${HOME}/.cask/bin:${HOME}/go/bin"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000

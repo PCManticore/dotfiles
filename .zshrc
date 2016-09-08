@@ -14,6 +14,10 @@
 . ${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 # }}}
 
+# {{{ Source git-secret zsh plugin.
+. ${HOME}/.zsh/git-secret.plugin.zsh
+# }}}
+
 # {{{ Environment
 export HOMEBIN="${HOME}/bin"
 export HOMEUSRBIN="${HOME}/usr/bin"

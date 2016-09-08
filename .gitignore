@@ -1,0 +1,10 @@
+*~
+.#*
+\#*\#
+*.log
+*.swp
+.PlayOnLinux/
+.wine/
+.Skype/
+.zshrc.local
+TAGS
